@@ -1,0 +1,538 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ProjectNav from "../../components/ProjectNav.astro";
+import { projects } from "../../data/projects";
+
+// Generate static paths for all projects
+export const getStaticPaths = () => {
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+};
+
+const { project } = Astro.props;
+
+if (!project) {
+  return Astro.redirect("/404");
+}
+
+// Related projects (same tags, different project)
+const relatedProjects = Array.isArray(project.tags)
+  ? projects
+      .filter(
+        (p) =>
+          p.id !== project.id &&
+          Array.isArray(p.tags) &&
+          p.tags.some((tag) => project.tags.includes(tag))
+      )
+      .slice(0, 3)
+  : [];
+
+// Format dates nicely
+const formatDate = (dateString: string) => {
+  if (!dateString) return "";
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+
+// Canonical URL for sharing
+const canonicalUrl = Astro.url
+  ? Astro.url.href
+  : Astro.site + "learnt/" + project.slug;
+
+// Status styling
+const statusStyles = {
+  completed:
+    "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+  "in-progress":
+    "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+  planned:
+    "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
+  archived: "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400",
+  sunset:
+    "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400",
+};
+const difficultyStyles = {
+  beginner: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+  intermediate:
+    "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400",
+  advanced: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
+};
+---
+
+<Layout
+  title={`${project.title} - Learnt Project`}
+  description={project.short || project.description}
+  image={project.screenshot}
+>
+  {/* Breadcrumb Navigation */}
+  <nav
+    class="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700"
+    aria-label="Breadcrumb"
+  >
+    <div class="container mx-auto px-4 py-3">
+      <ol class="flex items-center space-x-2 text-sm">
+        <li>
+          <a
+            href="/"
+            class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+            >Home</a
+          >
+        </li>
+        <li class="text-gray-400 dark:text-gray-600">/</li>
+        <li>
+          <a
+            href="/learnt"
+            class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+            >Projects</a
+          >
+        </li>
+        <li class="text-gray-400 dark:text-gray-600">/</li>
+        <li
+          class="text-gray-900 dark:text-white font-medium"
+          aria-current="page"
+        >
+          {project.title}
+        </li>
+      </ol>
+    </div>
+  </nav>
+
+  <article class="container mx-auto px-4 py-8 max-w-4xl" role="main">
+    <a href="/learnt" class="inline-block mb-6 btn btn-outline"
+      >← Back to Projects</a
+    >
+    {/* Project Header */}
+    <header class="mb-8">
+      <div class="flex flex-wrap gap-3 mb-4">
+        <span
+          class={`px-3 py-1 text-sm font-medium rounded-full ${statusStyles[project.status]}`}
+          >{project.status}</span
+        >
+        {
+          project.difficulty && (
+            <span
+              class={`px-3 py-1 text-sm font-medium rounded-full ${difficultyStyles[project.difficulty]}`}
+            >
+              {project.difficulty}
+            </span>
+          )
+        }
+        {
+          project.dateCreated && (
+            <span class="px-3 py-1 text-sm bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 rounded-full">
+              Created{" "}
+              <time datetime={project.dateCreated}>
+                {formatDate(project.dateCreated)}
+              </time>
+            </span>
+          )
+        }
+      </div>
+      <h1
+        class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 leading-tight"
+      >
+        {project.title}
+      </h1>
+      <p class="text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
+        {project.short || project.description}
+      </p>
+      {/* Action Buttons */}
+      <div class="flex flex-wrap gap-4 mb-2">
+        {
+          project.githubUrl && (
+            <a
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-primary inline-flex items-center gap-2"
+            >
+              GitHub
+            </a>
+          )
+        }
+        {
+          project.liveUrl && (
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-secondary inline-flex items-center gap-2"
+            >
+              Live Demo
+            </a>
+          )
+        }
+        {
+          project.notesUrl && (
+            <a
+              href={project.notesUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-outline inline-flex items-center gap-2"
+            >
+              Notes
+            </a>
+          )
+        }
+      </div>
+
+      {/* Social Share Buttons */}
+      <div class="flex flex-wrap gap-2 mb-6">
+        <a
+          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(project.title)}&url=${encodeURIComponent(canonicalUrl)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1 px-3 py-1 rounded bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:hover:bg-blue-800 text-sm font-medium"
+          aria-label="Share on Twitter"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"
+            ><path
+              d="M22.46 6c-.77.35-1.6.58-2.47.69a4.3 4.3 0 0 0 1.88-2.37 8.59 8.59 0 0 1-2.72 1.04A4.28 4.28 0 0 0 16.11 4c-2.37 0-4.29 1.92-4.29 4.29 0 .34.04.67.1.99C7.69 9.13 4.07 7.3 1.64 4.6c-.37.64-.58 1.38-.58 2.17 0 1.5.76 2.82 1.92 3.6-.7-.02-1.36-.21-1.94-.53v.05c0 2.1 1.5 3.85 3.5 4.25-.36.1-.74.16-1.13.16-.28 0-.54-.03-.8-.08.54 1.7 2.1 2.94 3.95 2.97A8.6 8.6 0 0 1 2 19.54c-.65 0-1.28-.04-1.9-.11A12.13 12.13 0 0 0 7.29 21c7.55 0 11.68-6.26 11.68-11.68 0-.18-.01-.36-.02-.54A8.18 8.18 0 0 0 22.46 6z"
+            ></path></svg
+          >
+          Twitter
+        </a>
+        <a
+          href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(canonicalUrl)}&title=${encodeURIComponent(project.title)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1 px-3 py-1 rounded bg-blue-200 text-blue-900 hover:bg-blue-300 dark:bg-blue-800 dark:text-blue-100 dark:hover:bg-blue-700 text-sm font-medium"
+          aria-label="Share on LinkedIn"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"
+            ><path
+              d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5v-14c0-2.76-2.24-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.28c-.97 0-1.75-.79-1.75-1.75s.78-1.75 1.75-1.75 1.75.78 1.75 1.75-.78 1.75-1.75 1.75zm15.5 11.28h-3v-5.6c0-1.34-.03-3.07-1.87-3.07-1.87 0-2.16 1.46-2.16 2.97v5.7h-3v-10h2.88v1.36h.04c.4-.75 1.38-1.54 2.84-1.54 3.04 0 3.6 2 3.6 4.59v5.59z"
+            ></path></svg
+          >
+          LinkedIn
+        </a>
+        <a
+          href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(canonicalUrl)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1 px-3 py-1 rounded bg-blue-50 text-blue-800 hover:bg-blue-100 dark:bg-blue-900 dark:text-blue-200 dark:hover:bg-blue-800 text-sm font-medium"
+          aria-label="Share on Facebook"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"
+            ><path
+              d="M22.675 0h-21.35c-.733 0-1.325.592-1.325 1.326v21.348c0 .733.592 1.326 1.325 1.326h11.495v-9.294h-3.128v-3.622h3.128v-2.672c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.326v-21.349c0-.734-.593-1.326-1.324-1.326z"
+            ></path></svg
+          >
+          Facebook
+        </a>
+      </div>
+    </header>
+
+    {/* Project Image */}
+    {
+      project.screenshot && (
+        <div class="mb-8 rounded-xl overflow-hidden shadow-lg bg-gray-100 dark:bg-gray-800">
+          <img
+            src={project.screenshot}
+            alt={project.altText || `Screenshot of ${project.title}`}
+            class="w-full h-auto"
+            loading="lazy"
+            decoding="async"
+            onerror="this.src='/images/placeholder-project.png'; this.onerror=null;"
+          />
+        </div>
+      )
+    }
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* Main Content */}
+      <div class="lg:col-span-2">
+        {/* Project Description */}
+        <section class="prose prose-lg dark:prose-invert max-w-none mb-8">
+          <p>{project.longDescription}</p>
+          {
+            Array.isArray(project.features) && project.features.length > 0 && (
+              <>
+                <h3>Key Features</h3>
+                <ul>
+                  {project.features.map((f) => (
+                    <li>{f}</li>
+                  ))}
+                </ul>
+              </>
+            )
+          }
+          {
+            Array.isArray(project.challenges) &&
+              project.challenges.length > 0 && (
+                <>
+                  <h3>Challenges</h3>
+                  <ul>
+                    {project.challenges.map((c) => (
+                      <li>{c}</li>
+                    ))}
+                  </ul>
+                </>
+              )
+          }
+          {
+            Array.isArray(project.nextSteps) &&
+              project.nextSteps.length > 0 && (
+                <>
+                  <h3>Next Steps</h3>
+                  <ul>
+                    {project.nextSteps.map((n) => (
+                      <li>{n}</li>
+                    ))}
+                  </ul>
+                </>
+              )
+          }
+
+          {/* Changelog */}
+          {
+            Array.isArray(project.changelog) &&
+              project.changelog.length > 0 && (
+                <section class="prose prose-lg dark:prose-invert max-w-none mb-8">
+                  <h3>Changelog</h3>
+                  <ul>
+                    {project.changelog.map((entry) => (
+                      <li>
+                        <strong>
+                          <time datetime={entry.date}>
+                            {formatDate(entry.date)}
+                          </time>
+                          :
+                        </strong>{" "}
+                        {entry.note}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )
+          }
+
+          {/* Retrospective */}
+          {
+            project.retrospective && (
+              <section class="prose prose-lg dark:prose-invert max-w-none mb-8">
+                <h3>Retrospective</h3>
+                <p>{project.retrospective}</p>
+              </section>
+            )
+          }
+        </section>
+
+        {/* Sunset Information */}
+        {
+          project.sunsetDate && (project.status === "sunset" as typeof project.status) && (
+            <section class="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-xl p-6 mb-8">
+              <div class="flex items-start gap-3">
+                <svg
+                  class="w-6 h-6 text-orange-500 mt-1 flex-shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
+                  />
+                </svg>
+                <div>
+                  <h3 class="text-lg font-semibold text-orange-800 dark:text-orange-200 mb-2">
+                    Project Sunset
+                  </h3>
+                  <p class="text-orange-700 dark:text-orange-300 mb-2">
+                    This project was sunset on{" "}
+                    <strong>
+                      <time datetime={project.sunsetDate}>
+                        {formatDate(project.sunsetDate)}
+                      </time>
+                    </strong>
+                    .
+                  </p>
+                  <p class="text-sm text-orange-600 dark:text-orange-400">
+                    Sunset projects have completed their learning objectives and
+                    are no longer actively maintained, but their code and
+                    learnings remain available for reference.
+                  </p>
+                </div>
+              </div>
+            </section>
+          )
+        }
+      </div>
+
+      {/* Sidebar */}
+      <aside class="space-y-6">
+        {/* Quick Info */}
+        <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            Quick Info
+          </h3>
+          <dl class="space-y-3">
+            <div>
+              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                Status
+              </dt>
+              <dd
+                class={`inline-flex items-center px-2 py-1 text-sm font-medium rounded-full mt-1 ${statusStyles[project.status]}`}
+              >
+                {project.status}
+              </dd>
+            </div>
+            {
+              project.difficulty && (
+                <div>
+                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    Difficulty
+                  </dt>
+                  <dd
+                    class={`inline-flex items-center px-2 py-1 text-sm font-medium rounded-full mt-1 ${difficultyStyles[project.difficulty]}`}
+                  >
+                    {project.difficulty}
+                  </dd>
+                </div>
+              )
+            }
+            {
+              project.dateCreated && (
+                <div>
+                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    Created
+                  </dt>
+                  <dd class="text-sm text-gray-900 dark:text-white mt-1">
+                    <time datetime={project.dateCreated}>
+                      {formatDate(project.dateCreated)}
+                    </time>
+                  </dd>
+                </div>
+              )
+            }
+            {
+              project.sunsetDate && (
+                <div>
+                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    Sunset
+                  </dt>
+                  <dd class="text-sm text-gray-900 dark:text-white mt-1">
+                    <time datetime={project.sunsetDate}>
+                      {formatDate(project.sunsetDate)}
+                    </time>
+                  </dd>
+                </div>
+              )
+            }
+          </dl>
+        </div>
+
+        {/* Technologies */}
+        <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            Technologies
+          </h3>
+          <div class="flex flex-wrap gap-2">
+            {
+              project.tags.map((tag) => (
+                <a
+                  href={`/learnt?tag=${encodeURIComponent(tag)}`}
+                  class="inline-block text-sm font-medium bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full border border-gray-200 dark:border-gray-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-700 dark:hover:text-blue-300 hover:border-blue-300 dark:hover:border-blue-600 transition-colors"
+                >
+                  {tag}
+                </a>
+              ))
+            }
+          </div>
+        </div>
+
+        {/* Learning Outcomes */}
+        {
+          Array.isArray(project.learned) && project.learned.length > 0 && (
+            <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6">
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                What I Learned
+              </h3>
+              <ul class="list-disc pl-6">
+                {project.learned.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+
+        {/* Related Projects */}
+        {
+          relatedProjects.length > 0 && (
+            <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6">
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                Related Projects
+              </h3>
+              <ul class="space-y-4">
+                {relatedProjects.map((rp) => (
+                  <li class="flex items-center gap-3">
+                    <a
+                      href={`/learnt/${rp.slug}`}
+                      class="block w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900"
+                    >
+                      <img
+                        src={rp.screenshot}
+                        alt={rp.altText || rp.title}
+                        class="object-cover w-full h-full"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </a>
+                    <div class="flex-1 min-w-0">
+                      <a
+                        href={`/learnt/${rp.slug}`}
+                        class="font-medium text-blue-700 dark:text-blue-300 hover:underline line-clamp-1"
+                      >
+                        {rp.title}
+                      </a>
+                      <div class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2">
+                        {rp.short || rp.description}
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+      </aside>
+    </div>
+
+    {/* Navigation to Previous/Next Projects */}
+    <ProjectNav currentSlug={project.slug} />
+    <div aria-live="polite" id="nav-announcer" class="sr-only"></div>
+    <script is:inline>
+      document.addEventListener("keydown", function (e) {
+        if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")
+          return;
+        if (e.key === "ArrowLeft") {
+          const prev = document.querySelector('a[rel="prev"]');
+          if (prev) {
+            const announcer = document.getElementById("nav-announcer");
+            if (announcer)
+              announcer.textContent = "Navigating to previous project.";
+            prev.click();
+          }
+        }
+        if (e.key === "ArrowRight") {
+          const next = document.querySelector('a[rel="next"]');
+          if (next) {
+            const announcer = document.getElementById("nav-announcer");
+            if (announcer)
+              announcer.textContent = "Navigating to next project.";
+            next.click();
+          }
+        }
+      });
+    </script>
+  </article>
+</Layout>

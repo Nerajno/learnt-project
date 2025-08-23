@@ -1,0 +1,29 @@
+---
+import { getAllProjects } from "../data/projects";
+const { currentSlug } = Astro.props;
+const projects = getAllProjects();
+const idx = projects.findIndex((p) => p.slug === currentSlug);
+const prev = idx > 0 ? projects[idx - 1] : null;
+const next = idx < projects.length - 1 ? projects[idx + 1] : null;
+---
+
+<nav class="flex justify-between mt-12">
+  {
+    prev ? (
+      <a href={`/learnt/${prev.slug}`} class="btn btn-outline" rel="prev">
+        ← {prev.title}
+      </a>
+    ) : (
+      <span />
+    )
+  }
+  {
+    next ? (
+      <a href={`/learnt/${next.slug}`} class="btn btn-outline" rel="next">
+        {next.title} →
+      </a>
+    ) : (
+      <span />
+    )
+  }
+</nav>

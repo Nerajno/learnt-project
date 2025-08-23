@@ -1,0 +1,131 @@
+---
+import { getUniqueCategories, getUniqueTechnologies } from '../data/projects';
+
+const categories = getUniqueCategories();
+const technologies = getUniqueTechnologies();
+
+// Get current URL params for initial values
+const url = Astro.url;
+const searchParams = url.searchParams;
+const currentSearch = searchParams.get('search') || '';
+const currentCategory = searchParams.get('category') || '';
+const currentStatus = searchParams.get('status') || '';
+const currentDifficulty = searchParams.get('difficulty') || '';
+const currentTechnology = searchParams.get('technology') || '';
+---
+
+<div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-8 shadow-sm">
+  <form id="search-form" class="space-y-4" method="GET" action="/learnt">
+    <!-- Search Input -->
+    <div class="relative">
+      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </div>
+      <input
+        type="search"
+        id="search-input"
+        name="search"
+        value={currentSearch}
+        placeholder="Search projects, technologies, or keywords..."
+        class="input pl-10 pr-4"
+        autocomplete="off"
+      />
+      <!-- Clear search button -->
+      <button
+        type="button"
+        id="clear-search"
+        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+        style={currentSearch ? 'display: flex;' : 'display: none;'}
+        aria-label="Clear search"
+      >
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Filters Row -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- Category Filter -->
+      <div>
+        <label for="category-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Category
+        </label>
+        <select id="category-select" name="category" class="input">
+          <option value="">All Categories</option>
+          {categories.map((category) => (
+            <option value={category} selected={currentCategory === category}>
+              {category.charAt(0).toUpperCase() + category.slice(1)}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <!-- Status Filter -->
+      <div>
+        <label for="status-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Status
+        </label>
+        <select id="status-select" name="status" class="input">
+          <option value="">All Statuses</option>
+          <option value="active" selected={currentStatus === 'active'}>Active</option>
+          <option value="sunset" selected={currentStatus === 'sunset'}>Sunset</option>
+          <option value="archived" selected={currentStatus === 'archived'}>Archived</option>
+        </select>
+      </div>
+
+      <!-- Difficulty Filter -->
+      <div>
+        <label for="difficulty-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Difficulty
+        </label>
+        <select id="difficulty-select" name="difficulty" class="input">
+          <option value="">All Levels</option>
+          <option value="beginner" selected={currentDifficulty === 'beginner'}>Beginner</option>
+          <option value="intermediate" selected={currentDifficulty === 'intermediate'}>Intermediate</option>
+          <option value="advanced" selected={currentDifficulty === 'advanced'}>Advanced</option>
+        </select>
+      </div>
+
+      <!-- Technology Filter -->
+      <div>
+        <label for="technology-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Technology
+        </label>
+        <select id="technology-select" name="technology" class="input">
+          <option value="">All Technologies</option>
+          {technologies.map((tech) => (
+            <option value={tech} selected={currentTechnology === tech}>
+              {tech}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="flex justify-end">
+      <button type="submit" class="btn btn-primary">Apply Filters</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const clearBtn = document.getElementById("clear-search");
+    const searchInput = document.getElementById("search-input");
+
+    if (clearBtn && searchInput) {
+      clearBtn.addEventListener("click", () => {
+        searchInput.value = "";
+        clearBtn.style.display = "none";
+      });
+
+      searchInput.addEventListener("input", () => {
+        clearBtn.style.display = searchInput.value ? "flex" : "none";
+      });
+    }
+  });
+</script>

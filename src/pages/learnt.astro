@@ -1,0 +1,38 @@
+---
+import Layout from "../layouts/Layout.astro";
+import SearchBar from "../components/SearchBar.astro";
+import ProjectList from "../components/ProjectList.astro";
+import { getAllProjects, filterProjects } from "../data/projects";
+
+const url = Astro.url;
+const searchParams = url.searchParams;
+
+const filters = {
+  search: searchParams.get("search") || "",
+  category: searchParams.get("category") || "",
+  status: searchParams.get("status") || "",
+  difficulty: searchParams.get("difficulty") || "",
+  technology: searchParams.get("technology") || "",
+};
+
+const allProjects = getAllProjects();
+const projects = allProjects.filter(project => 
+  (filters.difficulty === '' || project.difficulty === filters.difficulty) &&
+  (filters.technology === '' || project.technologies.includes(filters.technology))
+);
+---
+
+<Layout title="Learnt Projects">
+  <section class="max-w-6xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold mb-6">Learnt Projects</h1>
+    <p class="text-gray-600 dark:text-gray-400 mb-8">
+      Explore projects I built, sunset, or experimented with along the way. Use the search and filters to find specific ones.
+    </p>
+
+    <!-- Search & Filters -->
+    <SearchBar />
+
+    <!-- Project List -->
+    <ProjectList projects={projects} />
+  </section>
+</Layout>

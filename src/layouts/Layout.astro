@@ -70,6 +70,32 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
       })(window, document, "clarity", "script");
     </script>
+
+    <!-- GA4 || Google Analytics -->
+    <script
+      is:inline
+      type='text/partytown'
+      src='https://www.googletagmanager.com/gtag/js?id=G-CXQYQ18LFT'></script>
+
+
+      <script type='text/partytown'>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      // This is the important part
+      gtag('consent', 'default', {
+        ad_storage: 'granted',
+        ad_user_data: 'granted',
+        ad_personalization: 'granted',
+        analytics_storage: 'granted',
+      });
+
+      gtag('config', 'G-CXQYQ18LFT');
+    </script>
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     

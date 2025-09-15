@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@kbyte-tech/astro-clarity": "^0.0.8",
     "astro": "^5.13.2"
   },
   "devDependencies": {

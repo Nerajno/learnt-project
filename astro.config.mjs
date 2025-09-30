@@ -11,7 +11,7 @@ export default defineConfig({
       projectId: 'surxnzd38u',
     }),
   ],
-  site: 'https://your-domain.com', // Update with your actual domain
+  site: 'https://learnt.developingdvlpr.com',
   build: {
     inlineStylesheets: 'auto',
   },

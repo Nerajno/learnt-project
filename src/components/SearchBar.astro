@@ -1,8 +1,15 @@
 ---
-import { getUniqueCategories, getUniqueTechnologies } from '../data/projects';
+import {
+  getUniqueCategories,
+  getUniqueTechnologies,
+  getUniqueTags,
+  getProjectYears
+} from '../data/projects';
 
 const categories = getUniqueCategories();
 const technologies = getUniqueTechnologies();
+const tags = getUniqueTags();
+const years = getProjectYears();
 
 // Get current URL params for initial values
 const url = Astro.url;
@@ -12,120 +19,254 @@ const currentCategory = searchParams.get('category') || '';
 const currentStatus = searchParams.get('status') || '';
 const currentDifficulty = searchParams.get('difficulty') || '';
 const currentTechnology = searchParams.get('technology') || '';
+const currentPhase = searchParams.get('phase') || '';
+const currentYear = searchParams.get('year') || '';
+const currentTag = searchParams.get('tag') || '';
 ---
 
 <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-8 shadow-sm">
-  <form id="search-form" class="space-y-4" method="GET" action="/learnt">
+  <form id="search-form" class="space-y-6" method="GET" action="/learnt">
     <!-- Search Input -->
-    <div class="relative">
-      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-        </svg>
+    <div>
+      <label for="search-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        Search Projects
+      </label>
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+        <input
+          type="search"
+          id="search-input"
+          name="search"
+          value={currentSearch}
+          placeholder="Search by title, description, technology, or tag..."
+          class="input pl-10 pr-10"
+          autocomplete="off"
+        />
+        <!-- Clear search button -->
+        <button
+          type="button"
+          id="clear-search"
+          class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+          style={currentSearch ? 'display: flex;' : 'display: none;'}
+          aria-label="Clear search"
+        >
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
       </div>
-      <input
-        type="search"
-        id="search-input"
-        name="search"
-        value={currentSearch}
-        placeholder="Search projects, technologies, or keywords..."
-        class="input pl-10 pr-4"
-        autocomplete="off"
-      />
-      <!-- Clear search button -->
+    </div>
+
+    <!-- Primary Filters Row -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+        Primary Filters
+      </label>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Category Filter -->
+        <div>
+          <label for="category-select" class="sr-only">Category</label>
+          <select id="category-select" name="category" class="input">
+            <option value="">All Categories</option>
+            {categories.map((category) => (
+              <option value={category} selected={currentCategory === category}>
+                {category.charAt(0).toUpperCase() + category.slice(1)}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <!-- Status Filter -->
+        <div>
+          <label for="status-select" class="sr-only">Status</label>
+          <select id="status-select" name="status" class="input">
+            <option value="">All Statuses</option>
+            <option value="completed" selected={currentStatus === 'completed'}>Completed</option>
+            <option value="in-progress" selected={currentStatus === 'in-progress'}>In Progress</option>
+            <option value="planned" selected={currentStatus === 'planned'}>Planned</option>
+            <option value="archived" selected={currentStatus === 'archived'}>Archived</option>
+          </select>
+        </div>
+
+        <!-- Phase Filter -->
+        <div>
+          <label for="phase-select" class="sr-only">Phase</label>
+          <select id="phase-select" name="phase" class="input">
+            <option value="">All Phases</option>
+            <option value="active" selected={currentPhase === 'active'}>Active</option>
+            <option value="sunset" selected={currentPhase === 'sunset'}>Sunset</option>
+            <option value="archived" selected={currentPhase === 'archived'}>Archived</option>
+          </select>
+        </div>
+
+        <!-- Year Filter -->
+        <div>
+          <label for="year-select" class="sr-only">Year</label>
+          <select id="year-select" name="year" class="input">
+            <option value="">All Years</option>
+            {years.map((year) => (
+              <option value={year} selected={currentYear === year.toString()}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secondary Filters Row -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+        Additional Filters
+      </label>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Difficulty Filter -->
+        <div>
+          <label for="difficulty-select" class="sr-only">Difficulty</label>
+          <select id="difficulty-select" name="difficulty" class="input">
+            <option value="">All Difficulty Levels</option>
+            <option value="beginner" selected={currentDifficulty === 'beginner'}>Beginner</option>
+            <option value="intermediate" selected={currentDifficulty === 'intermediate'}>Intermediate</option>
+            <option value="advanced" selected={currentDifficulty === 'advanced'}>Advanced</option>
+          </select>
+        </div>
+
+        <!-- Technology Filter -->
+        <div>
+          <label for="technology-select" class="sr-only">Technology</label>
+          <select id="technology-select" name="technology" class="input">
+            <option value="">All Technologies</option>
+            {technologies.map((tech) => (
+              <option value={tech} selected={currentTechnology === tech}>
+                {tech}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <!-- Tag Filter -->
+        <div>
+          <label for="tag-select" class="sr-only">Tag</label>
+          <select id="tag-select" name="tag" class="input">
+            <option value="">All Tags</option>
+            {tags.map((tag) => (
+              <option value={tag} selected={currentTag === tag}>
+                {tag}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row gap-3 justify-between items-center pt-2">
+      <div class="flex gap-3 w-full sm:w-auto">
+        <button type="submit" class="btn-primary flex-1 sm:flex-initial">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+          Apply Filters
+        </button>
+        <button
+          type="button"
+          id="clear-all-filters"
+          class="btn-secondary flex-1 sm:flex-initial"
+        >
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+          Clear All
+        </button>
+      </div>
+
+      <!-- Toggle Advanced Filters (Mobile) -->
       <button
         type="button"
-        id="clear-search"
-        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-        style={currentSearch ? 'display: flex;' : 'display: none;'}
-        aria-label="Clear search"
+        id="toggle-advanced"
+        class="text-sm text-primary-600 dark:text-primary-400 hover:underline sm:hidden"
       >
-        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-        </svg>
+        Show Advanced Filters
       </button>
     </div>
 
-    <!-- Filters Row -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <!-- Category Filter -->
-      <div>
-        <label for="category-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          Category
-        </label>
-        <select id="category-select" name="category" class="input">
-          <option value="">All Categories</option>
-          {categories.map((category) => (
-            <option value={category} selected={currentCategory === category}>
-              {category.charAt(0).toUpperCase() + category.slice(1)}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <!-- Status Filter -->
-      <div>
-        <label for="status-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          Status
-        </label>
-        <select id="status-select" name="status" class="input">
-          <option value="">All Statuses</option>
-          <option value="active" selected={currentStatus === 'active'}>Active</option>
-          <option value="sunset" selected={currentStatus === 'sunset'}>Sunset</option>
-          <option value="archived" selected={currentStatus === 'archived'}>Archived</option>
-        </select>
-      </div>
-
-      <!-- Difficulty Filter -->
-      <div>
-        <label for="difficulty-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          Difficulty
-        </label>
-        <select id="difficulty-select" name="difficulty" class="input">
-          <option value="">All Levels</option>
-          <option value="beginner" selected={currentDifficulty === 'beginner'}>Beginner</option>
-          <option value="intermediate" selected={currentDifficulty === 'intermediate'}>Intermediate</option>
-          <option value="advanced" selected={currentDifficulty === 'advanced'}>Advanced</option>
-        </select>
-      </div>
-
-      <!-- Technology Filter -->
-      <div>
-        <label for="technology-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          Technology
-        </label>
-        <select id="technology-select" name="technology" class="input">
-          <option value="">All Technologies</option>
-          {technologies.map((tech) => (
-            <option value={tech} selected={currentTechnology === tech}>
-              {tech}
-            </option>
-          ))}
-        </select>
-      </div>
-    </div>
-
-    <!-- Submit Button -->
-    <div class="flex justify-end">
-      <button type="submit" class="btn btn-primary">Apply Filters</button>
+    <!-- Filter Summary -->
+    <div id="filter-summary" class="text-sm text-gray-600 dark:text-gray-400 pt-2 border-t border-gray-200 dark:border-gray-700">
+      <!-- Dynamically updated by JavaScript -->
     </div>
   </form>
 </div>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("search-form");
     const clearBtn = document.getElementById("clear-search");
-    const searchInput = document.getElementById("search-input");
+    const searchInput = document.getElementById("search-input") as HTMLInputElement;
+    const clearAllBtn = document.getElementById("clear-all-filters");
+    const filterSummary = document.getElementById("filter-summary");
 
+    // Clear search button functionality
     if (clearBtn && searchInput) {
       clearBtn.addEventListener("click", () => {
         searchInput.value = "";
         clearBtn.style.display = "none";
+        searchInput.focus();
       });
 
       searchInput.addEventListener("input", () => {
         clearBtn.style.display = searchInput.value ? "flex" : "none";
       });
     }
+
+    // Clear all filters
+    if (clearAllBtn) {
+      clearAllBtn.addEventListener("click", () => {
+        window.location.href = "/learnt";
+      });
+    }
+
+    // Update filter summary
+    function updateFilterSummary() {
+      if (!form || !filterSummary) return;
+
+      const formData = new FormData(form as HTMLFormElement);
+      const activeFilters: string[] = [];
+
+      for (const [key, value] of formData.entries()) {
+        if (value && value !== "") {
+          const input = form.querySelector(`[name="${key}"]`) as HTMLSelectElement | HTMLInputElement;
+          if (input) {
+            let displayValue = value as string;
+
+            // For select elements, get the selected option text
+            if (input.tagName === "SELECT") {
+              const selectedOption = input.options[input.selectedIndex];
+              displayValue = selectedOption.text;
+            }
+
+            activeFilters.push(`<strong>${key.charAt(0).toUpperCase() + key.slice(1)}:</strong> ${displayValue}`);
+          }
+        }
+      }
+
+      if (activeFilters.length > 0) {
+        filterSummary.innerHTML = `<div class="flex items-start gap-2"><svg class="w-4 h-4 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg><span>Active filters: ${activeFilters.join(", ")}</span></div>`;
+      } else {
+        filterSummary.innerHTML = '<div class="flex items-center gap-2 text-gray-500"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>No filters applied - showing all projects</div>';
+      }
+    }
+
+    // Update summary on page load
+    updateFilterSummary();
+
+    // Update summary when filters change
+    if (form) {
+      const selects = form.querySelectorAll("select");
+      selects.forEach(select => {
+      });
+    }
   });
-</script>

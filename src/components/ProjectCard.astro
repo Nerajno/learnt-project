@@ -56,14 +56,14 @@ function getCategoryIcon(category: string) {
   class={`card hover-lift group ${featured ? "ring-2 ring-primary-200 dark:ring-primary-800" : ""} animate-fade-in`}
 >
   <!-- Project Image -->
-  <div class="relative overflow-hidden rounded-t-xl">
+  <div class="relative overflow-hidden rounded-t-xl bg-gray-100 dark:bg-gray-800">
     <img
-      src={project.screenshot}
-      alt={`Screenshot of ${project.title}`}
+      src={project.screenshot || '/images/project-placeholder.svg'}
+      alt={project.altText || `Screenshot of ${project.title}`}
       class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
       loading="lazy"
       decoding="async"
-      onerror="this.src='/images/placeholder-project.png'"
+      onerror="this.src='/images/project-placeholder.svg'"
     />
 
     <!-- Overlay with links on hover -->

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:0.1" />
+    </linearGradient>
+    <linearGradient id="iconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#f7fafc"/>
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  
+  <!-- Grid pattern -->
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+  </pattern>
+  <rect width="1200" height="630" fill="url(#grid)" opacity="0.3"/>
+  
+  <!-- Icon container -->
+  <g transform="translate(600, 315)">
+    <!-- Outer circle -->
+    <circle cx="0" cy="0" r="100" fill="white" opacity="0.9"/>
+    <circle cx="0" cy="0" r="100" fill="none" stroke="url(#iconGradient)" stroke-width="4" opacity="0.5"/>
+    
+    <!-- Code brackets icon -->
+    <g transform="scale(2.5)">
+      <!-- Left bracket -->
+      <path d="M-15,-12 L-20,-12 L-20,12 L-15,12" stroke="url(#iconGradient)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      
+      <!-- Right bracket -->
+      <path d="M15,-12 L20,-12 L20,12 L15,12" stroke="url(#iconGradient)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      
+      <!-- Slash -->
+      <line x1="-8" y1="15" x2="8" y2="-15" stroke="url(#iconGradient)" stroke-width="2" stroke-linecap="round"/>
+    </g>
+  </g>
+  
+  <!-- Text -->
+  <text x="600" y="460" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="600" fill="#4a5568" text-anchor="middle">
+    Project Screenshot
+  </text>
+  <text x="600" y="500" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="400" fill="#718096" text-anchor="middle">
+    Image coming soon
+  </text>
+  
+  <!-- Dark mode version -->
+  <style>
+    @media (prefers-color-scheme: dark) {
+      rect:first-child { fill: #1a202c; }
+      circle:first-of-type { fill: #2d3748; opacity: 0.9; }
+      text:first-of-type { fill: #e2e8f0; }
+      text:last-of-type { fill: #a0aec0; }
+      #grid path { stroke: #2d3748; }
+    }
+  </style>
+</svg>

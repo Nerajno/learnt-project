@@ -11,10 +11,12 @@ const { project } = Astro.props as { project: Project };
   </header>
 
   <img
-    src={project.image || "/images/placeholder-project.png"}
-    alt={project.title}
+    src={project.screenshot || "/images/project-placeholder.svg"}
+    alt={project.altText || project.title}
     class="w-full rounded-xl shadow mb-6"
+    loading="lazy"
     decoding="async"
+    onerror="this.src='/images/project-placeholder.svg'"
   />
 
   <!-- Meta -->

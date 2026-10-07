@@ -1,42 +1,35 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { Icon } from "astro-icon/components";
+import { site } from "../data/site";
 
-// Configuration object for easy maintenance
-const contactInfo = {
-  email: "you@example.com",
-  github: "yourusername",
-  linkedin: "yourusername",
-  twitter: "yourusername", // Optional: add more social links
-};
+const { github, linkedin, x } = site.social;
 
-// Generate contact links with metadata
 const contactLinks = [
   {
-    platform: "Email",
-    href: `mailto:${contactInfo.email}`,
-    label: contactInfo.email,
-    icon: "mail",
-    external: false,
-  },
-  {
     platform: "GitHub",
-    href: `https://github.com/${contactInfo.github}`,
-    label: `@${contactInfo.github}`,
+    href: github.url,
+    label: `@${github.handle}`,
     icon: "github",
     external: true,
   },
   {
     platform: "LinkedIn",
-    href: `https://linkedin.com/in/${contactInfo.linkedin}`,
-    label: `linkedin.com/in/${contactInfo.linkedin}`,
+    href: linkedin.url,
+    label: `linkedin.com/in/${linkedin.handle}`,
     icon: "linkedin",
+    external: true,
+  },
+  {
+    platform: "X",
+    href: x.url,
+    label: `@${x.handle}`,
+    icon: "x",
     external: true,
   },
 ];
 
 // SEO metadata
-const seoDescription = "Get in touch with me via email, GitHub, or LinkedIn. Open for questions and collaboration.";
+const seoDescription = "Get in touch with me via GitHub, LinkedIn, or X. Open for questions and collaboration.";
 ---
 
 <Layout title="Contact" description={seoDescription}>

@@ -6,6 +6,13 @@ const { github, linkedin, x } = site.social;
 
 const contactLinks = [
   {
+    platform: "Portfolio",
+    href: site.portfolio,
+    label: new URL(site.portfolio).host,
+    icon: "globe",
+    external: true,
+  },
+  {
     platform: "GitHub",
     href: github.url,
     label: `@${github.handle}`,

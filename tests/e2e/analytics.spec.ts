@@ -1,4 +1,4 @@
-import { test, expect } from './test';
+import { ANALYTICS, test, expect } from './test';
 
 test('analytics tags are configured with real IDs', async ({ request }) => {
   const html = await (await request.get('/')).text();
@@ -8,12 +8,13 @@ test('analytics tags are configured with real IDs', async ({ request }) => {
   expect(html).toContain('type="text/partytown"');
 });
 
-test('test runs send no GA hits', async ({ page }) => {
-  const hits: string[] = [];
-  page.on('requestfinished', (req) => {
-    if (req.url().includes('google-analytics.com/g/collect')) hits.push(req.url());
+// Aborted requests never produce a response, so any response here means
+// an analytics request (GA4 or Clarity) actually reached a server.
+test('no analytics request gets a response during tests', async ({ page }) => {
+  const reached: string[] = [];
+  page.on('response', (res) => {
+    if (ANALYTICS.test(res.url())) reached.push(res.url());
   });
   await page.goto('/');
-  await page.waitForLoadState('networkidle');
-  expect(hits).toEqual([]);
+  expect(reached).toEqual([]);
 });

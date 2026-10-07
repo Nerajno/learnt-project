@@ -1,6 +1,6 @@
 import { test as base, expect } from '@playwright/test';
 
-const ANALYTICS = /(googletagmanager\.com|google-analytics\.com|clarity\.ms)/;
+export const ANALYTICS = /(googletagmanager\.com|google-analytics\.com|clarity\.ms)/;
 
 // Abort analytics so test runs never send hits to GA4 or Clarity.
 export const test = base.extend({

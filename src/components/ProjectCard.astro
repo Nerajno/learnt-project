@@ -202,24 +202,6 @@ function getCategoryIcon(category: string) {
         }
       </div>
     </div>
-
-    <!-- Progress indicator for in-progress projects -->
-    {
-      project.status === "in-progress" && (
-        <div class="mb-4">
-          <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-1">
-            <span>Progress</span>
-            <span>75%</span>
-          </div>
-          <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-            <div
-              class="bg-primary-600 h-2 rounded-full transition-all duration-300"
-              style="width: 75%"
-            />
-          </div>
-        </div>
-      )
-    }
   </div>
 
   <!-- Card Footer -->

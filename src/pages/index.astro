@@ -3,7 +3,10 @@ import Layout from '../layouts/Layout.astro';
 import ProjectList from '../components/ProjectList.astro';
 import { getAllProjects } from '../data/projects';
 
-const featuredProjects = getAllProjects().filter(project => project.featured);
+// Learnt is for past projects; living ones are listed on the About page.
+const featuredProjects = getAllProjects().filter(
+  project => project.featured && project.phase !== 'active'
+);
 ---
 
 <Layout title="Welcome | Learnt">

@@ -2194,8 +2194,9 @@ export function getProjectsByPhase(phase: string): Project[] {
   return projects.filter(project => project.phase === phase);
 }
 
+// Learnt is for past projects; living ones are listed on the About page.
 export function getFeaturedProjects(): Project[] {
-  return projects.filter(project => project.featured);
+  return projects.filter(project => project.featured && project.phase !== 'active');
 }
 
 export function getProjectsByTechnology(tech: string): Project[] {

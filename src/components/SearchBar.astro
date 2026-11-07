@@ -35,18 +35,18 @@ const years = getProjectYears();
           type="button"
           data-stage-filter=""
           aria-pressed="true"
-          class="rounded-full border border-gray-300 dark:border-gray-600 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 hover:border-primary-400 aria-pressed:bg-primary-600 aria-pressed:text-white aria-pressed:border-primary-600"
+          class="rounded-full border border-gray-300 dark:border-gray-600 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 hover:border-primary-400 aria-pressed:bg-primary-700 aria-pressed:text-white aria-pressed:border-primary-700"
         >
-          All <span class="ml-1 text-xs opacity-70">{total}</span>
+          All <span class="ml-1 text-xs">{total}</span>
         </button>
         {STAGES.map((stage) => (
           <button
             type="button"
             data-stage-filter={stage.value}
             aria-pressed="false"
-            class="rounded-full border border-gray-300 dark:border-gray-600 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 hover:border-primary-400 aria-pressed:bg-primary-600 aria-pressed:text-white aria-pressed:border-primary-600"
+            class="rounded-full border border-gray-300 dark:border-gray-600 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 hover:border-primary-400 aria-pressed:bg-primary-700 aria-pressed:text-white aria-pressed:border-primary-700"
           >
-            {stage.label} <span class="ml-1 text-xs opacity-70">{counts[stage.value]}</span>
+            {stage.label} <span class="ml-1 text-xs">{counts[stage.value]}</span>
           </button>
         ))}
       </div>

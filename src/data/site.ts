@@ -2,6 +2,8 @@
 export const site = {
   name: 'Nerando Johnson',
   portfolio: 'https://developingdvlpr.com/',
+  blog: 'https://developingdvlpr.com/blog',
+  garden: 'https://garden.developingdvlpr.com/',
   social: {
     github: { handle: 'Nerajno', url: 'https://github.com/Nerajno' },
     linkedin: { handle: 'nerando-johnson', url: 'https://www.linkedin.com/in/nerando-johnson/' },

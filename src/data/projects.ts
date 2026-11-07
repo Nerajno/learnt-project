@@ -2114,17 +2114,12 @@ export function getProjectStats() {
 
 // Get projects by year
 export function getProjectsByYear(year: number): Project[] {
-  return projects.filter(project => {
-    const projectYear = new Date(project.dateCreated || project.dateStarted).getFullYear();
-    return projectYear === year;
-  });
+  return projects.filter(project => project.born.slice(0, 4) === String(year));
 }
 
 // Get all years with projects
 export function getProjectYears(): number[] {
-  const years = projects.map(project =>
-    new Date(project.dateCreated || project.dateStarted).getFullYear()
-  );
+  const years = projects.map(project => Number(project.born.slice(0, 4)));
   return [...new Set(years)].sort((a, b) => b - a);
 }
 
@@ -2136,11 +2131,7 @@ export function getProjectsByDifficulty(difficulty: string): Project[] {
 // Get recent projects (last n projects)
 export function getRecentProjects(count: number = 5): Project[] {
   return [...projects]
-    .sort((a, b) => {
-      const dateA = new Date(a.dateCreated || a.dateStarted).getTime();
-      const dateB = new Date(b.dateCreated || b.dateStarted).getTime();
-      return dateB - dateA;
-    })
+    .sort((a, b) => b.born.localeCompare(a.born))
     .slice(0, count);
 }
 

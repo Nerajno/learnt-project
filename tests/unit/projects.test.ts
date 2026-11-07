@@ -1,5 +1,31 @@
 import { describe, expect, it } from 'vitest';
-import { getFeaturedProjects, projects } from '../../src/data/projects';
+import {
+  getFeaturedProjects,
+  getProjectYears,
+  getProjectsByYear,
+  getRecentProjects,
+  projects,
+} from '../../src/data/projects';
+
+describe('date helpers use born (#15)', () => {
+  it('getRecentProjects is ordered by born descending', () => {
+    const born = getRecentProjects(5).map((p) => p.born);
+    expect([...born].sort().reverse()).toEqual(born);
+  });
+
+  it('getProjectsByYear buckets by the born year, timezone-stable', () => {
+    const expected = projects
+      .filter((p) => p.born.startsWith('2023'))
+      .map((p) => p.slug)
+      .sort();
+    expect(getProjectsByYear(2023).map((p) => p.slug).sort()).toEqual(expected);
+  });
+
+  it('getProjectYears returns the born years, newest first', () => {
+    const expected = [...new Set(projects.map((p) => Number(p.born.slice(0, 4))))].sort((a, b) => b - a);
+    expect(getProjectYears()).toEqual(expected);
+  });
+});
 
 describe('graveyard dates (#15)', () => {
   const ISO = /^\d{4}-\d{2}-\d{2}$/;

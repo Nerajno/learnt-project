@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { projects, type DeepDive } from '../src/data/projects';
 
 // #17: the deepDive block covers VWC §4 for headstone projects only.
+// Type-only fixtures: checked by `npm run typecheck`, not at runtime.
 const full: DeepDive = {
   problem: 'Students lost track of assignments across tools.',
   successCriteria: ['Create, edit and delete notes', 'Works as a single page'],
@@ -17,19 +18,15 @@ const full: DeepDive = {
 };
 
 const preAi: DeepDive = { ...full, ai: 'No AI tools used' };
+void preAi;
 
 describe('deepDive schema (#17)', () => {
-  it('accepts a full block and the "No AI tools used" form', () => {
-    expect(full.tradeoffs[0].decision).toBeTruthy();
-    expect(preAi.ai).toBe('No AI tools used');
-  });
-
-  it('only headstone projects carry a deepDive', () => {
+  it('no non-headstone project has a deepDive', () => {
     const offenders = projects.filter((p) => p.deepDive && p.tier !== 'headstone').map((p) => p.slug);
     expect(offenders).toEqual([]);
   });
 
-  it('headstones keep their v2 ideas in deepDive.v2, not nextSteps', () => {
+  it('no headstone has nextSteps (v2 ideas belong in deepDive.v2)', () => {
     const offenders = projects.filter((p) => p.tier === 'headstone' && p.nextSteps?.length).map((p) => p.slug);
     expect(offenders).toEqual([]);
   });

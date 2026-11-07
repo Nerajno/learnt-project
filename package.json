@@ -9,7 +9,8 @@
     "astro": "astro",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "astro build && playwright test"
+    "test:e2e": "astro build && playwright test",
+    "typecheck": "tsc --noEmit --strict --skipLibCheck --module esnext --moduleResolution bundler --target es2022 src/data/projects.ts tests/deepdive.test.ts"
   },
   "dependencies": {
     "@astrojs/partytown": "^2.1.4",

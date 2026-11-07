@@ -142,3 +142,52 @@ export function cardDataset(item: ArchiveItem): Record<string, string> {
     'data-search': item.search,
   };
 }
+
+export function matchesFilters(item: ArchiveItem, filters: ArchiveFilters): boolean {
+  const q = filters.q.trim().toLowerCase();
+  if (q && !item.search.includes(q)) return false;
+  if (filters.stage && item.stage !== filters.stage) return false;
+  if (filters.category && item.category !== filters.category) return false;
+  if (filters.year !== null && item.year !== filters.year) return false;
+  return true;
+}
+
+function byTitle(a: ArchiveItem, b: ArchiveItem): number {
+  return a.title.localeCompare(b.title);
+}
+
+export function sortProjects(items: ArchiveItem[], sort: Sort): ArchiveItem[] {
+  const copy = [...items];
+  copy.sort((a, b) => {
+    let primary = 0;
+
+    if (sort === 'newest') {
+      primary = a.born < b.born ? 1 : a.born > b.born ? -1 : 0;
+    } else if (sort === 'oldest') {
+      primary = a.born < b.born ? -1 : a.born > b.born ? 1 : 0;
+    } else {
+      const aDays = lifespanDays(a);
+      const bDays = lifespanDays(b);
+      if (aDays === null && bDays === null) primary = 0;
+      else if (aDays === null) primary = 1;
+      else if (bDays === null) primary = -1;
+      else primary = sort === 'longest' ? bDays - aDays : aDays - bDays;
+    }
+
+    return primary || byTitle(a, b);
+  });
+  return copy;
+}
+
+export function filterProjects(items: ArchiveItem[], filters: ArchiveFilters): ArchiveItem[] {
+  return sortProjects(
+    items.filter((item) => matchesFilters(item, filters)),
+    filters.sort,
+  );
+}
+
+export function countByStage(items: ArchiveItem[]): Record<Stage, number> {
+  const counts: Record<Stage, number> = { seed: 0, sprout: 0, shipped: 0, composted: 0 };
+  for (const item of items) counts[item.stage] += 1;
+  return counts;
+}

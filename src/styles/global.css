@@ -199,3 +199,13 @@
     @apply focus-within:ring-2 focus-within:ring-primary-500 focus-within:ring-offset-2;
   }
 }
+/* Filtered archive cards must stay hidden even when a utility sets display. */
+[hidden] {
+  display: none !important;
+}
+
+/* The archive re-renders order on every filter change; replaying the entrance
+   animation makes all 42 cards flash on each keystroke. */
+#project-list .animate-fade-in {
+  animation: none;
+}

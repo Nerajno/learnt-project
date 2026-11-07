@@ -243,6 +243,7 @@ const current =
         if (!mobileMenu || !mobileMenuToggle) return;
         mobileMenu.classList.toggle('hidden', !open);
         mobileMenuToggle.setAttribute('aria-expanded', String(open));
+        mobileMenuToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
         if (open) mobileMenu.querySelector('a')?.focus();
       };
 
@@ -299,11 +300,11 @@ const current =
       }
 
       .footer-link {
-        @apply text-soft hover:text-accent-hover underline underline-offset-2 transition-colors;
+        @apply inline-flex items-center justify-center min-h-[44px] min-w-[44px] text-soft hover:text-accent-hover underline underline-offset-2 transition-colors;
       }
 
       .social-link {
-        @apply inline-flex items-center min-h-[44px] text-soft hover:text-accent-hover underline underline-offset-2 transition-colors;
+        @apply inline-flex items-center justify-center min-h-[44px] min-w-[44px] text-soft hover:text-accent-hover underline underline-offset-2 transition-colors;
       }
     </style>
   </body>

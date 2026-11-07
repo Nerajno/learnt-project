@@ -177,7 +177,7 @@
 
   /* Container utilities */
   .container-custom {
-    @apply max-w-[1160px] mx-auto px-6;
+    @apply max-w-[1160px] mx-auto px-[24px];
   }
 
   .section-padding {

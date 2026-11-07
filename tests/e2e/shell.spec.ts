@@ -4,6 +4,7 @@ import { test, expect } from './test';
 const routes = [
   ['/', 'Home'],
   ['/learnt/', 'Archive'],
+  ['/learnt/trumma-drum-machine/', 'Archive'],
   ['/about/', 'About'],
   ['/contact/', 'Contact'],
 ] as const;
@@ -69,26 +70,33 @@ test('mobile menu opens, closes with Escape, and returns focus', async ({ page }
 
   await button.click();
   await expect(button).toHaveAttribute('aria-expanded', 'true');
+  await expect(button).toHaveAttribute('aria-label', 'Close menu');
   await expect(menu).toBeVisible();
   await expect(menu.getByRole('link', { name: 'Home', exact: true })).toBeFocused();
 
   await page.keyboard.press('Escape');
   await expect(button).toHaveAttribute('aria-expanded', 'false');
+  await expect(button).toHaveAttribute('aria-label', 'Open menu');
   await expect(menu).toBeHidden();
   await expect(button).toBeFocused();
 
   await page.keyboard.press('Enter');
   await expect(button).toHaveAttribute('aria-expanded', 'true');
+  await page.locator('main').click();
+  await expect(button).toHaveAttribute('aria-expanded', 'false');
+  await expect(menu).toBeHidden();
 });
 
 test('tap targets are at least 44px', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto('/');
-  const targets = [
+  const desktop = [
     ...(await page.locator('.nav-link').all()),
     page.locator('#theme-toggle'),
+    ...(await page.locator('footer .social-link').all()),
+    ...(await page.locator('footer .footer-link').all()),
   ];
-  for (const target of targets) {
+  for (const target of desktop) {
     const box = await target.boundingBox();
     expect(box).not.toBeNull();
     expect(box!.width).toBeGreaterThanOrEqual(44);
@@ -97,7 +105,13 @@ test('tap targets are at least 44px', async ({ page }) => {
 
   await page.setViewportSize({ width: 360, height: 800 });
   await page.reload();
-  for (const target of [page.locator('#theme-toggle'), page.locator('#mobile-menu-toggle')]) {
+  await page.locator('#mobile-menu-toggle').click();
+  const mobile = [
+    ...(await page.locator('.mobile-nav-link').all()),
+    page.locator('#theme-toggle'),
+    page.locator('#mobile-menu-toggle'),
+  ];
+  for (const target of mobile) {
     const box = await target.boundingBox();
     expect(box).not.toBeNull();
     expect(box!.width).toBeGreaterThanOrEqual(44);
@@ -106,16 +120,29 @@ test('tap targets are at least 44px', async ({ page }) => {
 });
 
 test('keyboard focus is visible', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto('/');
-  await page.keyboard.press('Tab');
-  await page.keyboard.press('Tab');
-  const outline = await page.evaluate(() => {
-    const el = document.activeElement as HTMLElement;
-    const style = getComputedStyle(el);
-    return { outlineStyle: style.outlineStyle, outlineWidth: style.outlineWidth };
-  });
-  expect(outline.outlineStyle).not.toBe('none');
-  expect(outline.outlineWidth).not.toBe('0px');
+
+  const outline = () =>
+    page.evaluate(() => {
+      const el = document.activeElement as HTMLElement;
+      const style = getComputedStyle(el);
+      return { id: el.id, outlineStyle: style.outlineStyle, outlineWidth: style.outlineWidth };
+    });
+
+  // skip link -> wordmark -> Home nav link
+  for (let i = 0; i < 3; i++) await page.keyboard.press('Tab');
+  let style = await outline();
+  expect(style.id).not.toBe('theme-toggle');
+  expect(style.outlineStyle).not.toBe('none');
+  expect(style.outlineWidth).not.toBe('0px');
+
+  // Archive, About, Contact, external, toggle
+  for (let i = 0; i < 5; i++) await page.keyboard.press('Tab');
+  style = await outline();
+  expect(style.id).toBe('theme-toggle');
+  expect(style.outlineStyle).not.toBe('none');
+  expect(style.outlineWidth).not.toBe('0px');
 });
 
 test('no horizontal overflow at 360px', async ({ page }) => {

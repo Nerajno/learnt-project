@@ -15,7 +15,10 @@ for (const slug of ['trumma-drum-machine', 'trapper-keeper-v1']) {
     const countText = await card(page, slug).getByTestId('learnings-count').textContent();
     const count = Number(countText?.match(/\d+/)?.[0]);
 
+    expect(count, 'card shows a learnings count').toBeGreaterThan(0);
+
     await page.goto(`/learnt/${slug}/`);
+    await expect(page.getByTestId('learnings-list')).toHaveCount(1);
     await expect(page.getByTestId('learnings-list').locator('li')).toHaveCount(count);
   });
 }
@@ -37,6 +40,8 @@ test('every card matches its detail page on date and learnings count', async ({ 
     const list = html.match(/data-testid="learnings-list"[^>]*>([\s\S]*?)<\/ul>/)?.[1] ?? '';
     const rendered = (list.match(/<li\b/g) ?? []).length;
     const want = fromCards.get(slug)!;
+    expect(want.count, `${slug} card count`).toBeGreaterThan(0);
+    expect(html, `${slug} learnings list`).toContain('data-testid="learnings-list"');
     expect(rendered, `${slug} learnings`).toBe(want.count);
     expect(html, `${slug} born date`).toContain(`datetime="${want.born}"`);
   }

@@ -14,8 +14,7 @@ function project(overrides: Partial<Project> = {}): Project {
     status: 'completed',
     difficulty: 'beginner',
     phase: 'active',
-    dateStarted: '2024-01-01',
-    dateCreated: '2024-01-01',
+    born: '2024-01-01',
     features: [],
     learnings: ['Learned something'],
     challenges: [],
@@ -60,15 +59,15 @@ describe('lifespanDays', () => {
 });
 
 describe('toArchiveItem', () => {
-  it('builds a lowercase search blob and normalised dates', () => {
+  it('builds a lowercase search blob and carries born/died', () => {
     const item = toArchiveItem(
       project({
         title: 'Rails Contacts',
         technologies: ['Ruby on Rails'],
         tags: ['CRUD'],
         learnings: ['MVC'],
-        dateCreated: '2024-03-02',
-        dateCompleted: '2024-03-05',
+        born: '2024-03-02',
+        died: '2024-03-05',
       }),
     );
     expect(item).toMatchObject({
@@ -86,24 +85,12 @@ describe('toArchiveItem', () => {
     expect(item.search).toBe(item.search.toLowerCase());
   });
 
-  it('falls back to dateStarted when dateCreated is absent', () => {
-    const item = toArchiveItem(project({ dateCreated: undefined, dateStarted: '2023-07-04' }));
-    expect(item.year).toBe(2023);
-    expect(item.born).toBe('2023-07-04');
+  it('leaves died empty for an open project', () => {
+    expect(toArchiveItem(project({ born: '2024-03-02' })).died).toBe('');
   });
 
-  it('derives the year from the ISO date string, not the local timezone', () => {
-    expect(toArchiveItem(project({ dateCreated: '2023-01-01' })).year).toBe(2023);
-  });
-
-  it('prefers dateCompleted, then sunsetDate, then dateSunset', () => {
-    expect(toArchiveItem(project({ dateCompleted: '2024-01-02' })).died).toBe('2024-01-02');
-    expect(
-      toArchiveItem(project({ dateCompleted: undefined, sunsetDate: '2024-02-03' })).died,
-    ).toBe('2024-02-03');
-    expect(
-      toArchiveItem(project({ dateCompleted: undefined, sunsetDate: undefined, dateSunset: '2024-03-04' })).died,
-    ).toBe('2024-03-04');
+  it('derives the year from the ISO born string', () => {
+    expect(toArchiveItem(project({ born: '2023-01-01' })).year).toBe(2023);
   });
 });
 

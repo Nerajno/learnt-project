@@ -86,17 +86,9 @@ export function deriveStage(project: Pick<Project, 'status' | 'phase'>): Stage {
   return 'composted';
 }
 
-function startDate(project: Project): string {
-  return project.dateCreated ?? project.dateStarted ?? '';
-}
-
-function endDate(project: Project): string {
-  return project.dateCompleted ?? project.sunsetDate ?? project.dateSunset ?? '';
-}
-
 export function toArchiveItem(project: Project): ArchiveItem {
-  const born = startDate(project);
-  const died = endDate(project);
+  const born = project.born;
+  const died = project.died ?? '';
   const yearMatch = /^(\d{4})/.exec(born);
   const search = [
     project.title,

@@ -60,4 +60,9 @@ describe('ProjectCard', () => {
     expect(html).toContain('data-year="2023"');
     expect(html).toContain('data-search="');
   });
+
+  it('shows the born date', async () => {
+    const html = await render(makeProject({ born: '2023-01-15' }));
+    expect(html).toContain('datetime="2023-01-15"');
+  });
 });

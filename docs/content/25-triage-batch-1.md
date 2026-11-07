@@ -8,11 +8,11 @@ Worksheet for [#25](https://github.com/Nerajno/learnt-project/issues/25). Fill i
 - **Blank for you:** `born`/`died` (your final pick), `outcome`, `impact` and `epitaph`. Write them in your own voice. #25 rule: no invented numbers.
 - **`outcome` and `impact`** are needed for headstones and markers only, not coursework. **`epitaph`** is needed for everyone.
 - `causeOfDeath` options: `shipped`, `superseded`, `outgrew-stack`, `course-ended`, `abandoned`, `merged-into`. Open (living) projects have none.
-- `stage` options (#39): `seed`, `sprout`, `shipped`, `composted`.
+- `stage` options (#39): `seed`, `sprout`, `shipped`, `composted`. `stage` isn't in the data yet: your answers are collected now, as #25 asks, and applied when #39 adds the field.
 
 ## Date evidence: read this first
 
-None of the 33 projects with your commits has data dates that match git. The current values look estimated: most fall on the 1st or 15th of a month.
+Source: GitHub API on 2026-11-07, counting only commits authored by `Nerajno` in each project's `githubUrl` repo. None of the 33 projects with your commits has data dates that match git. The current values look estimated: most fall on the 1st or 15th of a month.
 Git isn't automatically right either. Re-uploaded repos show later dates, and maintenance or dependency commits push `last` past the real end.
 For each project, pick whichever date reflects when the work actually happened.
 
@@ -32,7 +32,7 @@ For each project, pick whichever date reflects when the work actually happened.
 | tier | `marker` (keep?) | |
 | born / died | see dates above | |
 | causeOfDeath | — (open project) | |
-| stage | `sprout` | |
+| stage | `sprout`? | |
 | outcome | | |
 | impact | | |
 | epitaph | | |
@@ -51,7 +51,7 @@ For each project, pick whichever date reflects when the work actually happened.
 | tier | `marker` (keep?) | |
 | born / died | see dates above | |
 | causeOfDeath | — (open project) | |
-| stage | `sprout` | |
+| stage | `sprout`? | |
 | outcome | | |
 | impact | | |
 | epitaph | | |
@@ -108,7 +108,7 @@ For each project, pick whichever date reflects when the work actually happened.
 | tier | `marker` (keep?) | |
 | born / died | see dates above | |
 | causeOfDeath | — (open project) | |
-| stage | `sprout` | |
+| stage | `sprout`? | |
 | outcome | | |
 | impact | | |
 | epitaph | | |
@@ -119,7 +119,7 @@ For each project, pick whichever date reflects when the work actually happened.
 
 - **Dates in data:** born `2025-08-01` · died `— (open)`
 - **Your commits** (`Nerajno/learnt-project`, 69 commits): first `2025-08-23` · last `2026-11-07`
-- **Links:** [repo](https://github.com/Nerajno/learnt-project) · live `https://learnt.developingdvlpr.com` → HTTP 200
+- **Links:** [repo](https://github.com/Nerajno/learnt-project) · live `https://learnt.developingdvlpr.com` → HTTP 200 (checked 2026-11-07)
 - **Current:** tier `marker` · status `in-progress` · phase `active` · tags `astro, documentation, archive, portfolio, meta`
 
 | Field | Suggestion | Your answer |
@@ -127,7 +127,7 @@ For each project, pick whichever date reflects when the work actually happened.
 | tier | `marker` (keep?) | |
 | born / died | see dates above | |
 | causeOfDeath | — (open project) | |
-| stage | `sprout` | |
+| stage | `sprout`? | |
 | outcome | | |
 | impact | | |
 | epitaph | | |
@@ -183,8 +183,8 @@ For each project, pick whichever date reflects when the work actually happened.
 |---|---|---|
 | tier | `marker` (keep?) | |
 | born / died | see dates above | |
-| causeOfDeath | `superseded`, supersededBy `learnt-project` (per #25 comment) | |
-| stage | `composted` (per #25 comment, confirm) | |
+| causeOfDeath | `superseded`, supersededBy `learnt-project` (per [#25 comment](https://github.com/Nerajno/learnt-project/issues/25#issuecomment-6102909946)) | |
+| stage | `composted` (per [#25 comment](https://github.com/Nerajno/learnt-project/issues/25#issuecomment-6102909946), confirm) | |
 | outcome | | |
 | impact | | |
 | epitaph | | |
@@ -203,7 +203,7 @@ For each project, pick whichever date reflects when the work actually happened.
 | tier | `marker` (keep?) | |
 | born / died | see dates above | |
 | causeOfDeath | — (open project) | |
-| stage | `sprout` | |
+| stage | `sprout`? | |
 | outcome | | |
 | impact | | |
 | epitaph | | |
@@ -214,5 +214,5 @@ For each project, pick whichever date reflects when the work actually happened.
 
 - `side-project-status` is `completed` + `sunset`: Composted, superseded by `learnt-project`. Confirm?
 - Trapper Keeper V1 needs a real `causeOfDeath`.
-- `is-nerando-done-yet` and `vue-conf-workshop` are forks. Is the fork the project, or did you build on top of someone else's repo?
+- GitHub marks `is-nerando-done-yet` and `vue-conf-workshop` as forks (only `is-nerando-done-yet` has the `fork` tag in the data). Is the fork the project, or did you build on top of someone else's repo?
 - `portfolio-v3` and `github-profile`: your first commits are from 2024 and 2020, but the data says 2025. Is this the same repo that was reused for a new version?

@@ -58,8 +58,8 @@ const ogImage = image && publicFileExists(image) ? image : '/images/placeholder.
         'description': Astro.props.project.description,
         'image': new URL(ogImage, Astro.site).toString(),
         'url': new URL(Astro.url.pathname, Astro.site).toString(),
-        'datePublished': Astro.props.project.dateCreated,
-        'dateModified': Astro.props.project.dateCompleted || Astro.props.project.dateCreated,
+        'datePublished': Astro.props.project.born,
+        'dateModified': Astro.props.project.died ?? Astro.props.project.born,
         'author': {
           '@type': 'Person',
           'name': 'Nerando Johnson'

@@ -13,11 +13,15 @@ export interface Props {
 const { project, featured = false, showFullDescription = false } = Astro.props;
 const archiveMeta = cardDataset(toArchiveItem(project));
 
-// Format date for display
+// Format date for display without shifting date-only values by timezone
 function formatDate(dateString: string) {
-  return new Date(dateString).toLocaleDateString("en-US", {
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(dateString)
+    ? new Date(`${dateString}T00:00:00Z`)
+    : new Date(dateString);
+  return date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
+    timeZone: "UTC",
   });
 }
 
@@ -165,8 +169,8 @@ function getCategoryIcon(category: string) {
           </svg>
           <span class="capitalize">{project.category}</span>
           <span>•</span>
-          <time datetime={project.dateStarted}>
-            {formatDate(project.dateStarted)}
+          <time datetime={project.born}>
+            {formatDate(project.born)}
           </time>
         </div>
       </div>

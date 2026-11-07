@@ -68,7 +68,7 @@ const current =
     <meta property="twitter:image" content={new URL(ogImage, Astro.url)} />
     
     <!-- JSON-LD structured data (#28) -->
-    {jsonLd && <script type="application/ld+json" set:html={serializeJsonLd(jsonLd)} />}
+    {jsonLd && <script type="application/ld+json" is:inline set:html={serializeJsonLd(jsonLd)} />}
     <!-- GA4 || Google Analytics -->
     <script
       is:inline

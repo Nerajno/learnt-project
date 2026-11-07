@@ -103,7 +103,7 @@ const ogImage = publicFileExists(project.screenshot)
   : '/images/placeholder.png';
 const structuredData = projectJsonLd(
   project,
-  new URL(`/learnt/${project.slug}/`, Astro.site),
+  new URL(Astro.url.pathname, Astro.site), // same as Layout's canonical link
   new URL(ogImage, Astro.site),
 );
 

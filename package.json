@@ -8,12 +8,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "test": "vitest run",
-<<<<<<< HEAD
-    "test:e2e": "playwright test"
-=======
     "test:watch": "vitest",
     "test:e2e": "astro build && playwright test"
->>>>>>> origin/master
   },
   "dependencies": {
     "@astrojs/partytown": "^2.1.4",

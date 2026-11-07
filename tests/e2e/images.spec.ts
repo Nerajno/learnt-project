@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './test';
 
 const pages = ['/', '/learnt', '/learnt/trumma-drum-machine', '/learnt/trapper-keeper-v1'];
 

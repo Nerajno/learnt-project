@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-import { defineConfig } from '@playwright/test';
-
-// Port 4322 avoids the developer's `astro dev` server, which owns 4321.
-// A reused dev server would test the wrong build.
-export default defineConfig({
-  testDir: './tests/e2e',
-  use: { baseURL: 'http://localhost:4322' },
-  webServer: {
-    command: 'npm run build && npm run preview -- --port 4322',
-    url: 'http://localhost:4322',
-    reuseExistingServer: !process.env.CI,
-    timeout: 180_000,
-=======
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
@@ -34,6 +20,5 @@ export default defineConfig({
     command: 'npm run preview -- --host 127.0.0.1 --port 4321',
     url: 'http://127.0.0.1:4321',
     reuseExistingServer: !process.env.CI,
->>>>>>> origin/master
   },
 });

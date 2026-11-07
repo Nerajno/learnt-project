@@ -9,14 +9,14 @@ export interface Project {
   status: 'completed' | 'in-progress' | 'planned' | 'archived';
   difficulty: 'beginner' | 'intermediate' | 'advanced';
   phase: 'active' | 'sunset' | 'archived';
-  dateStarted: string;
-  dateCompleted?: string;
-  dateCreated?: string;
-  sunsetDate?: string;
+  born: string;
+  died?: string;
+  causeOfDeath?: 'shipped' | 'superseded' | 'outgrew-stack' | 'course-ended' | 'abandoned' | 'merged-into';
+  supersededBy?: string;
+  epitaph?: string;
   short?: string;
   learned?: string[];
   altText?: string;
-  dateSunset?: string;
   githubUrl?: string;
   liveUrl?: string;
   screenshot?: string;
@@ -39,7 +39,6 @@ export const projects: Project[] = [
     id: '1',
     title: 'Portfolio V3',
     short: 'Third iteration of my personal portfolio built with Astro',
-    dateCreated: '2025-09-15',
     learned: [
       'Astro static site generation',
       'Component-based architecture',
@@ -53,7 +52,7 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'in-progress',
     difficulty: 'intermediate',
-    dateStarted: '2025-08-01',
+    born: '2025-08-01',
     githubUrl: 'https://github.com/Nerajno/portfolio_v3',
     phase: 'active',
     features: [
@@ -90,7 +89,6 @@ export const projects: Project[] = [
     id: '2',
     title: 'Learnt Project',
     short: 'A graveyard for all my projects - documenting my learning journey',
-    dateCreated: '2025-09-15',
     learned: [
       'Project lifecycle management',
       'Documentation best practices',
@@ -105,7 +103,7 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'in-progress',
     difficulty: 'intermediate',
-    dateStarted: '2025-08-01',
+    born: '2025-08-01',
     githubUrl: 'https://github.com/Nerajno/learnt-project',
     liveUrl: 'https://learnt.developingdvlpr.com',
     phase: 'active',
@@ -150,7 +148,6 @@ export const projects: Project[] = [
     id: '3',
     title: 'Digital Garden',
     short: 'Personal knowledge base and note-taking system',
-    dateCreated: '2025-09-16',
     learned: [
       'Digital garden concepts',
       'Knowledge management systems',
@@ -165,7 +162,7 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'in-progress',
     difficulty: 'beginner',
-    dateStarted: '2025-09-01',
+    born: '2025-09-01',
     githubUrl: 'https://github.com/Nerajno/digital_garden',
     phase: 'active',
     features: [
@@ -202,7 +199,6 @@ export const projects: Project[] = [
     id: '4',
     title: 'Is Nerando Done Yet',
     short: 'Status keeper tracking project completion',
-    dateCreated: '2025-09-30',
     learned: [
       'Vue.js fundamentals',
       'Status tracking systems',
@@ -216,7 +212,7 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'in-progress',
     difficulty: 'beginner',
-    dateStarted: '2025-09-20',
+    born: '2025-09-20',
     githubUrl: 'https://github.com/Nerajno/isnerandodoneyet-com',
     phase: 'active',
     features: [
@@ -244,7 +240,6 @@ export const projects: Project[] = [
     id: '5',
     title: 'My Digital Mausoleum',
     short: 'Archive of personal learning projects and experiments',
-    dateCreated: '2024-12-01',
     learned: [
       'Project archival',
       'Documentation organization',
@@ -258,7 +253,7 @@ export const projects: Project[] = [
     category: 'design',
     status: 'in-progress',
     difficulty: 'beginner',
-    dateStarted: '2024-11-01',
+    born: '2024-11-01',
     githubUrl: 'https://github.com/NerajnoLearning/My-digital-Mausoleum',
     phase: 'active',
     features: [
@@ -291,7 +286,6 @@ export const projects: Project[] = [
     id: '6',
     title: 'Learnt V2',
     short: 'Second attempt at project graveyard - iteration and improvement',
-    dateCreated: '2025-08-20',
     learned: [
       'Iterating on previous work',
       'Astro fundamentals',
@@ -306,9 +300,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'archived',
     difficulty: 'intermediate',
-    dateStarted: '2025-08-10',
-    dateCompleted: '2025-08-20',
-    sunsetDate: '2025-08-20',
+    born: '2025-08-10',
+    died: '2025-08-20',
     githubUrl: 'https://github.com/Nerajno/learnt_2',
     phase: 'sunset',
     features: [
@@ -336,7 +329,6 @@ export const projects: Project[] = [
     id: '7',
     title: 'Learnt V1',
     short: 'First attempt at building a project graveyard',
-    dateCreated: '2025-08-16',
     learned: [
       'Starting projects',
       'Basic Astro setup',
@@ -350,9 +342,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'archived',
     difficulty: 'beginner',
-    dateStarted: '2025-08-05',
-    dateCompleted: '2025-08-16',
-    sunsetDate: '2025-08-16',
+    born: '2025-08-05',
+    died: '2025-08-16',
     githubUrl: 'https://github.com/Nerajno/learnt',
     phase: 'archived',
     features: [
@@ -379,7 +370,6 @@ export const projects: Project[] = [
     id: '8',
     title: 'Side Project Status Tracker',
     short: 'Vue-based tracker for managing multiple side projects',
-    dateCreated: '2025-05-04',
     learned: [
       'Project management',
       'Vue state management',
@@ -393,9 +383,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'completed',
     difficulty: 'intermediate',
-    dateStarted: '2025-04-15',
-    dateCompleted: '2025-05-04',
-    sunsetDate: '2025-06-01',
+    born: '2025-04-15',
+    died: '2025-06-01',
     githubUrl: 'https://github.com/Nerajno/v0-Side_project_Status',
     phase: 'sunset',
     features: [
@@ -426,7 +415,6 @@ export const projects: Project[] = [
     id: '9',
     title: 'Burble V1',
     short: 'React-based Netflix styled app with added features',
-    dateCreated: '2024-10-29',
     learned: [
       'React component architecture',
       'API integration',
@@ -441,9 +429,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'completed',
     difficulty: 'intermediate',
-    dateStarted: '2024-09-15',
-    dateCompleted: '2024-10-29',
-    sunsetDate: '2024-11-15',
+    born: '2024-09-15',
+    died: '2024-11-15',
     githubUrl: 'https://github.com/Nerajno/Burble-V1',
     phase: 'sunset',
     features: [
@@ -476,7 +463,6 @@ export const projects: Project[] = [
     id: '10',
     title: 'FreeCodeCamp Calculator',
     short: 'Calculator project for FreeCodeCamp Front End Development certification',
-    dateCreated: '2024-10-29',
     learned: [
       'TypeScript fundamentals',
       'Calculator logic implementation',
@@ -491,8 +477,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'completed',
     difficulty: 'beginner',
-    dateStarted: '2024-10-01',
-    dateCompleted: '2024-10-29',
+    born: '2024-10-01',
+    died: '2024-10-29',
     githubUrl: 'https://github.com/Nerajno/Ber-kna-FCCFEDL',
     phase: 'archived',
     features: [
@@ -524,7 +510,6 @@ export const projects: Project[] = [
     id: '11',
     title: 'Drum Machine - Trumma',
     short: 'Interactive drum machine built for FreeCodeCamp certification',
-    dateCreated: '2024-09-01',
     learned: [
       'Web Audio API',
       'Event handling for keyboard',
@@ -539,8 +524,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'completed',
     difficulty: 'intermediate',
-    dateStarted: '2024-08-15',
-    dateCompleted: '2024-09-01',
+    born: '2024-08-15',
+    died: '2024-09-01',
     githubUrl: 'https://github.com/NerajnoLearning/Trumma',
     liveUrl: 'https://drum-machine.freecodecamp.rocks/',
     phase: 'archived',
@@ -574,7 +559,6 @@ export const projects: Project[] = [
     id: '12',
     title: 'JavaScript30',
     short: '30 Day Vanilla JS Challenge by Wes Bos',
-    dateCreated: '2024-03-30',
     learned: [
       'Vanilla JavaScript mastery',
       'DOM manipulation techniques',
@@ -590,8 +574,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'completed',
     difficulty: 'beginner',
-    dateStarted: '2024-03-01',
-    dateCompleted: '2024-03-30',
+    born: '2024-03-01',
+    died: '2024-03-30',
     githubUrl: 'https://github.com/Nerajno/JavaScript30',
     phase: 'archived',
     features: [
@@ -627,7 +611,6 @@ export const projects: Project[] = [
     id: '13',
     title: 'Vue Conference Workshop',
     short: 'Proven patterns workshop materials from Vue Conf 2025',
-    dateCreated: '2025-05-19',
     learned: [
       'Vue.js best practices',
       'Component design patterns',
@@ -642,8 +625,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'completed',
     difficulty: 'advanced',
-    dateStarted: '2025-05-19',
-    dateCompleted: '2025-05-19',
+    born: '2025-05-19',
+    died: '2025-05-19',
     githubUrl: 'https://github.com/Nerajno/vue-conf-25-proven-patterns-workshop',
     phase: 'archived',
     features: [
@@ -676,7 +659,6 @@ export const projects: Project[] = [
     id: '14',
     title: 'FCC D3 Bar Chart',
     short: 'D3.js bar chart visualization for FreeCodeCamp certification',
-    dateCreated: '2024-06-01',
     learned: [
       'D3.js fundamentals',
       'SVG manipulation',
@@ -691,8 +673,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'completed',
     difficulty: 'intermediate',
-    dateStarted: '2024-05-20',
-    dateCompleted: '2024-06-01',
+    born: '2024-05-20',
+    died: '2024-06-01',
     githubUrl: 'https://github.com/NerajnoLearning/FCC_D3_Bars',
     phase: 'archived',
     features: [
@@ -725,7 +707,6 @@ export const projects: Project[] = [
     id: '15',
     title: 'FCC D3 Story',
     short: 'Culmination of D3 data visualization projects',
-    dateCreated: '2024-06-15',
     learned: [
       'Advanced D3.js techniques',
       'Data storytelling',
@@ -740,8 +721,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'completed',
     difficulty: 'advanced',
-    dateStarted: '2024-06-05',
-    dateCompleted: '2024-06-15',
+    born: '2024-06-05',
+    died: '2024-06-15',
     githubUrl: 'https://github.com/NerajnoLearning/FCC_D3_story',
     phase: 'archived',
     features: [
@@ -773,7 +754,6 @@ export const projects: Project[] = [
     id: '16',
     title: 'Vue Holiday Card Maker',
     short: 'Interactive holiday card creator built with Vue',
-    dateCreated: '2024-12-01',
     learned: [
       'Vue component design',
       'User customization features',
@@ -788,8 +768,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'completed',
     difficulty: 'intermediate',
-    dateStarted: '2024-11-15',
-    dateCompleted: '2024-12-01',
+    born: '2024-11-15',
+    died: '2024-12-01',
     githubUrl: 'https://github.com/NerajnoLearning/Vue_Holiday_Card_Maker',
     phase: 'archived',
     features: [
@@ -820,7 +800,6 @@ export const projects: Project[] = [
     id: '17',
     title: 'Assaggio FCC Project',
     short: 'Front-End Development Library Certification project #1',
-    dateCreated: '2023-09-16',
     learned: [
       'FreeCodeCamp certification requirements',
       'JavaScript DOM manipulation',
@@ -834,8 +813,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'completed',
     difficulty: 'beginner',
-    dateStarted: '2023-09-01',
-    dateCompleted: '2023-09-16',
+    born: '2023-09-01',
+    died: '2023-09-16',
     githubUrl: 'https://github.com/Nerajno/Assaggio-1-FCC_FEDLC',
     phase: 'archived',
     features: [
@@ -865,7 +844,6 @@ export const projects: Project[] = [
     id: '18',
     title: 'bRavur FCC Project',
     short: 'Front-End Development Library Certification project #4',
-    dateCreated: '2024-05-01',
     learned: [
       'Advanced React patterns',
       'State management',
@@ -879,8 +857,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'completed',
     difficulty: 'intermediate',
-    dateStarted: '2024-04-15',
-    dateCompleted: '2024-05-01',
+    born: '2024-04-15',
+    died: '2024-05-01',
     githubUrl: 'https://github.com/NerajnoLearning/bRavur-4-FCC_FEDLC',
     phase: 'archived',
     features: [
@@ -911,7 +889,6 @@ export const projects: Project[] = [
     id: '19',
     title: 'Toppur FCC Project',
     short: 'Front-End Development Library Certification project #5',
-    dateCreated: '2024-06-01',
     learned: [
       'Final FCC certification project',
       'Full application development',
@@ -925,8 +902,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'completed',
     difficulty: 'intermediate',
-    dateStarted: '2024-05-15',
-    dateCompleted: '2024-06-01',
+    born: '2024-05-15',
+    died: '2024-06-01',
     githubUrl: 'https://github.com/NerajnoLearning/NerajnoLearning-sToppur-5-FCC_FEDLC',
     phase: 'archived',
     features: [
@@ -958,7 +935,6 @@ export const projects: Project[] = [
     id: '20',
     title: 'Current Portfolio 2023',
     short: 'Portfolio website iteration from 2023',
-    dateCreated: '2024-03-15',
     learned: [
       'Portfolio design principles',
       'HTML and CSS best practices',
@@ -972,9 +948,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'archived',
     difficulty: 'beginner',
-    dateStarted: '2024-02-01',
-    dateCompleted: '2024-03-15',
-    sunsetDate: '2024-08-01',
+    born: '2024-02-01',
+    died: '2024-08-01',
     githubUrl: 'https://github.com/Nerajno/Current_Portfolio_2023',
     phase: 'sunset',
     features: [
@@ -1008,7 +983,6 @@ export const projects: Project[] = [
     id: '21',
     title: 'Hosted Blog V3',
     short: 'Vue-based personal blog, third iteration',
-    dateCreated: '2023-12-31',
     learned: [
       'Vue.js application structure',
       'Blog architecture',
@@ -1023,9 +997,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'archived',
     difficulty: 'intermediate',
-    dateStarted: '2023-12-01',
-    dateCompleted: '2023-12-31',
-    sunsetDate: '2024-06-01',
+    born: '2023-12-01',
+    died: '2024-06-01',
     githubUrl: 'https://github.com/Nerajno/hosted_Blog_v3',
     phase: 'sunset',
     features: [
@@ -1057,7 +1030,6 @@ export const projects: Project[] = [
     id: '22',
     title: 'Astro Blog',
     short: 'Blog experiment with Astro static site generator',
-    dateCreated: '2024-01-27',
     learned: [
       'Astro fundamentals',
       'Static site generation',
@@ -1071,9 +1043,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'archived',
     difficulty: 'beginner',
-    dateStarted: '2024-01-15',
-    dateCompleted: '2024-01-27',
-    sunsetDate: '2024-03-01',
+    born: '2024-01-15',
+    died: '2024-03-01',
     githubUrl: 'https://github.com/Nerajno/blog-Astro',
     phase: 'sunset',
     features: [
@@ -1104,7 +1075,6 @@ export const projects: Project[] = [
     id: '23',
     title: 'MDX Blog with Next.js',
     short: 'Self-hosted blog with TypeScript and MDX',
-    dateCreated: '2024-01-27',
     learned: [
       'Next.js framework',
       'MDX for blog posts',
@@ -1119,9 +1089,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'archived',
     difficulty: 'intermediate',
-    dateStarted: '2024-01-15',
-    dateCompleted: '2024-01-27',
-    sunsetDate: '2024-04-01',
+    born: '2024-01-15',
+    died: '2024-04-01',
     githubUrl: 'https://github.com/Nerajno/My-Self-hosted-TypeScript-Mdx-blog',
     phase: 'sunset',
     features: [
@@ -1153,7 +1122,6 @@ export const projects: Project[] = [
     id: '24',
     title: 'CV Website',
     short: 'Print-friendly, minimalist CV page',
-    dateCreated: '2023-12-27',
     learned: [
       'Print CSS',
       'Minimalist design',
@@ -1167,8 +1135,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'completed',
     difficulty: 'beginner',
-    dateStarted: '2023-12-20',
-    dateCompleted: '2023-12-27',
+    born: '2023-12-20',
+    died: '2023-12-27',
     githubUrl: 'https://github.com/Nerajno/cv',
     phase: 'active',
     features: [
@@ -1202,7 +1170,6 @@ export const projects: Project[] = [
     id: '25',
     title: 'Trapper Keeper V1',
     short: 'Rails SPA CRUD-style address book for managing contacts',
-    dateCreated: '2025-08-11',
     learned: [
       'Ruby on Rails fundamentals',
       'RESTful API design',
@@ -1217,8 +1184,8 @@ export const projects: Project[] = [
     category: 'fullstack',
     status: 'completed',
     difficulty: 'intermediate',
-    dateStarted: '2025-07-01',
-    dateCompleted: '2025-08-11',
+    born: '2025-07-01',
+    died: '2025-08-11',
     githubUrl: 'https://github.com/Nerajno/Trapper_Keeper-v1',
     phase: 'archived',
     features: [
@@ -1251,7 +1218,6 @@ export const projects: Project[] = [
     id: '26',
     title: 'DevConnector 2.0',
     short: 'MERN stack social network for developers',
-    dateCreated: '2023-06-08',
     learned: [
       'MERN stack development',
       'Full-stack application architecture',
@@ -1266,8 +1232,8 @@ export const projects: Project[] = [
     category: 'fullstack',
     status: 'completed',
     difficulty: 'advanced',
-    dateStarted: '2023-05-01',
-    dateCompleted: '2023-06-08',
+    born: '2023-05-01',
+    died: '2023-06-08',
     githubUrl: 'https://github.com/NerajnoLearning/devconnector_2.0',
     phase: 'archived',
     features: [
@@ -1303,7 +1269,6 @@ export const projects: Project[] = [
     id: '27',
     title: 'Frontend Final Project',
     short: 'Capstone project for Flatiron School bootcamp',
-    dateCreated: '2023-03-15',
     learned: [
       'Bootcamp best practices',
       'Full application development',
@@ -1318,8 +1283,8 @@ export const projects: Project[] = [
     category: 'fullstack',
     status: 'completed',
     difficulty: 'intermediate',
-    dateStarted: '2023-02-15',
-    dateCompleted: '2023-03-15',
+    born: '2023-02-15',
+    died: '2023-03-15',
     githubUrl: 'https://github.com/Nerajno/frontend_final_project',
     phase: 'archived',
     features: [
@@ -1352,7 +1317,6 @@ export const projects: Project[] = [
     id: '28',
     title: 'Backend Final Project',
     short: 'Backend capstone for bootcamp certification',
-    dateCreated: '2023-10-24',
     learned: [
       'Backend architecture',
       'Database design',
@@ -1367,8 +1331,8 @@ export const projects: Project[] = [
     category: 'backend',
     status: 'completed',
     difficulty: 'intermediate',
-    dateStarted: '2023-10-01',
-    dateCompleted: '2023-10-24',
+    born: '2023-10-01',
+    died: '2023-10-24',
     githubUrl: 'https://github.com/Nerajno/backend_final-project',
     phase: 'archived',
     features: [
@@ -1401,7 +1365,6 @@ export const projects: Project[] = [
     id: '29',
     title: 'Native Treats API',
     short: 'API for managing local treats and food items',
-    dateCreated: '2023-09-21',
     learned: [
       'API development',
       'Data modeling',
@@ -1416,8 +1379,8 @@ export const projects: Project[] = [
     category: 'backend',
     status: 'completed',
     difficulty: 'intermediate',
-    dateStarted: '2023-09-01',
-    dateCompleted: '2023-09-21',
+    born: '2023-09-01',
+    died: '2023-09-21',
     githubUrl: 'https://github.com/Nerajno/Native_treats_api',
     phase: 'archived',
     features: [
@@ -1450,7 +1413,6 @@ export const projects: Project[] = [
     id: '30',
     title: 'JP Morgan Forage Program',
     short: 'Software engineering virtual experience program tasks',
-    dateCreated: '2023-07-10',
     learned: [
       'Financial data visualization',
       'Python for finance',
@@ -1465,8 +1427,8 @@ export const projects: Project[] = [
     category: 'fullstack',
     status: 'completed',
     difficulty: 'intermediate',
-    dateStarted: '2023-07-01',
-    dateCompleted: '2023-07-10',
+    born: '2023-07-01',
+    died: '2023-07-10',
     githubUrl: 'https://github.com/Nerajno/forage-jpmc-swe-task-2',
     phase: 'archived',
     features: [
@@ -1501,7 +1463,6 @@ export const projects: Project[] = [
     id: '31',
     title: 'CS50P Final Project',
     short: 'Final project for Harvard\'s CS50 Python course',
-    dateCreated: '2024-08-02',
     learned: [
       'Python programming fundamentals',
       'Problem-solving with code',
@@ -1516,8 +1477,8 @@ export const projects: Project[] = [
     category: 'backend',
     status: 'completed',
     difficulty: 'intermediate',
-    dateStarted: '2024-07-01',
-    dateCompleted: '2024-08-02',
+    born: '2024-07-01',
+    died: '2024-08-02',
     githubUrl: 'https://github.com/NerajnoLearning/CS50P-Final_Project',
     phase: 'archived',
     features: [
@@ -1551,7 +1512,6 @@ export const projects: Project[] = [
     id: '32',
     title: '100 Days of Code Log',
     short: 'Daily log of 100 days of consistent coding practice',
-    dateCreated: '2024-08-02',
     learned: [
       'Consistency and discipline',
       'Daily practice importance',
@@ -1566,8 +1526,8 @@ export const projects: Project[] = [
     category: 'design',
     status: 'completed',
     difficulty: 'beginner',
-    dateStarted: '2024-05-01',
-    dateCompleted: '2024-08-02',
+    born: '2024-05-01',
+    died: '2024-08-02',
     githubUrl: 'https://github.com/Nerajno/100DaysOfCodeLog',
     phase: 'archived',
     features: [
@@ -1601,7 +1561,6 @@ export const projects: Project[] = [
     id: '33',
     title: 'FreeCodeCamp Fork',
     short: 'Personal fork of FreeCodeCamp for learning and contributions',
-    dateCreated: '2024-01-01',
     learned: [
       'Open source contribution',
       'Large codebase navigation',
@@ -1615,8 +1574,8 @@ export const projects: Project[] = [
     category: 'fullstack',
     status: 'archived',
     difficulty: 'advanced',
-    dateStarted: '2023-12-01',
-    dateCompleted: '2024-01-01',
+    born: '2023-12-01',
+    died: '2024-01-01',
     githubUrl: 'https://github.com/Nerajno/freeCodeCamp',
     phase: 'archived',
     features: [
@@ -1648,7 +1607,6 @@ export const projects: Project[] = [
     id: '34',
     title: 'Redux Reducer Bootcamp Exercise',
     short: 'Flatiron School Redux exercise for state management',
-    dateCreated: '2023-04-12',
     learned: [
       'Redux fundamentals',
       'State management patterns',
@@ -1663,8 +1621,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'completed',
     difficulty: 'intermediate',
-    dateStarted: '2023-04-10',
-    dateCompleted: '2023-04-12',
+    born: '2023-04-10',
+    died: '2023-04-12',
     githubUrl: 'https://github.com/Nerajno/redux-reducer-atlanta-web-060319',
     phase: 'archived',
     features: [
@@ -1696,7 +1654,6 @@ export const projects: Project[] = [
     id: '35',
     title: 'Folkmusic Contribution',
     short: 'Open source contribution to Folkmusic.com project',
-    dateCreated: '2023-06-08',
     learned: [
       'Open source contribution',
       'CSS improvements',
@@ -1710,8 +1667,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'completed',
     difficulty: 'beginner',
-    dateStarted: '2023-06-01',
-    dateCompleted: '2023-06-08',
+    born: '2023-06-01',
+    died: '2023-06-08',
     githubUrl: 'https://github.com/Nerajno/folkmusic',
     phase: 'archived',
     features: [
@@ -1742,7 +1699,6 @@ export const projects: Project[] = [
     id: '36',
     title: 'GitHub Actions for CI',
     short: 'Learning GitHub Actions for continuous integration',
-    dateCreated: '2023-04-01',
     learned: [
       'GitHub Actions workflow',
       'CI/CD pipelines',
@@ -1757,8 +1713,8 @@ export const projects: Project[] = [
     category: 'backend',
     status: 'completed',
     difficulty: 'intermediate',
-    dateStarted: '2023-03-15',
-    dateCompleted: '2023-04-01',
+    born: '2023-03-15',
+    died: '2023-04-01',
     githubUrl: 'https://github.com/Nerajno/github-actions-for-ci',
     phase: 'archived',
     features: [
@@ -1791,7 +1747,6 @@ export const projects: Project[] = [
     id: '37',
     title: 'Connect Tech 2021 Conference App',
     short: 'Conference workshop application from Connect Tech 2021',
-    dateCreated: '2023-04-01',
     learned: [
       'Conference workshop patterns',
       'TypeScript in practice',
@@ -1805,8 +1760,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'completed',
     difficulty: 'intermediate',
-    dateStarted: '2023-03-25',
-    dateCompleted: '2023-04-01',
+    born: '2023-03-25',
+    died: '2023-04-01',
     githubUrl: 'https://github.com/NerajnoLearning/conf-app-connecttech-2021',
     phase: 'archived',
     features: [
@@ -1839,7 +1794,6 @@ export const projects: Project[] = [
     id: '38',
     title: 'TDD Big Picture',
     short: 'Learning Test-Driven Development concepts and practices',
-    dateCreated: '2023-02-01',
     learned: [
       'TDD methodology',
       'Testing patterns',
@@ -1854,8 +1808,8 @@ export const projects: Project[] = [
     category: 'backend',
     status: 'completed',
     difficulty: 'intermediate',
-    dateStarted: '2023-01-15',
-    dateCompleted: '2023-02-01',
+    born: '2023-01-15',
+    died: '2023-02-01',
     githubUrl: 'https://github.com/NerajnoLearning/TDD-TheBigPicture',
     phase: 'archived',
     features: [
@@ -1887,7 +1841,6 @@ export const projects: Project[] = [
     id: '39',
     title: '.NET Tools Exploration',
     short: 'Exploring ASP.NET command line tools and utilities',
-    dateCreated: '2023-01-01',
     learned: [
       '.NET ecosystem',
       'Command line tools',
@@ -1901,8 +1854,8 @@ export const projects: Project[] = [
     category: 'backend',
     status: 'archived',
     difficulty: 'beginner',
-    dateStarted: '2022-12-15',
-    dateCompleted: '2023-01-01',
+    born: '2022-12-15',
+    died: '2023-01-01',
     githubUrl: 'https://github.com/NerajnoLearning/DotNetTools',
     phase: 'archived',
     features: [
@@ -1934,7 +1887,6 @@ export const projects: Project[] = [
     id: '40',
     title: 'Yup Nosey',
     short: 'Experimental project exploring curiosity-driven development',
-    dateCreated: '2025-03-02',
     learned: [
       'Experimental development',
       'Rapid prototyping',
@@ -1948,9 +1900,8 @@ export const projects: Project[] = [
     category: 'frontend',
     status: 'archived',
     difficulty: 'beginner',
-    dateStarted: '2025-02-15',
-    dateCompleted: '2025-03-02',
-    sunsetDate: '2025-03-15',
+    born: '2025-02-15',
+    died: '2025-03-15',
     githubUrl: 'https://github.com/Nerajno/yup-nosey',
     phase: 'sunset',
     features: [
@@ -1982,7 +1933,6 @@ export const projects: Project[] = [
     id: '41',
     title: 'Gulp Jest Plugin',
     short: 'Gulp plugin for running Jest tests in build pipeline',
-    dateCreated: '2022-08-01',
     learned: [
       'Gulp task runners',
       'Plugin development',
@@ -1997,8 +1947,8 @@ export const projects: Project[] = [
     category: 'backend',
     status: 'archived',
     difficulty: 'advanced',
-    dateStarted: '2022-07-15',
-    dateCompleted: '2022-08-01',
+    born: '2022-07-15',
+    died: '2022-08-01',
     githubUrl: 'https://github.com/Nerajno/gulp-jest',
     phase: 'archived',
     features: [
@@ -2031,7 +1981,6 @@ export const projects: Project[] = [
     id: '42',
     title: 'GitHub Profile README',
     short: 'GitHub profile README with stats and info',
-    dateCreated: '2025-03-23',
     learned: [
       'GitHub profile customization',
       'Markdown formatting',
@@ -2045,7 +1994,7 @@ export const projects: Project[] = [
     category: 'design',
     status: 'in-progress',
     difficulty: 'beginner',
-    dateStarted: '2025-03-20',
+    born: '2025-03-20',
     githubUrl: 'https://github.com/Nerajno/nerajno',
     phase: 'active',
     features: [

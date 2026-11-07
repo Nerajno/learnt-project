@@ -75,3 +75,26 @@ describe('getFeaturedProjects', () => {
     expect(getFeaturedProjects().map((p) => p.slug)).toEqual(expected);
   });
 });
+
+describe('tiers (#16)', () => {
+  const tierValues = ['headstone', 'marker', 'coursework'] as const;
+
+  it('every project has an explicit valid tier', () => {
+    for (const project of projects) {
+      expect(tierValues).toContain(project.tier);
+    }
+  });
+
+  it('tier counts sum to every project', () => {
+    const total = tierValues
+      .map((tier) => projects.filter((p) => p.tier === tier).length)
+      .reduce((sum, count) => sum + count, 0);
+    expect(total).toBe(projects.length);
+  });
+
+  it('has three to five headstones', () => {
+    const headstones = projects.filter((p) => p.tier === 'headstone').length;
+    expect(headstones).toBeGreaterThanOrEqual(3);
+    expect(headstones).toBeLessThanOrEqual(5);
+  });
+});

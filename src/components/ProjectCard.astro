@@ -2,6 +2,7 @@
 import type { Project } from "../data/projects";
 import ProjectImage from "./ProjectImage.astro";
 import { repoLabel } from "../lib/images";
+import { toArchiveItem, cardDataset } from "../lib/archive";
 
 export interface Props {
   project: Project;
@@ -10,6 +11,7 @@ export interface Props {
 }
 
 const { project, featured = false, showFullDescription = false } = Astro.props;
+const archiveMeta = cardDataset(toArchiveItem(project));
 
 // Format date for display
 function formatDate(dateString: string) {
@@ -55,6 +57,7 @@ function getCategoryIcon(category: string) {
 ---
 
 <article
+  {...archiveMeta}
   class={`card hover-lift group ${featured ? "ring-2 ring-primary-200 dark:ring-primary-800" : ""} animate-fade-in`}
 >
   <!-- Project Image -->

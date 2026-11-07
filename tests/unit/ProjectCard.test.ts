@@ -51,4 +51,13 @@ describe('ProjectCard', () => {
     const html = await render(makeProject({ technologies: ['A', 'B', 'C', 'D', 'E', 'F'] }));
     expect(html).toMatch(/\+2\s*more/);
   });
+
+  it('carries the archive filter metadata on the card root', async () => {
+    const html = await render(makeProject({ slug: 'test-project', category: 'frontend' }));
+    expect(html).toContain('data-slug="test-project"');
+    expect(html).toContain('data-stage="shipped"');
+    expect(html).toContain('data-category="frontend"');
+    expect(html).toContain('data-year="2023"');
+    expect(html).toContain('data-search="');
+  });
 });

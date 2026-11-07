@@ -1,5 +1,6 @@
 ---
 import type { Project } from "../data/projects";
+import ProjectImage from "./ProjectImage.astro";
 
 const { project } = Astro.props as { project: Project };
 ---
@@ -10,13 +11,12 @@ const { project } = Astro.props as { project: Project };
     <p class="text-gray-600 dark:text-gray-400">{project.description}</p>
   </header>
 
-  <img
-    src={project.screenshot || "/images/project-placeholder.svg"}
-    alt={project.altText || project.title}
+  <ProjectImage
+    src={project.screenshot}
+    alt={project.altText}
+    title={project.title}
+    slug={project.slug}
     class="w-full rounded-xl shadow mb-6"
-    loading="lazy"
-    decoding="async"
-    onerror="this.src='/images/project-placeholder.svg'"
   />
 
   <!-- Meta -->

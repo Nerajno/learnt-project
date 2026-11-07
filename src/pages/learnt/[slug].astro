@@ -1,7 +1,9 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import ProjectNav from "../../components/ProjectNav.astro";
+import ProjectImage from "../../components/ProjectImage.astro";
 import { projects } from "../../data/projects";
+import { publicFileExists, repoLabel } from "../../lib/images";
 import { Image } from 'astro:assets';
 
 // Generate static paths for all projects
@@ -93,6 +95,9 @@ const techIcons: Record<string, string> = {
 };
 
 // Structured data for SEO
+const ogImage = publicFileExists(project.screenshot)
+  ? project.screenshot ?? '/images/placeholder.png'
+  : '/images/placeholder.png';
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "CreativeWork",
@@ -100,7 +105,7 @@ const structuredData = {
   description: project.description,
   dateCreated: project.dateCreated,
   url: canonicalUrl,
-  image: project.screenshot,
+  image: new URL(ogImage, Astro.site).toString(),
   author: {
     "@type": "Person",
     name: "Your Name", // Replace with your name
@@ -311,36 +316,48 @@ const duration = getProjectDuration(project.dateCreated, project.sunsetDate);
       </div>
     </header>
 
-    {/* Project Image with Lightbox */}
-    {
-      project.screenshot && (
-        <div class="mb-8 rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 p-1">
-          <button
-            onclick="this.nextElementSibling.showModal()"
-            class="block w-full rounded-lg overflow-hidden cursor-zoom-in group"
-            aria-label="Click to enlarge image"
-          >
-            <img
-              src={project.screenshot || '/images/project-placeholder.svg'}
-              alt={project.altText || `Screenshot of ${project.title}`}
-              class="w-full h-auto transform transition-transform duration-300 group-hover:scale-[1.02]"
-              loading="lazy"
-              decoding="async"
-              onerror="this.src='/images/project-placeholder.svg'"
-            />
-          </button>
-          <dialog class="backdrop:bg-black/80 bg-transparent max-w-[90vw] max-h-[90vh] overflow-auto">
-            <img
-              src={project.screenshot || '/images/project-placeholder.svg'}
-              alt={project.altText || `Screenshot of ${project.title}`}
-              class="w-full h-auto cursor-zoom-out"
-              onclick="this.closest('dialog').close()"
-              onerror="this.src='/images/project-placeholder.svg'"
-            />
-          </dialog>
-        </div>
-      )
-    }
+    {/* Project Image with Lightbox (lightbox only for real screenshots) */}
+    <div class="mb-8">
+      {
+        publicFileExists(project.screenshot) ? (
+          <div class="rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 p-1">
+            <button
+              onclick="this.nextElementSibling.showModal()"
+              class="block w-full rounded-lg overflow-hidden cursor-zoom-in group"
+              aria-label="Click to enlarge image"
+            >
+              <ProjectImage
+                src={project.screenshot}
+                alt={project.altText}
+                title={project.title}
+                slug={project.slug}
+                loading="eager"
+                class="w-full h-auto transform transition-transform duration-300 group-hover:scale-[1.02]"
+              />
+            </button>
+            <dialog class="backdrop:bg-black/80 bg-transparent max-w-[90vw] max-h-[90vh] overflow-auto">
+              <div class="cursor-zoom-out" onclick="this.closest('dialog').close()">
+                <ProjectImage
+                  src={project.screenshot}
+                  alt={project.altText}
+                  title={project.title}
+                  slug={project.slug}
+                  class="w-full h-auto"
+                />
+              </div>
+            </dialog>
+          </div>
+        ) : (
+          <ProjectImage
+            src={project.screenshot}
+            alt={project.altText}
+            title={project.title}
+            slug={project.slug}
+            class="w-full h-auto rounded-xl"
+          />
+        )
+      }
+    </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {/* Main Content */}
@@ -662,13 +679,15 @@ const duration = getProjectDuration(project.dateCreated, project.sunsetDate);
                     class="flex items-center gap-3 group hover:bg-white dark:hover:bg-gray-800 rounded-lg p-2 -m-2 transition-colors"
                   >
                     <div class="w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-700 group-hover:border-blue-400 dark:group-hover:border-blue-500 transition-colors bg-gray-100 dark:bg-gray-800">
-                      <img
-                        src={rp.screenshot || '/images/project-placeholder.svg'}
-                        alt={rp.altText || rp.title}
+                      <ProjectImage
+                        src={rp.screenshot}
+                        alt={rp.altText ?? rp.title}
+                        title={rp.title}
+                        slug={rp.slug}
+                        repo={repoLabel(rp.githubUrl, rp.slug)}
                         class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-300"
-                        loading="lazy"
-                        decoding="async"
-                        onerror="this.src='/images/project-placeholder.svg'"
+                        heightClass="h-full"
+                        compact
                       />
                     </div>
                     <div class="flex-1 min-w-0">

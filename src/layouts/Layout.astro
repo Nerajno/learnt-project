@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { site } from '../data/site';
+import { publicFileExists } from '../lib/images';
 
 export interface Props {
   title: string;
@@ -17,6 +18,9 @@ const {
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+// Never point social metadata at a file that does not exist.
+const ogImage = image && publicFileExists(image) ? image : '/images/placeholder.png';
 ---
 
 <!DOCTYPE html>
@@ -36,14 +40,14 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:url" content={Astro.url} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={new URL(image, Astro.url)} />
+    <meta property="og:image" content={new URL(ogImage, Astro.url)} />
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={Astro.url} />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={new URL(image, Astro.url)} />
+    <meta property="twitter:image" content={new URL(ogImage, Astro.url)} />
     
     <!-- JSON-LD Structured Data for SEO (Project/Article) -->
     {Astro.props.project && (
@@ -52,7 +56,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         '@type': 'CreativeWork',
         'name': Astro.props.project.title,
         'description': Astro.props.project.description,
-        'image': new URL(Astro.props.project.screenshot || image, Astro.site).toString(),
+        'image': new URL(ogImage, Astro.site).toString(),
         'url': new URL(Astro.url.pathname, Astro.site).toString(),
         'datePublished': Astro.props.project.dateCreated,
         'dateModified': Astro.props.project.dateCompleted || Astro.props.project.dateCreated,

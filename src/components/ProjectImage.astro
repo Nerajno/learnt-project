@@ -1,0 +1,62 @@
+---
+import { publicFileExists, repoLabel } from '../lib/images';
+
+export interface Props {
+  src?: string;
+  alt?: string;
+  title: string;
+  slug: string;
+  repo?: string;
+  class?: string;
+  heightClass?: string;
+  loading?: 'lazy' | 'eager';
+  compact?: boolean;
+}
+
+const {
+  src,
+  alt,
+  title,
+  slug,
+  repo,
+  class: className = '',
+  heightClass = 'aspect-[16/10]',
+  loading = 'lazy',
+  compact = false,
+} = Astro.props;
+
+const hasImage = publicFileExists(src);
+const label = repo ?? repoLabel(undefined, slug);
+---
+
+{
+  hasImage ? (
+    <img
+      src={src}
+      alt={alt ?? `Screenshot of ${title}`}
+      class={className}
+      loading={loading}
+      decoding="async"
+    />
+  ) : (
+    <div
+      class={`flex flex-col items-center justify-center gap-1 overflow-hidden border border-dashed border-gray-300 bg-gray-100 dark:border-gray-600 dark:bg-gray-800 ${heightClass} ${className}`}
+      data-placeholder="true"
+      aria-hidden={compact ? 'true' : undefined}
+      style="background-image: repeating-linear-gradient(45deg, transparent 0 10px, rgba(0,0,0,.04) 10px 11px)"
+    >
+      {
+        !compact && (
+          <>
+            <span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">
+              no screenshot
+            </span>
+            <span class="font-mono text-xs text-gray-700 dark:text-gray-300">{label}</span>
+          </>
+        )
+      }
+    </div>
+  )
+}
+
+<!-- TODO(#38): swap the gray/dashed styling for --bg-alt / --border-strong / --font-mono once dvlpr-dialects lands. -->

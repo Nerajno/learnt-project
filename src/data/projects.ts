@@ -19,7 +19,7 @@ export interface Project {
   dateSunset?: string;
   githubUrl?: string;
   liveUrl?: string;
-  screenshot: string;
+  screenshot?: string;
   gallery?: string[];
   youtubeId?: string;
   notesUrl?: string;
@@ -56,8 +56,6 @@ export const projects: Project[] = [
     dateStarted: '2025-08-01',
     githubUrl: 'https://github.com/Nerajno/portfolio_v3',
     phase: 'active',
-    screenshot: '/images/screenshots/portfolio-v3.png',
-    gallery: ['/images/screenshots/portfolio-v3.png'],
     features: [
       'Static site generation with Astro',
       'Dark mode support',
@@ -111,8 +109,6 @@ export const projects: Project[] = [
     githubUrl: 'https://github.com/Nerajno/learnt-project',
     liveUrl: 'https://learnt.developingdvlpr.com',
     phase: 'active',
-    screenshot: '/images/screenshots/learnt.png',
-    gallery: ['/images/screenshots/learnt.png'],
     features: [
       'Project timeline visualization',
       'Status tracking (active, sunset, archived)',
@@ -172,8 +168,6 @@ export const projects: Project[] = [
     dateStarted: '2025-09-01',
     githubUrl: 'https://github.com/Nerajno/digital_garden',
     phase: 'active',
-    screenshot: '/images/screenshots/digital-garden.png',
-    gallery: ['/images/screenshots/digital-garden.png'],
     features: [
       'Interconnected notes',
       'Progressive disclosure',
@@ -225,8 +219,6 @@ export const projects: Project[] = [
     dateStarted: '2025-09-20',
     githubUrl: 'https://github.com/Nerajno/isnerandodoneyet-com',
     phase: 'active',
-    screenshot: '/images/screenshots/status-tracker.png',
-    gallery: ['/images/screenshots/status-tracker.png'],
     features: [
       'Status display',
       'Progress tracking',
@@ -269,8 +261,6 @@ export const projects: Project[] = [
     dateStarted: '2024-11-01',
     githubUrl: 'https://github.com/NerajnoLearning/My-digital-Mausoleum',
     phase: 'active',
-    screenshot: '/images/screenshots/mausoleum.png',
-    gallery: ['/images/screenshots/mausoleum.png'],
     features: [
       'Project archive',
       'Learning logs',
@@ -321,8 +311,6 @@ export const projects: Project[] = [
     sunsetDate: '2025-08-20',
     githubUrl: 'https://github.com/Nerajno/learnt_2',
     phase: 'sunset',
-    screenshot: '/images/screenshots/learnt-v2.png',
-    gallery: ['/images/screenshots/learnt-v2.png'],
     features: [
       'Basic project listing',
       'Simple filtering',
@@ -367,8 +355,6 @@ export const projects: Project[] = [
     sunsetDate: '2025-08-16',
     githubUrl: 'https://github.com/Nerajno/learnt',
     phase: 'archived',
-    screenshot: '/images/screenshots/learnt-v1.png',
-    gallery: ['/images/screenshots/learnt-v1.png'],
     features: [
       'Basic project pages',
       'Static site generation',
@@ -412,8 +398,6 @@ export const projects: Project[] = [
     sunsetDate: '2025-06-01',
     githubUrl: 'https://github.com/Nerajno/v0-Side_project_Status',
     phase: 'sunset',
-    screenshot: '/images/screenshots/side-project-tracker.png',
-    gallery: ['/images/screenshots/side-project-tracker.png'],
     features: [
       'Multiple project tracking',
       'Status categorization',
@@ -462,8 +446,6 @@ export const projects: Project[] = [
     sunsetDate: '2024-11-15',
     githubUrl: 'https://github.com/Nerajno/Burble-V1',
     phase: 'sunset',
-    screenshot: '/images/screenshots/burble.png',
-    gallery: ['/images/screenshots/burble.png'],
     features: [
       'Netflix-style carousel',
       'Video playback interface',
@@ -513,8 +495,6 @@ export const projects: Project[] = [
     dateCompleted: '2024-10-29',
     githubUrl: 'https://github.com/Nerajno/Ber-kna-FCCFEDL',
     phase: 'archived',
-    screenshot: '/images/screenshots/calculator.png',
-    gallery: ['/images/screenshots/calculator.png'],
     features: [
       'Basic arithmetic operations',
       'Clear and reset functions',
@@ -564,8 +544,6 @@ export const projects: Project[] = [
     githubUrl: 'https://github.com/NerajnoLearning/Trumma',
     liveUrl: 'https://drum-machine.freecodecamp.rocks/',
     phase: 'archived',
-    screenshot: '/images/screenshots/drum-machine.png',
-    gallery: ['/images/screenshots/drum-machine.png'],
     features: [
       '9 drum pads with unique sounds',
       'Keyboard support (Q,W,E,A,S,D,Z,X,C)',
@@ -616,8 +594,6 @@ export const projects: Project[] = [
     dateCompleted: '2024-03-30',
     githubUrl: 'https://github.com/Nerajno/JavaScript30',
     phase: 'archived',
-    screenshot: '/images/screenshots/js30.png',
-    gallery: ['/images/screenshots/js30.png'],
     features: [
       '30 unique JavaScript projects',
       'Vanilla JS only - no frameworks',
@@ -670,8 +646,6 @@ export const projects: Project[] = [
     dateCompleted: '2025-05-19',
     githubUrl: 'https://github.com/Nerajno/vue-conf-25-proven-patterns-workshop',
     phase: 'archived',
-    screenshot: '/images/screenshots/vue-workshop.png',
-    gallery: ['/images/screenshots/vue-workshop.png'],
     features: [
       'Advanced Vue patterns',
       'Composition API deep dive',
@@ -721,8 +695,6 @@ export const projects: Project[] = [
     dateCompleted: '2024-06-01',
     githubUrl: 'https://github.com/NerajnoLearning/FCC_D3_Bars',
     phase: 'archived',
-    screenshot: '/images/screenshots/d3-bars.png',
-    gallery: ['/images/screenshots/d3-bars.png'],
     features: [
       'Interactive bar chart',
       'Hover tooltips with data',
@@ -772,8 +744,6 @@ export const projects: Project[] = [
     dateCompleted: '2024-06-15',
     githubUrl: 'https://github.com/NerajnoLearning/FCC_D3_story',
     phase: 'archived',
-    screenshot: '/images/screenshots/d3-story.png',
-    gallery: ['/images/screenshots/d3-story.png'],
     features: [
       'Multiple visualization types',
       'Interactive data story',
@@ -822,8 +792,6 @@ export const projects: Project[] = [
     dateCompleted: '2024-12-01',
     githubUrl: 'https://github.com/NerajnoLearning/Vue_Holiday_Card_Maker',
     phase: 'archived',
-    screenshot: '/images/screenshots/holiday-card.png',
-    gallery: ['/images/screenshots/holiday-card.png'],
     features: [
       'Customizable text and colors',
       'Image upload',
@@ -870,8 +838,6 @@ export const projects: Project[] = [
     dateCompleted: '2023-09-16',
     githubUrl: 'https://github.com/Nerajno/Assaggio-1-FCC_FEDLC',
     phase: 'archived',
-    screenshot: '/images/screenshots/assaggio.png',
-    gallery: ['/images/screenshots/assaggio.png'],
     features: [
       'Meets all FCC requirements',
       'Responsive layout',
@@ -917,8 +883,6 @@ export const projects: Project[] = [
     dateCompleted: '2024-05-01',
     githubUrl: 'https://github.com/NerajnoLearning/bRavur-4-FCC_FEDLC',
     phase: 'archived',
-    screenshot: '/images/screenshots/bravur.png',
-    gallery: ['/images/screenshots/bravur.png'],
     features: [
       'React components',
       'Complex state management',
@@ -965,8 +929,6 @@ export const projects: Project[] = [
     dateCompleted: '2024-06-01',
     githubUrl: 'https://github.com/NerajnoLearning/NerajnoLearning-sToppur-5-FCC_FEDLC',
     phase: 'archived',
-    screenshot: '/images/screenshots/toppur.png',
-    gallery: ['/images/screenshots/toppur.png'],
     features: [
       'Complete React application',
       'Multiple components',
@@ -1015,8 +977,6 @@ export const projects: Project[] = [
     sunsetDate: '2024-08-01',
     githubUrl: 'https://github.com/Nerajno/Current_Portfolio_2023',
     phase: 'sunset',
-    screenshot: '/images/screenshots/portfolio-2023.png',
-    gallery: ['/images/screenshots/portfolio-2023.png'],
     features: [
       'Project showcase',
       'About section',
@@ -1068,8 +1028,6 @@ export const projects: Project[] = [
     sunsetDate: '2024-06-01',
     githubUrl: 'https://github.com/Nerajno/hosted_Blog_v3',
     phase: 'sunset',
-    screenshot: '/images/screenshots/blog-v3.png',
-    gallery: ['/images/screenshots/blog-v3.png'],
     features: [
       'Markdown blog posts',
       'Tag system',
@@ -1118,8 +1076,6 @@ export const projects: Project[] = [
     sunsetDate: '2024-03-01',
     githubUrl: 'https://github.com/Nerajno/blog-Astro',
     phase: 'sunset',
-    screenshot: '/images/screenshots/astro-blog.png',
-    gallery: ['/images/screenshots/astro-blog.png'],
     features: [
       'Static site generation',
       'Markdown blog posts',
@@ -1168,8 +1124,6 @@ export const projects: Project[] = [
     sunsetDate: '2024-04-01',
     githubUrl: 'https://github.com/Nerajno/My-Self-hosted-TypeScript-Mdx-blog',
     phase: 'sunset',
-    screenshot: '/images/screenshots/nextjs-blog.png',
-    gallery: ['/images/screenshots/nextjs-blog.png'],
     features: [
       'MDX blog posts',
       'TypeScript throughout',
@@ -1217,8 +1171,6 @@ export const projects: Project[] = [
     dateCompleted: '2023-12-27',
     githubUrl: 'https://github.com/Nerajno/cv',
     phase: 'active',
-    screenshot: '/images/screenshots/cv.png',
-    gallery: ['/images/screenshots/cv.png'],
     features: [
       'Print-optimized layout',
       'One-page design',
@@ -1269,8 +1221,6 @@ export const projects: Project[] = [
     dateCompleted: '2025-08-11',
     githubUrl: 'https://github.com/Nerajno/Trapper_Keeper-v1',
     phase: 'archived',
-    screenshot: '/images/screenshots/trapper-keeper.png',
-    gallery: ['/images/screenshots/trapper-keeper.png'],
     features: [
       'Add, edit, delete contacts',
       'Search and filter contacts',
@@ -1320,8 +1270,6 @@ export const projects: Project[] = [
     dateCompleted: '2023-06-08',
     githubUrl: 'https://github.com/NerajnoLearning/devconnector_2.0',
     phase: 'archived',
-    screenshot: '/images/screenshots/devconnector.png',
-    gallery: ['/images/screenshots/devconnector.png'],
     features: [
       'User authentication and authorization',
       'Developer profiles with experience and education',
@@ -1374,8 +1322,6 @@ export const projects: Project[] = [
     dateCompleted: '2023-03-15',
     githubUrl: 'https://github.com/Nerajno/frontend_final_project',
     phase: 'archived',
-    screenshot: '/images/screenshots/frontend-final.png',
-    gallery: ['/images/screenshots/frontend-final.png'],
     features: [
       'Full CRUD functionality',
       'User authentication',
@@ -1425,8 +1371,6 @@ export const projects: Project[] = [
     dateCompleted: '2023-10-24',
     githubUrl: 'https://github.com/Nerajno/backend_final-project',
     phase: 'archived',
-    screenshot: '/images/screenshots/backend-final.png',
-    gallery: ['/images/screenshots/backend-final.png'],
     features: [
       'RESTful API',
       'Database with complex relationships',
@@ -1476,8 +1420,6 @@ export const projects: Project[] = [
     dateCompleted: '2023-09-21',
     githubUrl: 'https://github.com/Nerajno/Native_treats_api',
     phase: 'archived',
-    screenshot: '/images/screenshots/native-treats.png',
-    gallery: ['/images/screenshots/native-treats.png'],
     features: [
       'CRUD operations',
       'Search and filtering',
@@ -1527,8 +1469,6 @@ export const projects: Project[] = [
     dateCompleted: '2023-07-10',
     githubUrl: 'https://github.com/Nerajno/forage-jpmc-swe-task-2',
     phase: 'archived',
-    screenshot: '/images/screenshots/jpmc.png',
-    gallery: ['/images/screenshots/jpmc.png'],
     features: [
       'Live data feeds',
       'Financial data processing',
@@ -1580,8 +1520,6 @@ export const projects: Project[] = [
     dateCompleted: '2024-08-02',
     githubUrl: 'https://github.com/NerajnoLearning/CS50P-Final_Project',
     phase: 'archived',
-    screenshot: '/images/screenshots/cs50p.png',
-    gallery: ['/images/screenshots/cs50p.png'],
     features: [
       'Command-line interface',
       'File I/O operations',
@@ -1632,8 +1570,6 @@ export const projects: Project[] = [
     dateCompleted: '2024-08-02',
     githubUrl: 'https://github.com/Nerajno/100DaysOfCodeLog',
     phase: 'archived',
-    screenshot: '/images/screenshots/100days.png',
-    gallery: ['/images/screenshots/100days.png'],
     features: [
       'Daily log entries',
       'Progress tracking',
@@ -1683,8 +1619,6 @@ export const projects: Project[] = [
     dateCompleted: '2024-01-01',
     githubUrl: 'https://github.com/Nerajno/freeCodeCamp',
     phase: 'archived',
-    screenshot: '/images/screenshots/fcc-fork.png',
-    gallery: ['/images/screenshots/fcc-fork.png'],
     features: [
       'Complete curriculum platform',
       'Interactive challenges',
@@ -1733,8 +1667,6 @@ export const projects: Project[] = [
     dateCompleted: '2023-04-12',
     githubUrl: 'https://github.com/Nerajno/redux-reducer-atlanta-web-060319',
     phase: 'archived',
-    screenshot: '/images/screenshots/redux-exercise.png',
-    gallery: ['/images/screenshots/redux-exercise.png'],
     features: [
       'Reducer functions',
       'Action creators',
@@ -1782,8 +1714,6 @@ export const projects: Project[] = [
     dateCompleted: '2023-06-08',
     githubUrl: 'https://github.com/Nerajno/folkmusic',
     phase: 'archived',
-    screenshot: '/images/screenshots/folkmusic.png',
-    gallery: ['/images/screenshots/folkmusic.png'],
     features: [
       'CSS improvements',
       'Component enhancements',
@@ -1831,8 +1761,6 @@ export const projects: Project[] = [
     dateCompleted: '2023-04-01',
     githubUrl: 'https://github.com/Nerajno/github-actions-for-ci',
     phase: 'archived',
-    screenshot: '/images/screenshots/github-actions.png',
-    gallery: ['/images/screenshots/github-actions.png'],
     features: [
       'Automated testing',
       'Lint checks',
@@ -1881,8 +1809,6 @@ export const projects: Project[] = [
     dateCompleted: '2023-04-01',
     githubUrl: 'https://github.com/NerajnoLearning/conf-app-connecttech-2021',
     phase: 'archived',
-    screenshot: '/images/screenshots/connect-tech.png',
-    gallery: ['/images/screenshots/connect-tech.png'],
     features: [
       'Conference schedule display',
       'Session management',
@@ -1932,8 +1858,6 @@ export const projects: Project[] = [
     dateCompleted: '2023-02-01',
     githubUrl: 'https://github.com/NerajnoLearning/TDD-TheBigPicture',
     phase: 'archived',
-    screenshot: '/images/screenshots/tdd-course.png',
-    gallery: ['/images/screenshots/tdd-course.png'],
     features: [
       'TDD examples',
       'Unit tests',
@@ -1981,8 +1905,6 @@ export const projects: Project[] = [
     dateCompleted: '2023-01-01',
     githubUrl: 'https://github.com/NerajnoLearning/DotNetTools',
     phase: 'archived',
-    screenshot: '/images/screenshots/dotnet-tools.png',
-    gallery: ['/images/screenshots/dotnet-tools.png'],
     features: [
       'CLI tools exploration',
       'Development utilities',
@@ -2031,8 +1953,6 @@ export const projects: Project[] = [
     sunsetDate: '2025-03-15',
     githubUrl: 'https://github.com/Nerajno/yup-nosey',
     phase: 'sunset',
-    screenshot: '/images/screenshots/yup-nosey.png',
-    gallery: ['/images/screenshots/yup-nosey.png'],
     features: [
       'Experimental features',
       'Rapid prototyping',
@@ -2081,8 +2001,6 @@ export const projects: Project[] = [
     dateCompleted: '2022-08-01',
     githubUrl: 'https://github.com/Nerajno/gulp-jest',
     phase: 'archived',
-    screenshot: '/images/screenshots/gulp-jest.png',
-    gallery: ['/images/screenshots/gulp-jest.png'],
     features: [
       'Gulp task integration',
       'Jest test runner',
@@ -2130,8 +2048,6 @@ export const projects: Project[] = [
     dateStarted: '2025-03-20',
     githubUrl: 'https://github.com/Nerajno/nerajno',
     phase: 'active',
-    screenshot: '/images/screenshots/github-profile.png',
-    gallery: ['/images/screenshots/github-profile.png'],
     features: [
       'GitHub stats display',
       'Tech stack showcase',

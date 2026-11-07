@@ -1,16 +1,13 @@
+import dialects from '@nerajno/dialects/tailwind-preset';
+
 /** @type {import('tailwindcss').Config} */
 export default {
+  presets: [dialects],
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   darkMode: 'class',
-  safelist: [
-    'bg-white',
-    'dark:bg-gray-800',
-    'dark:bg-gray-900',
-    'border-gray-200',
-    'dark:border-gray-700',
-  ],
   theme: {
     extend: {
+      // Legacy neutral scale kept for the pages #41/#45/#46 migrate to tokens.
       colors: {
         gray: {
           50: '#f9fafb',
@@ -25,6 +22,7 @@ export default {
           900: '#111827',
           950: '#030712',
         },
+        // Removed in Task 2 once every primary-* usage is on tokens.
         primary: {
           50: '#eff6ff',
           100: '#dbeafe',
@@ -38,10 +36,6 @@ export default {
           900: '#1e3a8a',
           950: '#172554',
         },
-      },
-      fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'Consolas', 'monospace'],
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',

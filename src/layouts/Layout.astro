@@ -1,4 +1,9 @@
 ---
+import '@fontsource/jetbrains-mono/400.css';
+import '@fontsource/jetbrains-mono/500.css';
+import '@fontsource/jetbrains-mono/700.css';
+import '@nerajno/dialects/tokens.css';
+import themeInit from '@nerajno/dialects/theme-init.js?raw';
 import '../styles/global.css';
 import { site } from '../data/site';
 import { publicFileExists } from '../lib/images';
@@ -24,7 +29,7 @@ const ogImage = image && publicFileExists(image) ? image : '/images/placeholder.
 ---
 
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth" data-surface="learn">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
@@ -94,28 +99,12 @@ const ogImage = image && publicFileExists(image) ? image : '/images/placeholder.
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    
-    <!-- Theme Script (before page loads to prevent flash) -->
-    <script is:inline>
-      // Theme initialization
-      if (typeof Storage !== 'undefined') {
-        const theme = localStorage.getItem('theme') || 
-                     (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        
-        if (theme === 'dark') {
-          document.documentElement.classList.add('dark');
-        }
-        
-        localStorage.setItem('theme', theme);
-      }
-    </script>
+
+    <!-- Theme + surface, before first paint -->
+    <script is:inline data-surface="learn" set:html={themeInit}></script>
   </head>
   
-  <body class="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+  <body class="min-h-screen transition-colors duration-300">
     <!-- Skip to main content for accessibility -->
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 btn-primary z-50">
       Skip to main content
@@ -262,14 +251,11 @@ const ogImage = image && publicFileExists(image) ? image : '/images/placeholder.
       
       themeToggle?.addEventListener('click', () => {
         const isDark = html.classList.contains('dark');
-        
-        if (isDark) {
-          html.classList.remove('dark');
-          localStorage.setItem('theme', 'light');
-        } else {
-          html.classList.add('dark');
-          localStorage.setItem('theme', 'dark');
-        }
+
+        html.classList.toggle('dark', !isDark);
+        html.classList.toggle('light', isDark);
+        html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        localStorage.setItem('theme', isDark ? 'light' : 'dark');
       });
 
       // Mobile menu toggle

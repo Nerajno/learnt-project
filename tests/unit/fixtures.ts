@@ -13,6 +13,7 @@ export function makeProject(overrides: Partial<Project> = {}): Project {
     difficulty: 'beginner',
     phase: 'archived',
     born: '2023-01-15',
+    tier: 'marker',
     screenshot: '/images/project-placeholder.svg',
     features: [],
     learnings: [],

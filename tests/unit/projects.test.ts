@@ -75,3 +75,32 @@ describe('getFeaturedProjects', () => {
     expect(getFeaturedProjects().map((p) => p.slug)).toEqual(expected);
   });
 });
+
+describe('tiers (#16)', () => {
+  const tierValues = ['headstone', 'marker', 'coursework'] as const;
+
+  it('every project has an explicit valid tier', () => {
+    for (const project of projects) {
+      expect(tierValues).toContain(project.tier);
+    }
+  });
+
+  it('tier counts sum to every project', () => {
+    const total = tierValues
+      .map((tier) => projects.filter((p) => p.tier === tier).length)
+      .reduce((sum, count) => sum + count, 0);
+    expect(total).toBe(projects.length);
+  });
+
+  it('has the agreed 5 headstone / 9 coursework / 28 marker split', () => {
+    expect(projects.filter((p) => p.tier === 'headstone')).toHaveLength(5);
+    expect(projects.filter((p) => p.tier === 'coursework')).toHaveLength(9);
+    expect(projects.filter((p) => p.tier === 'marker')).toHaveLength(28);
+  });
+
+  it('treats fcc-d3-story as exactly one headstone', () => {
+    const matches = projects.filter((p) => p.slug === 'fcc-d3-story');
+    expect(matches).toHaveLength(1);
+    expect(matches[0].tier).toBe('headstone');
+  });
+});

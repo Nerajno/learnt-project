@@ -1,6 +1,8 @@
 export type Stage = 'seed' | 'sprout' | 'shipped' | 'composted';
 export type Sort = 'newest' | 'oldest' | 'longest' | 'shortest';
 
+import type { Project } from '../data/projects';
+
 export interface ArchiveFilters {
   q: string;
   stage: Stage | '';
@@ -61,4 +63,82 @@ export function buildQuery(filters: ArchiveFilters): string {
   if (filters.sort !== DEFAULT_FILTERS.sort) params.set('sort', filters.sort);
   const query = params.toString();
   return query ? `?${query}` : '';
+}
+
+export interface ArchiveItem {
+  slug: string;
+  title: string;
+  category: Project['category'];
+  stage: Stage;
+  year: number | null;
+  born: string; // ISO date or ''
+  died: string; // ISO date or ''
+  search: string; // lowercase searchable blob
+}
+
+/** TODO(#39): replace this bridge with the real `stage` field. */
+export function deriveStage(project: Pick<Project, 'status' | 'phase'>): Stage {
+  if (project.status === 'planned') return 'seed';
+  if (project.status === 'in-progress') return 'sprout';
+  if (project.status === 'completed') {
+    return project.phase === 'sunset' ? 'composted' : 'shipped';
+  }
+  return 'composted';
+}
+
+function startDate(project: Project): string {
+  return project.dateCreated ?? project.dateStarted ?? '';
+}
+
+function endDate(project: Project): string {
+  return project.dateCompleted ?? project.sunsetDate ?? project.dateSunset ?? '';
+}
+
+export function toArchiveItem(project: Project): ArchiveItem {
+  const born = startDate(project);
+  const died = endDate(project);
+  const parsedYear = born ? new Date(born).getFullYear() : NaN;
+  const search = [
+    project.title,
+    project.description,
+    project.longDescription,
+    ...project.technologies,
+    ...project.tags,
+    ...project.learnings,
+  ]
+    .join(' ')
+    .toLowerCase();
+
+  return {
+    slug: project.slug,
+    title: project.title,
+    category: project.category,
+    stage: deriveStage(project),
+    year: Number.isFinite(parsedYear) ? parsedYear : null,
+    born,
+    died,
+    search,
+  };
+}
+
+/** Whole days from born to died; `null` when either date is missing. */
+export function lifespanDays(item: ArchiveItem): number | null {
+  if (!item.born || !item.died) return null;
+  const start = Date.parse(item.born);
+  const end = Date.parse(item.died);
+  if (Number.isNaN(start) || Number.isNaN(end)) return null;
+  return Math.max(0, Math.round((end - start) / 86_400_000));
+}
+
+export function cardDataset(item: ArchiveItem): Record<string, string> {
+  return {
+    'data-slug': item.slug,
+    'data-title': item.title,
+    'data-stage': item.stage,
+    'data-category': item.category,
+    'data-year': item.year === null ? '' : String(item.year),
+    'data-born': item.born,
+    'data-died': item.died,
+    'data-search': item.search,
+  };
 }

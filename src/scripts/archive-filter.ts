@@ -10,6 +10,7 @@ import {
 } from '../lib/archive';
 
 const list = document.querySelector<HTMLElement>('#project-list');
+const form = document.querySelector<HTMLFormElement>('#archive-controls');
 const searchInput = document.querySelector<HTMLInputElement>('#archive-search');
 const categorySelect = document.querySelector<HTMLSelectElement>('#archive-category');
 const yearSelect = document.querySelector<HTMLSelectElement>('#archive-year');
@@ -115,6 +116,11 @@ for (const button of stageButtons) {
 for (const select of [categorySelect, yearSelect, sortSelect]) {
   select?.addEventListener('change', () => apply(readControls(), 'push'));
 }
+
+form?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  apply(readControls(), 'replace');
+});
 
 function clearAll() {
   apply(DEFAULT_FILTERS, 'push');

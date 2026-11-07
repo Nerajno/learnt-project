@@ -92,6 +92,10 @@ describe('toArchiveItem', () => {
     expect(item.born).toBe('2023-07-04');
   });
 
+  it('derives the year from the ISO date string, not the local timezone', () => {
+    expect(toArchiveItem(project({ dateCreated: '2023-01-01' })).year).toBe(2023);
+  });
+
   it('prefers dateCompleted, then sunsetDate, then dateSunset', () => {
     expect(toArchiveItem(project({ dateCompleted: '2024-01-02' })).died).toBe('2024-01-02');
     expect(

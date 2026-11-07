@@ -203,3 +203,9 @@
 [hidden] {
   display: none !important;
 }
+
+/* The archive re-renders order on every filter change; replaying the entrance
+   animation makes all 42 cards flash on each keystroke. */
+#project-list .animate-fade-in {
+  animation: none;
+}

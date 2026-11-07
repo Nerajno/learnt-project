@@ -97,7 +97,7 @@ function endDate(project: Project): string {
 export function toArchiveItem(project: Project): ArchiveItem {
   const born = startDate(project);
   const died = endDate(project);
-  const parsedYear = born ? new Date(born).getFullYear() : NaN;
+  const yearMatch = /^(\d{4})/.exec(born);
   const search = [
     project.title,
     project.description,
@@ -114,7 +114,7 @@ export function toArchiveItem(project: Project): ArchiveItem {
     title: project.title,
     category: project.category,
     stage: deriveStage(project),
-    year: Number.isFinite(parsedYear) ? parsedYear : null,
+    year: yearMatch ? Number(yearMatch[1]) : null,
     born,
     died,
     search,

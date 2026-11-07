@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './test';
 
 test('learn surface and system theme apply before paint', async ({ page }) => {
@@ -36,3 +37,37 @@ test('system preference is followed without a saved choice', async ({ page }) =>
   await page.reload();
   await expect(page.locator('html')).toHaveClass(/dark/);
 });
+
+for (const scheme of ['light', 'dark'] as const) {
+  test(`no serious axe violations on the shell (${scheme})`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme: scheme });
+    await page.goto('/');
+    // Cards fade in; analyze the settled colours, not a mid-animation blend.
+    await page.addStyleTag({
+      content: '* { animation: none !important; transition: none !important; }',
+    });
+    const results = await new AxeBuilder({ page })
+      .include('nav')
+      .include('footer')
+      .include('main h1')
+      .include('main h2')
+      .include('main p')
+      .include('.btn')
+      .analyze();
+    const serious = results.violations.filter(
+      (v) => v.impact === 'serious' || v.impact === 'critical',
+    );
+    expect(serious).toEqual([]);
+  });
+}
+
+for (const path of ['/', '/learnt/']) {
+  test(`no horizontal overflow at 360px on ${path}`, async ({ page }) => {
+    await page.setViewportSize({ width: 360, height: 800 });
+    await page.goto(path);
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow).toBeLessThanOrEqual(1);
+  });
+}

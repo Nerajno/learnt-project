@@ -35,7 +35,7 @@ const years = getProjectYears();
           type="button"
           data-stage-filter=""
           aria-pressed="true"
-          class="rounded-full border border-gray-300 dark:border-gray-600 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 hover:border-accent aria-pressed:bg-accent aria-pressed:text-surface aria-pressed:border-accent"
+          class="rounded-full border border-gray-300 dark:border-gray-600 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 hover:border-accent aria-pressed:bg-accent aria-pressed:!text-surface aria-pressed:border-accent"
         >
           All <span class="ml-1 text-xs">{total}</span>
         </button>
@@ -44,7 +44,7 @@ const years = getProjectYears();
             type="button"
             data-stage-filter={stage.value}
             aria-pressed="false"
-            class="rounded-full border border-gray-300 dark:border-gray-600 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 hover:border-accent aria-pressed:bg-accent aria-pressed:text-surface aria-pressed:border-accent"
+            class="rounded-full border border-gray-300 dark:border-gray-600 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 hover:border-accent aria-pressed:bg-accent aria-pressed:!text-surface aria-pressed:border-accent"
           >
             {stage.label} <span class="ml-1 text-xs">{counts[stage.value]}</span>
           </button>

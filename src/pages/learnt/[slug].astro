@@ -734,6 +734,12 @@ const duration = getProjectDuration(project.born, project.died);
     </div>
     
     <div aria-live="polite" id="nav-announcer" class="sr-only"></div>
+
+    <p class="mt-8 text-center text-sm">
+      <a href={`/contact?project=${encodeURIComponent(project.slug)}`} data-testid="report-link">
+        Spot something wrong? Tell me
+      </a>
+    </p>
   </article>
 
   {/* Enhanced keyboard navigation and interactions */}

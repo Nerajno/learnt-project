@@ -5,198 +5,108 @@ import { site } from "../data/site";
 const { github, linkedin, x } = site.social;
 
 const contactLinks = [
-  {
-    platform: "Portfolio",
-    href: site.portfolio,
-    label: new URL(site.portfolio).host,
-    icon: "globe",
-    external: true,
-  },
-  {
-    platform: "GitHub",
-    href: github.url,
-    label: `@${github.handle}`,
-    icon: "github",
-    external: true,
-  },
-  {
-    platform: "LinkedIn",
-    href: linkedin.url,
-    label: `linkedin.com/in/${linkedin.handle}`,
-    icon: "linkedin",
-    external: true,
-  },
-  {
-    platform: "X",
-    href: x.url,
-    label: `@${x.handle}`,
-    icon: "x",
-    external: true,
-  },
+  { platform: "Portfolio", href: site.portfolio, label: new URL(site.portfolio).host },
+  { platform: "GitHub", href: github.url, label: `@${github.handle}` },
+  { platform: "LinkedIn", href: linkedin.url, label: `linkedin.com/in/${linkedin.handle}` },
+  { platform: "X", href: x.url, label: `@${x.handle}` },
 ];
 
-// SEO metadata
-const seoDescription = "Get in touch with me via GitHub, LinkedIn, or X. Open for questions and collaboration.";
+const topics = [
+  "A project in the archive",
+  "Collaboration",
+  "Speaking or workshop",
+  "Just saying hello",
+];
+
+const seoDescription =
+  "Built something similar or spotted a better fix? Open to questions and collaboration.";
+
+const label = "block text-sm font-medium text-strong mb-1";
+const field =
+  "block w-full min-h-[48px] px-3 py-2 rounded-lg border border-surface-strong bg-surface-card text-body " +
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
+const hint = "mt-1 text-xs text-soft";
 ---
 
 <Layout title="Contact" description={seoDescription}>
-  <section class="max-w-3xl mx-auto px-4 py-12">
-    <div class="prose dark:prose-invert">
-      <h1 class="text-3xl font-bold mb-6">Get in Touch</h1>
-      
-      <p class="text-lg mb-8">
-        I'd love to hear from you! Whether you have a question, want to collaborate, 
-        or just want to say hello, feel free to reach out.
-      </p>
-    </div>
+  <section class="container-custom py-12">
+    <div class="grid gap-10 lg:grid-cols-[2fr_3fr]">
+      <div>
+        <h1 class="text-3xl md:text-4xl font-bold mb-4">
+          Built something similar? Spotted a better fix?
+        </h1>
+        <p class="text-lg text-body mb-8">Open to questions and collaboration.</p>
 
-    <!-- Contact Cards Grid -->
-    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-8">
-      {contactLinks.map((link) => (
-        <a
-          href={link.href}
-          target={link.external ? "_blank" : undefined}
-          rel={link.external ? "noopener noreferrer" : undefined}
-          class="group flex items-center gap-3 p-4 rounded-lg border border-gray-200 
-                 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 
-                 transition-colors duration-200 hover:shadow-md"
-          aria-label={`Contact via ${link.platform}`}
-        >
-          <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center 
-                      rounded-full bg-gray-100 dark:bg-gray-800 
-                      group-hover:bg-blue-50 dark:group-hover:bg-blue-900/30 
-                      transition-colors duration-200">
-            {/* Icon placeholder - replace with actual icon component */}
-            <span class="text-gray-600 dark:text-gray-400 group-hover:text-blue-500">
-              {link.platform[0]}
-            </span>
-          </div>
-          <div class="flex-grow">
-            <div class="font-medium text-gray-900 dark:text-gray-100 group-hover:text-blue-500 
-                        dark:group-hover:text-blue-400 transition-colors">
-              {link.platform}
-            </div>
-            <div class="text-sm text-gray-600 dark:text-gray-400">
-              {link.label}
-            </div>
-          </div>
-          {link.external && (
-            <svg 
-              class="w-4 h-4 text-gray-400 group-hover:text-blue-500 transition-colors" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path 
-                stroke-linecap="round" 
-                stroke-linejoin="round" 
-                stroke-width="2" 
-                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-              />
-            </svg>
-          )}
-        </a>
-      ))}
-    </div>
-
-    <!-- Optional: Contact Form -->
-    <div class="mt-12 p-6 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-      <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-        Send a Message
-      </h2>
-      <form class="space-y-4" action="/api/contact" method="POST">
-        <div>
-          <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            required
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 
-                   rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 
-                   dark:bg-gray-700 dark:text-white"
-          />
-        </div>
-        <div>
-          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 
-                   rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 
-                   dark:bg-gray-700 dark:text-white"
-          />
-        </div>
-        <div>
-          <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Message
-          </label>
-          <textarea
-            id="message"
-            name="message"
-            rows="4"
-            required
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 
-                   rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 
-                   dark:bg-gray-700 dark:text-white"
-          />
-        </div>
-        <button
-          type="submit"
-          class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium 
-                 rounded-md transition-colors duration-200 focus:outline-none 
-                 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          Send Message
-        </button>
-      </form>
-    </div>
-
-    <!-- Availability Status -->
-    <div class="mt-8 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 
-                dark:border-green-800 rounded-lg">
-      <div class="flex items-center gap-2">
-        <span class="relative flex h-3 w-3">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full 
-                       bg-green-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-        </span>
-        <p class="text-sm text-green-800 dark:text-green-300">
-          Currently available for new opportunities and collaborations
-        </p>
+        <ul class="space-y-3" aria-label="Elsewhere">
+          {contactLinks.map((link) => (
+            <li>
+              <a href={link.href} rel="noopener noreferrer" class="inline-flex min-h-[44px] items-baseline gap-2">
+                <span class="font-medium text-strong">{link.platform}</span>
+                <span class="text-sm text-soft">{link.label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
+
+      <form
+        id="contact-form"
+        name="contact"
+        method="POST"
+        action="/contact/thanks"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        class="space-y-5 p-6 rounded-lg border border-surface bg-surface-alt"
+      >
+        <input type="hidden" name="form-name" value="contact" />
+        <p class="hidden" aria-hidden="true">
+          <label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+        </p>
+
+        <div class="grid gap-5 md:grid-cols-2">
+          <div>
+            <label for="name" class={label}>Name</label>
+            <input id="name" name="name" type="text" autocomplete="name" required aria-describedby="name-hint" class={field} />
+            <p id="name-hint" class={hint}>Required.</p>
+          </div>
+          <div>
+            <label for="email" class={label}>Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required aria-describedby="email-hint" class={field} />
+            <p id="email-hint" class={hint}>Required. I'll reply here.</p>
+          </div>
+        </div>
+
+        <div>
+          <label for="topic" class={label}>What's it about?</label>
+          <select id="topic" name="topic" autocomplete="off" class={field}>
+            {topics.map((t) => <option value={t}>{t}</option>)}
+          </select>
+        </div>
+
+        <div>
+          <label for="project" class={label}>Which project? (optional)</label>
+          <input id="project" name="project" type="text" autocomplete="off" aria-describedby="project-hint" class={field} />
+          <p id="project-hint" class={hint}>The project name or its archive URL.</p>
+        </div>
+
+        <div>
+          <label for="message" class={label}>Message</label>
+          <textarea id="message" name="message" rows="6" required aria-describedby="message-hint" class={field}></textarea>
+          <p id="message-hint" class={hint}>Required.</p>
+        </div>
+
+        <button type="submit" class="btn-primary min-h-[48px] px-6">Send message</button>
+      </form>
     </div>
   </section>
 </Layout>
 
-<style>
-  /* Optional: Add custom animations */
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+<script>
+  // /contact?project=<slug> prefills the project field (linked from detail pages).
+  const form = document.getElementById("contact-form") as HTMLFormElement | null;
+  const project = new URLSearchParams(window.location.search).get("project");
+  if (form && project) {
+    (form.elements.namedItem("project") as HTMLInputElement).value = project.slice(0, 200);
+    (form.elements.namedItem("topic") as HTMLSelectElement).value = "A project in the archive";
   }
-
-  section > * {
-    animation: fadeInUp 0.6s ease-out forwards;
-  }
-
-  section > *:nth-child(2) {
-    animation-delay: 0.1s;
-  }
-
-  section > *:nth-child(3) {
-    animation-delay: 0.2s;
-  }
-</style>
+</script>

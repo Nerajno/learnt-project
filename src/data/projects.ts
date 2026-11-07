@@ -26,7 +26,6 @@ export interface Project {
     ci?: boolean;
   };
   short?: string;
-  learned?: string[];
   altText?: string;
   githubUrl?: string;
   liveUrl?: string;
@@ -50,11 +49,6 @@ export const projects: Project[] = [
     id: '1',
     title: 'Portfolio V3',
     short: 'Third iteration of my personal portfolio built with Astro',
-    learned: [
-      'Astro static site generation',
-      'Component-based architecture',
-      'Performance optimization techniques',
-    ],
     altText: 'Screenshot of Portfolio V3',
     slug: 'portfolio-v3',
     description: 'Latest version of my portfolio showcasing projects and skills',
@@ -76,11 +70,9 @@ export const projects: Project[] = [
       'SEO optimized'
     ],
     learnings: [
-      'Astro Islands architecture',
-      'Static site optimization',
-      'Component reusability patterns',
-      'Modern CSS with Tailwind',
-      'Performance best practices'
+      'Astro static site generation',
+      'Component-based architecture',
+      'Performance optimization techniques',
     ],
     challenges: [
       'Migrating from previous framework',
@@ -101,12 +93,6 @@ export const projects: Project[] = [
     id: '2',
     title: 'Learnt Project',
     short: 'A graveyard for all my projects - documenting my learning journey',
-    learned: [
-      'Project lifecycle management',
-      'Documentation best practices',
-      'Building project archives',
-      'Meta-documentation strategies',
-    ],
     altText: 'Screenshot of Learnt Project',
     slug: 'learnt-project',
     description: 'Archive and documentation of all my learning projects',
@@ -130,11 +116,10 @@ export const projects: Project[] = [
       'Tag-based organization'
     ],
     learnings: [
-      'Importance of documenting learning journey',
-      'Project categorization strategies',
-      'Building searchable archives',
-      'Astro content collections',
-      'Complex filtering implementation'
+      'Project lifecycle management',
+      'Documentation best practices',
+      'Building project archives',
+      'Meta-documentation strategies',
     ],
     challenges: [
       'Organizing years of projects',
@@ -161,12 +146,6 @@ export const projects: Project[] = [
     id: '3',
     title: 'Digital Garden',
     short: 'Personal knowledge base and note-taking system',
-    learned: [
-      'Digital garden concepts',
-      'Knowledge management systems',
-      'CSS styling and layouts',
-      'Evergreen content principles',
-    ],
     altText: 'Screenshot of Digital Garden',
     slug: 'digital-garden',
     description: 'A growing collection of notes, thoughts, and learning resources',
@@ -188,11 +167,10 @@ export const projects: Project[] = [
       'Backlinks between notes'
     ],
     learnings: [
-      'Digital garden methodology',
-      'Note-taking systems (Zettelkasten)',
-      'Content organization strategies',
-      'Writing for learning',
-      'Building connections between ideas'
+      'Digital garden concepts',
+      'Knowledge management systems',
+      'CSS styling and layouts',
+      'Evergreen content principles',
     ],
     challenges: [
       'Balancing structure vs. flexibility',
@@ -213,11 +191,6 @@ export const projects: Project[] = [
     id: '4',
     title: 'Is Nerando Done Yet',
     short: 'Status keeper tracking project completion',
-    learned: [
-      'Vue.js fundamentals',
-      'Status tracking systems',
-      'Fork and contribute workflow',
-    ],
     altText: 'Screenshot of Is Nerando Done Yet',
     slug: 'is-nerando-done-yet',
     description: 'Fun status tracker for monitoring project completion',
@@ -238,10 +211,9 @@ export const projects: Project[] = [
       'Emoji indicators'
     ],
     learnings: [
-      'Vue.js basics',
-      'Contributing to open source',
-      'Forking workflows',
-      'Customizing existing projects'
+      'Vue.js fundamentals',
+      'Status tracking systems',
+      'Fork and contribute workflow',
     ],
     challenges: [
       'Understanding existing codebase',
@@ -255,11 +227,6 @@ export const projects: Project[] = [
     id: '5',
     title: 'My Digital Mausoleum',
     short: 'Archive of personal learning projects and experiments',
-    learned: [
-      'Project archival',
-      'Documentation organization',
-      'Learning reflection',
-    ],
     altText: 'Digital Mausoleum',
     slug: 'digital-mausoleum',
     description: 'Collection of archived learning projects and experiments',
@@ -280,11 +247,9 @@ export const projects: Project[] = [
       'Links to repositories'
     ],
     learnings: [
-      'Importance of archiving',
-      'Reflecting on progress',
-      'Documentation value',
-      'Learning journey tracking',
-      'Growth mindset'
+      'Project archival',
+      'Documentation organization',
+      'Learning reflection',
     ],
     challenges: [
       'Organizing diverse projects',
@@ -302,12 +267,6 @@ export const projects: Project[] = [
     id: '6',
     title: 'Learnt V2',
     short: 'Second attempt at project graveyard - iteration and improvement',
-    learned: [
-      'Iterating on previous work',
-      'Astro fundamentals',
-      'Project scope management',
-      'When to pivot',
-    ],
     altText: 'Screenshot of Learnt V2',
     slug: 'learnt-v2',
     description: 'Second iteration of the Learnt project archive',
@@ -328,10 +287,10 @@ export const projects: Project[] = [
       'Static generation'
     ],
     learnings: [
-      'Sometimes you need to start over',
-      'Importance of planning structure',
-      'Version control best practices',
-      'When to pivot vs persist'
+      'Iterating on previous work',
+      'Astro fundamentals',
+      'Project scope management',
+      'When to pivot',
     ],
     challenges: [
       'Unclear requirements',
@@ -346,11 +305,6 @@ export const projects: Project[] = [
     id: '7',
     title: 'Learnt V1',
     short: 'First attempt at building a project graveyard',
-    learned: [
-      'Starting projects',
-      'Basic Astro setup',
-      'Project planning importance',
-    ],
     altText: 'Screenshot of Learnt V1',
     slug: 'learnt-v1',
     description: 'Initial attempt at creating a project documentation system',
@@ -370,10 +324,9 @@ export const projects: Project[] = [
       'Simple navigation'
     ],
     learnings: [
-      'Getting started with Astro',
-      'Planning is essential',
-      'Don\'t be afraid to restart',
-      'Learning from failure'
+      'Starting projects',
+      'Basic Astro setup',
+      'Project planning importance',
     ],
     challenges: [
       'Unclear vision',
@@ -388,11 +341,6 @@ export const projects: Project[] = [
     id: '8',
     title: 'Side Project Status Tracker',
     short: 'Vue-based tracker for managing multiple side projects',
-    learned: [
-      'Project management',
-      'Vue state management',
-      'Status visualization',
-    ],
     altText: 'Side Project Status Tracker',
     slug: 'side-project-status',
     description: 'Tool for tracking status of multiple side projects',
@@ -414,10 +362,9 @@ export const projects: Project[] = [
       'Export functionality'
     ],
     learnings: [
-      'Vue component composition',
-      'State management patterns',
-      'Data visualization',
-      'Project tracking methodologies'
+      'Project management',
+      'Vue state management',
+      'Status visualization',
     ],
     challenges: [
       'Keeping data in sync',
@@ -434,12 +381,6 @@ export const projects: Project[] = [
     id: '9',
     title: 'Burble V1',
     short: 'React-based Netflix styled app with added features',
-    learned: [
-      'React component architecture',
-      'API integration',
-      'Netflix-style UI patterns',
-      'Complex carousel implementations',
-    ],
     altText: 'Screenshot of Burble',
     slug: 'burble-v1',
     description: 'Netflix-inspired streaming interface built with React',
@@ -462,11 +403,10 @@ export const projects: Project[] = [
       'Responsive design'
     ],
     learnings: [
-      'React hooks and state management',
-      'Working with video APIs',
-      'Complex UI layouts',
-      'Performance optimization for media',
-      'Carousel implementation patterns'
+      'React component architecture',
+      'API integration',
+      'Netflix-style UI patterns',
+      'Complex carousel implementations',
     ],
     challenges: [
       'Implementing smooth carousels',
@@ -483,12 +423,6 @@ export const projects: Project[] = [
     id: '10',
     title: 'FreeCodeCamp Calculator',
     short: 'Calculator project for FreeCodeCamp Front End Development certification',
-    learned: [
-      'TypeScript fundamentals',
-      'Calculator logic implementation',
-      'Event handling',
-      'State machines',
-    ],
     altText: 'Screenshot of FCC Calculator',
     slug: 'fcc-calculator',
     description: 'Calculator built for FreeCodeCamp certification',
@@ -511,11 +445,10 @@ export const projects: Project[] = [
       'Responsive design'
     ],
     learnings: [
-      'TypeScript basics',
-      'Calculator logic patterns',
-      'State management without frameworks',
-      'User input validation',
-      'Floating point arithmetic handling'
+      'TypeScript fundamentals',
+      'Calculator logic implementation',
+      'Event handling',
+      'State machines',
     ],
     challenges: [
       'Handling edge cases',
@@ -531,12 +464,6 @@ export const projects: Project[] = [
     id: '11',
     title: 'Drum Machine - Trumma',
     short: 'Interactive drum machine built for FreeCodeCamp certification',
-    learned: [
-      'Web Audio API',
-      'Event handling for keyboard',
-      'React component patterns',
-      'Audio file management',
-    ],
     altText: 'Screenshot of Trumma Drum Machine',
     slug: 'trumma-drum-machine',
     description: 'Browser-based drum machine with keyboard and click support',
@@ -560,12 +487,10 @@ export const projects: Project[] = [
       'Responsive layout'
     ],
     learnings: [
-      'Web Audio API usage',
-      'Keyboard event handling',
-      'Sound file management',
-      'Interactive UI design',
-      'Accessibility for audio apps',
-      'Event listener cleanup'
+      'Web Audio API',
+      'Event handling for keyboard',
+      'React component patterns',
+      'Audio file management',
     ],
     challenges: [
       'Audio file loading and buffering',
@@ -581,13 +506,6 @@ export const projects: Project[] = [
     id: '12',
     title: 'JavaScript30',
     short: '30 Day Vanilla JS Challenge by Wes Bos',
-    learned: [
-      'Vanilla JavaScript mastery',
-      'DOM manipulation techniques',
-      'CSS tricks and animations',
-      'Working without frameworks',
-      'ES6+ features',
-    ],
     altText: 'Screenshot of JavaScript30 projects',
     slug: 'javascript30',
     description: 'Completed Wes Bos\'s 30 day vanilla JavaScript challenge',
@@ -610,14 +528,11 @@ export const projects: Project[] = [
       'Geolocation and speech recognition'
     ],
     learnings: [
-      'ES6+ features (arrow functions, destructuring, spread)',
-      'Array methods mastery (map, filter, reduce)',
-      'Working with audio/video APIs',
-      'CSS variables with JavaScript',
-      'LocalStorage and SessionStorage',
-      'Fetch API and JSON',
-      'Canvas API fundamentals',
-      'Event delegation patterns'
+      'Vanilla JavaScript mastery',
+      'DOM manipulation techniques',
+      'CSS tricks and animations',
+      'Working without frameworks',
+      'ES6+ features',
     ],
     challenges: [
       'Completing one project per day',
@@ -634,12 +549,6 @@ export const projects: Project[] = [
     id: '13',
     title: 'Vue Conference Workshop',
     short: 'Proven patterns workshop materials from Vue Conf 2025',
-    learned: [
-      'Vue.js best practices',
-      'Component design patterns',
-      'Vue Composition API',
-      'Advanced reactivity',
-    ],
     altText: 'Vue Conf Workshop materials',
     slug: 'vue-conf-workshop',
     description: 'Workshop materials from Vue Conference 2025 on proven patterns',
@@ -662,12 +571,10 @@ export const projects: Project[] = [
       'Performance optimization'
     ],
     learnings: [
-      'Vue 3 Composition API mastery',
-      'Advanced component patterns',
-      'TypeScript with Vue best practices',
-      'Performance optimization techniques',
-      'Testing strategies for Vue',
-      'Real-world pattern application'
+      'Vue.js best practices',
+      'Component design patterns',
+      'Vue Composition API',
+      'Advanced reactivity',
     ],
     challenges: [
       'Understanding complex composition API patterns',
@@ -683,12 +590,6 @@ export const projects: Project[] = [
     id: '14',
     title: 'FCC D3 Bar Chart',
     short: 'D3.js bar chart visualization for FreeCodeCamp certification',
-    learned: [
-      'D3.js fundamentals',
-      'SVG manipulation',
-      'Data binding concepts',
-      'Scales and axes',
-    ],
     altText: 'D3 Bar Chart Visualization',
     slug: 'fcc-d3-bars',
     description: 'Bar chart data visualization built with D3.js',
@@ -711,12 +612,10 @@ export const projects: Project[] = [
       'Axes with proper scales'
     ],
     learnings: [
-      'D3.js selection API',
-      'SVG coordinate systems',
-      'Data binding patterns (enter-update-exit)',
-      'Scales (linear, time) and axes',
-      'D3 transitions and animations',
-      'Responsive SVG techniques'
+      'D3.js fundamentals',
+      'SVG manipulation',
+      'Data binding concepts',
+      'Scales and axes',
     ],
     challenges: [
       'Understanding D3\'s data join pattern',
@@ -732,12 +631,6 @@ export const projects: Project[] = [
     id: '15',
     title: 'FCC D3 Story',
     short: 'Culmination of D3 data visualization projects',
-    learned: [
-      'Advanced D3.js techniques',
-      'Data storytelling',
-      'Complex visualizations',
-      'Multiple chart coordination',
-    ],
     altText: 'D3 Story Visualization',
     slug: 'fcc-d3-story',
     description: 'Final comprehensive D3.js visualization project',
@@ -760,11 +653,10 @@ export const projects: Project[] = [
       'Narrative flow'
     ],
     learnings: [
-      'Data storytelling techniques',
-      'Complex D3 patterns',
-      'Coordinating multiple charts',
-      'Advanced animations',
-      'Performance optimization with large datasets'
+      'Advanced D3.js techniques',
+      'Data storytelling',
+      'Complex visualizations',
+      'Multiple chart coordination',
     ],
     challenges: [
       'Managing multiple visualizations',
@@ -780,12 +672,6 @@ export const projects: Project[] = [
     id: '16',
     title: 'Vue Holiday Card Maker',
     short: 'Interactive holiday card creator built with Vue',
-    learned: [
-      'Vue component design',
-      'User customization features',
-      'Canvas API manipulation',
-      'File handling',
-    ],
     altText: 'Vue Holiday Card Maker',
     slug: 'vue-holiday-card',
     description: 'Create and customize holiday cards with Vue.js',
@@ -808,11 +694,10 @@ export const projects: Project[] = [
       'Real-time preview'
     ],
     learnings: [
-      'Vue reactive forms',
-      'Canvas API usage',
-      'File upload handling',
-      'Image export functionality',
-      'User customization patterns'
+      'Vue component design',
+      'User customization features',
+      'Canvas API manipulation',
+      'File handling',
     ],
     challenges: [
       'Canvas rendering accuracy',
@@ -827,11 +712,6 @@ export const projects: Project[] = [
     id: '17',
     title: 'Assaggio FCC Project',
     short: 'Front-End Development Library Certification project #1',
-    learned: [
-      'FreeCodeCamp certification requirements',
-      'JavaScript DOM manipulation',
-      'Responsive design principles',
-    ],
     altText: 'Assaggio FCC Project',
     slug: 'assaggio-fcc',
     description: 'First project in FreeCodeCamp\'s Front End Development Libraries path',
@@ -853,11 +733,9 @@ export const projects: Project[] = [
       'Passes automated tests'
     ],
     learnings: [
-      'FCC testing suite',
-      'Meeting certification criteria',
-      'Code organization',
-      'User story implementation',
-      'Test-driven development basics'
+      'FreeCodeCamp certification requirements',
+      'JavaScript DOM manipulation',
+      'Responsive design principles',
     ],
     challenges: [
       'Understanding all requirements',
@@ -872,11 +750,6 @@ export const projects: Project[] = [
     id: '18',
     title: 'bRavur FCC Project',
     short: 'Front-End Development Library Certification project #4',
-    learned: [
-      'Advanced React patterns',
-      'State management',
-      'Component lifecycle',
-    ],
     altText: 'bRavur FCC Project',
     slug: 'bravur-fcc',
     description: 'Fourth project in FreeCodeCamp\'s Front End certification',
@@ -899,11 +772,9 @@ export const projects: Project[] = [
       'List rendering'
     ],
     learnings: [
-      'React best practices',
-      'Component composition',
-      'Lifting state up',
-      'React hooks usage',
-      'Prop drilling solutions'
+      'Advanced React patterns',
+      'State management',
+      'Component lifecycle',
     ],
     challenges: [
       'Complex state management',
@@ -918,11 +789,6 @@ export const projects: Project[] = [
     id: '19',
     title: 'Toppur FCC Project',
     short: 'Front-End Development Library Certification project #5',
-    learned: [
-      'Final FCC certification project',
-      'Full application development',
-      'Pulling everything together',
-    ],
     altText: 'Toppur FCC Project',
     slug: 'toppur-fcc',
     description: 'Fifth and final FCC Front End Libraries certification project',
@@ -945,11 +811,9 @@ export const projects: Project[] = [
       'All user stories implemented'
     ],
     learnings: [
-      'End-to-end React development',
-      'Application architecture',
-      'Component design patterns',
-      'Testing user stories',
-      'Certification standards'
+      'Final FCC certification project',
+      'Full application development',
+      'Pulling everything together',
     ],
     challenges: [
       'Meeting all requirements',
@@ -965,11 +829,6 @@ export const projects: Project[] = [
     id: '20',
     title: 'Current Portfolio 2023',
     short: 'Portfolio website iteration from 2023',
-    learned: [
-      'Portfolio design principles',
-      'HTML and CSS best practices',
-      'Responsive layouts',
-    ],
     altText: 'Portfolio 2023',
     slug: 'portfolio-2023',
     description: 'Previous iteration of personal portfolio',
@@ -992,12 +851,9 @@ export const projects: Project[] = [
       'SEO optimized'
     ],
     learnings: [
-      'Portfolio best practices',
-      'Vanilla JS DOM manipulation',
-      'CSS animations',
-      'Responsive design patterns',
-      'Contact form handling',
-      'Personal branding'
+      'Portfolio design principles',
+      'HTML and CSS best practices',
+      'Responsive layouts',
     ],
     challenges: [
       'Making it stand out',
@@ -1014,12 +870,6 @@ export const projects: Project[] = [
     id: '21',
     title: 'Hosted Blog V3',
     short: 'Vue-based personal blog, third iteration',
-    learned: [
-      'Vue.js application structure',
-      'Blog architecture',
-      'TypeScript in Vue',
-      'Content management',
-    ],
     altText: 'Hosted Blog V3',
     slug: 'hosted-blog-v3',
     description: 'Third version of my personal blog built with Vue',
@@ -1042,11 +892,10 @@ export const projects: Project[] = [
       'Syntax highlighting'
     ],
     learnings: [
-      'Vue Router usage',
-      'Markdown processing in Vue',
-      'Blog architecture patterns',
-      'SEO optimization',
-      'Content management strategies'
+      'Vue.js application structure',
+      'Blog architecture',
+      'TypeScript in Vue',
+      'Content management',
     ],
     challenges: [
       'Markdown rendering',
@@ -1062,11 +911,6 @@ export const projects: Project[] = [
     id: '22',
     title: 'Astro Blog',
     short: 'Blog experiment with Astro static site generator',
-    learned: [
-      'Astro fundamentals',
-      'Static site generation',
-      'Content collections',
-    ],
     altText: 'Astro Blog',
     slug: 'astro-blog',
     description: 'Experimental blog built with Astro SSG',
@@ -1089,11 +933,9 @@ export const projects: Project[] = [
       'Zero JS by default'
     ],
     learnings: [
-      'Astro basics and philosophy',
-      'Content collections API',
-      'Static generation benefits',
-      'Markdown frontmatter',
-      'Build optimization'
+      'Astro fundamentals',
+      'Static site generation',
+      'Content collections',
     ],
     challenges: [
       'Learning new framework',
@@ -1108,12 +950,6 @@ export const projects: Project[] = [
     id: '23',
     title: 'MDX Blog with Next.js',
     short: 'Self-hosted blog with TypeScript and MDX',
-    learned: [
-      'Next.js framework',
-      'MDX for blog posts',
-      'TypeScript configuration',
-      'Server-side rendering',
-    ],
     altText: 'Next.js MDX Blog',
     slug: 'nextjs-mdx-blog',
     description: 'Modern blog built with Next.js, TypeScript, and MDX',
@@ -1136,11 +972,10 @@ export const projects: Project[] = [
       'Dark mode'
     ],
     learnings: [
-      'Next.js fundamentals',
-      'MDX capabilities and limitations',
-      'Server-side rendering concepts',
-      'TypeScript in Next.js',
-      'Tailwind integration'
+      'Next.js framework',
+      'MDX for blog posts',
+      'TypeScript configuration',
+      'Server-side rendering',
     ],
     challenges: [
       'MDX configuration complexity',
@@ -1156,11 +991,6 @@ export const projects: Project[] = [
     id: '24',
     title: 'CV Website',
     short: 'Print-friendly, minimalist CV page',
-    learned: [
-      'Print CSS',
-      'Minimalist design',
-      'CV best practices',
-    ],
     altText: 'CV Website',
     slug: 'cv-website',
     description: 'Minimalist CV webpage optimized for printing',
@@ -1183,11 +1013,9 @@ export const projects: Project[] = [
       'Clean minimalist design'
     ],
     learnings: [
-      'Print CSS media queries',
-      'Minimalist design principles',
-      'CV content organization',
-      'Typography for print',
-      'Template customization'
+      'Print CSS',
+      'Minimalist design',
+      'CV best practices',
     ],
     challenges: [
       'Print layout perfection',
@@ -1205,12 +1033,6 @@ export const projects: Project[] = [
     id: '25',
     title: 'Trapper Keeper V1',
     short: 'Rails SPA CRUD-style address book for managing contacts',
-    learned: [
-      'Ruby on Rails fundamentals',
-      'RESTful API design',
-      'CRUD operations',
-      'Single Page Application architecture',
-    ],
     altText: 'Screenshot of Trapper Keeper',
     slug: 'trapper-keeper-v1',
     description: 'Contact management system built with Ruby on Rails',
@@ -1233,12 +1055,10 @@ export const projects: Project[] = [
       'Data validation'
     ],
     learnings: [
-      'Rails MVC architecture',
-      'Building RESTful APIs',
-      'Database relationships with ActiveRecord',
-      'Authentication and authorization',
-      'Front-end/back-end integration',
-      'Rails conventions'
+      'Ruby on Rails fundamentals',
+      'RESTful API design',
+      'CRUD operations',
+      'Single Page Application architecture',
     ],
     challenges: [
       'Setting up Rails environment',
@@ -1254,12 +1074,6 @@ export const projects: Project[] = [
     id: '26',
     title: 'DevConnector 2.0',
     short: 'MERN stack social network for developers',
-    learned: [
-      'MERN stack development',
-      'Full-stack application architecture',
-      'Social media features',
-      'JWT authentication',
-    ],
     altText: 'DevConnector social network',
     slug: 'devconnector',
     description: 'Social networking platform for developers built with MERN stack',
@@ -1283,13 +1097,10 @@ export const projects: Project[] = [
       'Private routes'
     ],
     learnings: [
-      'Full MERN stack development',
-      'Redux state management',
-      'JWT authentication implementation',
-      'RESTful API design',
-      'MongoDB database design',
-      'React hooks and context',
-      'Express middleware'
+      'MERN stack development',
+      'Full-stack application architecture',
+      'Social media features',
+      'JWT authentication',
     ],
     challenges: [
       'Managing complex application state',
@@ -1306,12 +1117,6 @@ export const projects: Project[] = [
     id: '27',
     title: 'Frontend Final Project',
     short: 'Capstone project for Flatiron School bootcamp',
-    learned: [
-      'Bootcamp best practices',
-      'Full application development',
-      'Project presentation skills',
-      'Team collaboration',
-    ],
     altText: 'Frontend Final Project',
     slug: 'frontend-final-project',
     description: 'Final project for Flatiron School front-end program',
@@ -1334,12 +1139,10 @@ export const projects: Project[] = [
       'Error handling'
     ],
     learnings: [
-      'End-to-end development process',
-      'Project planning and scoping',
-      'Presentation skills',
-      'Code review process',
-      'Deployment strategies',
-      'Professional development workflow'
+      'Bootcamp best practices',
+      'Full application development',
+      'Project presentation skills',
+      'Team collaboration',
     ],
     challenges: [
       'Time constraints',
@@ -1355,12 +1158,6 @@ export const projects: Project[] = [
     id: '28',
     title: 'Backend Final Project',
     short: 'Backend capstone for bootcamp certification',
-    learned: [
-      'Backend architecture',
-      'Database design',
-      'API development',
-      'Authentication systems',
-    ],
     altText: 'Backend Final Project',
     slug: 'backend-final-project',
     description: 'Final backend project for bootcamp completion',
@@ -1383,12 +1180,10 @@ export const projects: Project[] = [
       'Comprehensive test suite'
     ],
     learnings: [
-      'Rails API mode',
-      'Database schema design with migrations',
+      'Backend architecture',
+      'Database design',
+      'API development',
       'Authentication systems',
-      'API versioning',
-      'Testing strategies with RSpec',
-      'Security best practices'
     ],
     challenges: [
       'Complex database relationships',
@@ -1404,12 +1199,6 @@ export const projects: Project[] = [
     id: '29',
     title: 'Native Treats API',
     short: 'API for managing local treats and food items',
-    learned: [
-      'API development',
-      'Data modeling',
-      'Backend patterns',
-      'MongoDB usage',
-    ],
     altText: 'Native Treats API',
     slug: 'native-treats-api',
     description: 'RESTful API for cataloging regional treats and foods',
@@ -1432,12 +1221,10 @@ export const projects: Project[] = [
       'Rate limiting'
     ],
     learnings: [
-      'Express.js fundamentals',
-      'MongoDB queries and aggregation',
-      'API design patterns',
-      'Data validation with Joi',
-      'Error handling middleware',
-      'API security'
+      'API development',
+      'Data modeling',
+      'Backend patterns',
+      'MongoDB usage',
     ],
     challenges: [
       'Geographic data handling',
@@ -1453,12 +1240,6 @@ export const projects: Project[] = [
     id: '30',
     title: 'JP Morgan Forage Program',
     short: 'Software engineering virtual experience program tasks',
-    learned: [
-      'Financial data visualization',
-      'Python for finance',
-      'Real-world software engineering',
-      'Working with existing codebases',
-    ],
     altText: 'JP Morgan Forage tasks',
     slug: 'jpmc-forage',
     description: 'Completed JP Morgan Chase Software Engineering virtual experience',
@@ -1481,12 +1262,10 @@ export const projects: Project[] = [
       'Graph visualization'
     ],
     learnings: [
-      'Working with financial data',
-      'Real-time data processing',
-      'Chart implementation',
-      'Professional codebase navigation',
-      'Industry coding standards',
-      'Enterprise development practices'
+      'Financial data visualization',
+      'Python for finance',
+      'Real-world software engineering',
+      'Working with existing codebases',
     ],
     challenges: [
       'Understanding financial concepts',
@@ -1504,12 +1283,6 @@ export const projects: Project[] = [
     id: '31',
     title: 'CS50P Final Project',
     short: 'Final project for Harvard\'s CS50 Python course',
-    learned: [
-      'Python programming fundamentals',
-      'Problem-solving with code',
-      'Software engineering principles',
-      'Testing methodologies',
-    ],
     altText: 'CS50P Final Project',
     slug: 'cs50p-final',
     description: 'Capstone project for Harvard CS50\'s Introduction to Programming with Python',
@@ -1532,12 +1305,10 @@ export const projects: Project[] = [
       'Professional documentation'
     ],
     learnings: [
-      'Python fundamentals and idioms',
-      'Problem decomposition',
-      'Testing methodologies with pytest',
-      'Documentation practices',
-      'Code organization',
-      'Academic integrity'
+      'Python programming fundamentals',
+      'Problem-solving with code',
+      'Software engineering principles',
+      'Testing methodologies',
     ],
     challenges: [
       'Meeting CS50 requirements',
@@ -1554,12 +1325,6 @@ export const projects: Project[] = [
     id: '32',
     title: '100 Days of Code Log',
     short: 'Daily log of 100 days of consistent coding practice',
-    learned: [
-      'Consistency and discipline',
-      'Daily practice importance',
-      'Public accountability',
-      'Habit formation',
-    ],
     altText: '100 Days of Code Log',
     slug: '100-days-of-code',
     description: 'Documentation of my 100 Days of Code challenge journey',
@@ -1582,12 +1347,10 @@ export const projects: Project[] = [
       'Project links'
     ],
     learnings: [
-      'Power of consistency',
-      'Building sustainable habits',
-      'Public accountability benefits',
-      'Documentation skills',
-      'Perseverance and grit',
-      'Learning in public'
+      'Consistency and discipline',
+      'Daily practice importance',
+      'Public accountability',
+      'Habit formation',
     ],
     challenges: [
       'Maintaining daily streak',
@@ -1604,11 +1367,6 @@ export const projects: Project[] = [
     id: '33',
     title: 'FreeCodeCamp Fork',
     short: 'Personal fork of FreeCodeCamp for learning and contributions',
-    learned: [
-      'Open source contribution',
-      'Large codebase navigation',
-      'Community development',
-    ],
     altText: 'FreeCodeCamp Fork',
     slug: 'freecodecamp-fork',
     description: 'Forked FreeCodeCamp repo for learning and potential contributions',
@@ -1630,12 +1388,9 @@ export const projects: Project[] = [
       'Open source codebase'
     ],
     learnings: [
+      'Open source contribution',
       'Large codebase navigation',
-      'Open source workflows',
-      'Community contribution processes',
-      'Education platform architecture',
-      'Code review processes',
-      'Monorepo management'
+      'Community development',
     ],
     challenges: [
       'Understanding massive codebase',
@@ -1651,12 +1406,6 @@ export const projects: Project[] = [
     id: '34',
     title: 'Redux Reducer Bootcamp Exercise',
     short: 'Flatiron School Redux exercise for state management',
-    learned: [
-      'Redux fundamentals',
-      'State management patterns',
-      'Reducer composition',
-      'Immutability concepts',
-    ],
     altText: 'Redux Reducer Exercise',
     slug: 'redux-reducer-exercise',
     description: 'Bootcamp exercise focusing on Redux reducers and state',
@@ -1678,12 +1427,10 @@ export const projects: Project[] = [
       'Testing reducers'
     ],
     learnings: [
-      'Redux core concepts',
-      'Pure functions importance',
-      'Immutable state updates',
-      'Action types and creators',
-      'Store configuration',
-      'Redux debugging'
+      'Redux fundamentals',
+      'State management patterns',
+      'Reducer composition',
+      'Immutability concepts',
     ],
     challenges: [
       'Understanding Redux flow',
@@ -1699,11 +1446,6 @@ export const projects: Project[] = [
     id: '35',
     title: 'Folkmusic Contribution',
     short: 'Open source contribution to Folkmusic.com project',
-    learned: [
-      'Open source contribution',
-      'CSS improvements',
-      'Collaborative development',
-    ],
     altText: 'Folkmusic Contribution',
     slug: 'folkmusic-contribution',
     description: 'Contributed improvements to isolated parts of folkmusic.com',
@@ -1725,11 +1467,9 @@ export const projects: Project[] = [
       'Documentation updates'
     ],
     learnings: [
-      'Contributing to existing projects',
-      'Code review feedback process',
-      'Git collaborative workflows',
-      'CSS best practices',
-      'Community collaboration etiquette'
+      'Open source contribution',
+      'CSS improvements',
+      'Collaborative development',
     ],
     challenges: [
       'Understanding project structure',
@@ -1745,12 +1485,6 @@ export const projects: Project[] = [
     id: '36',
     title: 'GitHub Actions for CI',
     short: 'Learning GitHub Actions for continuous integration',
-    learned: [
-      'GitHub Actions workflow',
-      'CI/CD pipelines',
-      'Automated testing',
-      'DevOps basics',
-    ],
     altText: 'GitHub Actions CI',
     slug: 'github-actions-ci',
     description: 'Project for learning GitHub Actions and CI/CD practices',
@@ -1773,12 +1507,10 @@ export const projects: Project[] = [
       'Matrix builds'
     ],
     learnings: [
-      'GitHub Actions syntax',
-      'YAML configuration',
-      'CI/CD best practices',
-      'Workflow triggers',
-      'Secret management',
-      'Action marketplace'
+      'GitHub Actions workflow',
+      'CI/CD pipelines',
+      'Automated testing',
+      'DevOps basics',
     ],
     challenges: [
       'Understanding workflow syntax',
@@ -1794,11 +1526,6 @@ export const projects: Project[] = [
     id: '37',
     title: 'Connect Tech 2021 Conference App',
     short: 'Conference workshop application from Connect Tech 2021',
-    learned: [
-      'Conference workshop patterns',
-      'TypeScript in practice',
-      'React best practices',
-    ],
     altText: 'Connect Tech Conference App',
     slug: 'connect-tech-2021',
     description: 'Workshop app from Connect Tech 2021 conference',
@@ -1821,12 +1548,9 @@ export const projects: Project[] = [
       'Responsive design'
     ],
     learnings: [
-      'Conference app patterns',
-      'TypeScript advanced types',
-      'React performance optimization',
-      'Workshop learning techniques',
-      'Industry best practices',
-      'Networking at conferences'
+      'Conference workshop patterns',
+      'TypeScript in practice',
+      'React best practices',
     ],
     challenges: [
       'Following workshop pace',
@@ -1842,12 +1566,6 @@ export const projects: Project[] = [
     id: '38',
     title: 'TDD Big Picture',
     short: 'Learning Test-Driven Development concepts and practices',
-    learned: [
-      'TDD methodology',
-      'Testing patterns',
-      'C# fundamentals',
-      'Red-Green-Refactor cycle',
-    ],
     altText: 'TDD Big Picture Course',
     slug: 'tdd-big-picture',
     description: 'Pluralsight course on Test-Driven Development fundamentals',
@@ -1869,12 +1587,10 @@ export const projects: Project[] = [
       'Course exercises'
     ],
     learnings: [
-      'TDD methodology and benefits',
-      'Writing tests first',
-      'Refactoring safely with tests',
-      'Test organization',
-      'C# testing frameworks',
-      'When to use TDD'
+      'TDD methodology',
+      'Testing patterns',
+      'C# fundamentals',
+      'Red-Green-Refactor cycle',
     ],
     challenges: [
       'Thinking test-first',
@@ -1890,11 +1606,6 @@ export const projects: Project[] = [
     id: '39',
     title: '.NET Tools Exploration',
     short: 'Exploring ASP.NET command line tools and utilities',
-    learned: [
-      '.NET ecosystem',
-      'Command line tools',
-      'C# development',
-    ],
     altText: '.NET Tools',
     slug: 'dotnet-tools',
     description: 'Forked repo exploring various .NET command line tools',
@@ -1916,12 +1627,9 @@ export const projects: Project[] = [
       'Template systems'
     ],
     learnings: [
-      '.NET CLI basics',
-      'Tool installation and usage',
-      'Project templates',
-      'NuGet package management',
-      'Development workflows',
-      'Cross-platform .NET'
+      '.NET ecosystem',
+      'Command line tools',
+      'C# development',
     ],
     challenges: [
       'Understanding .NET ecosystem',
@@ -1937,11 +1645,6 @@ export const projects: Project[] = [
     id: '40',
     title: 'Yup Nosey',
     short: 'Experimental project exploring curiosity-driven development',
-    learned: [
-      'Experimental development',
-      'Rapid prototyping',
-      'Curiosity-driven coding',
-    ],
     altText: 'Yup Nosey Project',
     slug: 'yup-nosey',
     description: 'Curiosity-driven experimental project',
@@ -1963,12 +1666,9 @@ export const projects: Project[] = [
       'No strict requirements'
     ],
     learnings: [
-      'Value of experimentation',
-      'Learning through exploration',
-      'Prototyping quickly',
-      'Being comfortable with uncertainty',
-      'Embracing curiosity',
-      'Failure as learning'
+      'Experimental development',
+      'Rapid prototyping',
+      'Curiosity-driven coding',
     ],
     challenges: [
       'Lack of clear goals',
@@ -1984,12 +1684,6 @@ export const projects: Project[] = [
     id: '41',
     title: 'Gulp Jest Plugin',
     short: 'Gulp plugin for running Jest tests in build pipeline',
-    learned: [
-      'Gulp task runners',
-      'Plugin development',
-      'Build automation',
-      'Stream processing',
-    ],
     altText: 'Gulp Jest Plugin',
     slug: 'gulp-jest',
     description: 'Gulp plugin integration for Jest testing framework',
@@ -2012,12 +1706,10 @@ export const projects: Project[] = [
       'Watch mode support'
     ],
     learnings: [
-      'Gulp plugin architecture',
-      'Stream processing in Node.js',
-      'Build tool integration',
-      'Testing automation',
-      'Plugin development patterns',
-      'NPM package publishing'
+      'Gulp task runners',
+      'Plugin development',
+      'Build automation',
+      'Stream processing',
     ],
     challenges: [
       'Understanding Gulp streams',
@@ -2033,11 +1725,6 @@ export const projects: Project[] = [
     id: '42',
     title: 'GitHub Profile README',
     short: 'GitHub profile README with stats and info',
-    learned: [
-      'GitHub profile customization',
-      'Markdown formatting',
-      'Personal branding',
-    ],
     altText: 'GitHub Profile README',
     slug: 'github-profile',
     description: 'Custom GitHub profile README with stats and links',
@@ -2059,12 +1746,9 @@ export const projects: Project[] = [
       'Visitor counter'
     ],
     learnings: [
-      'GitHub profile features',
-      'Markdown advanced formatting',
-      'Personal branding online',
-      'Stats API integration',
-      'Visual presentation in markdown',
-      'README best practices'
+      'GitHub profile customization',
+      'Markdown formatting',
+      'Personal branding',
     ],
     challenges: [
       'Making it stand out',

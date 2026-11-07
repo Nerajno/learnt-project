@@ -2,11 +2,12 @@
 import Layout from '../layouts/Layout.astro';
 import ProjectList from '../components/ProjectList.astro';
 import { getFeaturedProjects } from '../data/projects';
+import { homeJsonLd } from '../lib/jsonld';
 
 const featuredProjects = getFeaturedProjects();
 ---
 
-<Layout title="Welcome | Learnt">
+<Layout title="Welcome | Learnt" jsonLd={homeJsonLd(new URL('/', Astro.site))}>
   <section class="py-16">
     <div class="container-custom">
       <div class="text-center max-w-3xl mx-auto">

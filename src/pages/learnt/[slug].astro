@@ -4,6 +4,7 @@ import ProjectNav from "../../components/ProjectNav.astro";
 import ProjectImage from "../../components/ProjectImage.astro";
 import { projects } from "../../data/projects";
 import { publicFileExists, repoLabel } from "../../lib/images";
+import { projectJsonLd } from "../../lib/jsonld";
 import { Image } from 'astro:assets';
 
 // Generate static paths for all projects
@@ -100,19 +101,11 @@ const techIcons: Record<string, string> = {
 const ogImage = publicFileExists(project.screenshot)
   ? project.screenshot ?? '/images/placeholder.png'
   : '/images/placeholder.png';
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "CreativeWork",
-  name: project.title,
-  description: project.description,
-  dateCreated: project.born,
-  url: canonicalUrl,
-  image: new URL(ogImage, Astro.site).toString(),
-  author: {
-    "@type": "Person",
-    name: "Your Name", // Replace with your name
-  },
-};
+const structuredData = projectJsonLd(
+  project,
+  new URL(`/learnt/${project.slug}/`, Astro.site),
+  new URL(ogImage, Astro.site),
+);
 
 const duration = getProjectDuration(project.born, project.died);
 ---
@@ -121,8 +114,8 @@ const duration = getProjectDuration(project.born, project.died);
   title={`${project.title} - Learnt Project`}
   description={project.short || project.description}
   image={project.screenshot}
+  jsonLd={structuredData}
 >
-  <script type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
 
   {/* Breadcrumb Navigation */}
   <nav

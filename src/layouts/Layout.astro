@@ -7,19 +7,20 @@ import themeInit from '@nerajno/dialects/theme-init.js?raw';
 import '../styles/global.css';
 import { site } from '../data/site';
 import { publicFileExists } from '../lib/images';
+import { serializeJsonLd, type JsonLd } from '../lib/jsonld';
 
 export interface Props {
   title: string;
   description?: string;
   image?: string;
-  project?: any;
+  jsonLd?: JsonLd | JsonLd[];
 }
 
 const { 
   title, 
   description = "A showcase of my learning journey through various development projects and technologies.",
   image = "/og-image.png",
-  project
+  jsonLd
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -66,24 +67,8 @@ const current =
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={new URL(ogImage, Astro.url)} />
     
-    <!-- JSON-LD Structured Data for SEO (Project/Article) -->
-    {Astro.props.project && (
-      <script type="application/ld+json" is:inline>{JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'CreativeWork',
-        'name': Astro.props.project.title,
-        'description': Astro.props.project.description,
-        'image': new URL(ogImage, Astro.site).toString(),
-        'url': new URL(Astro.url.pathname, Astro.site).toString(),
-        'datePublished': Astro.props.project.born,
-        'dateModified': Astro.props.project.died ?? Astro.props.project.born,
-        'author': {
-          '@type': 'Person',
-          'name': 'Nerando Johnson'
-        },
-        'keywords': Astro.props.project.tags?.join(', ')
-      })}</script>
-    )}
+    <!-- JSON-LD structured data (#28) -->
+    {jsonLd && <script type="application/ld+json" set:html={serializeJsonLd(jsonLd)} />}
     <!-- GA4 || Google Analytics -->
     <script
       is:inline

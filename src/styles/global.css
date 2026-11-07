@@ -27,11 +27,11 @@
     color: var(--text-strong);
   }
 
-  a {
+  :where(a) {
     color: var(--accent);
   }
 
-  a:hover {
+  :where(a):hover {
     color: var(--accent-hover);
   }
 
@@ -174,9 +174,6 @@
   }
 
   /* Hero gradient text */
-  .gradient-text {
-    color: var(--accent);
-  }
 
   /* Container utilities */
   .container-custom {

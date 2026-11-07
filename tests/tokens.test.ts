@@ -17,7 +17,7 @@ describe('token adoption', () => {
   it('has no raw hex colours under src', () => {
     const hits = files.flatMap((file) => {
       const text = readFileSync(file, 'utf8');
-      return [...text.matchAll(/#[0-9a-fA-F]{3,6}\b/g)].map((m) => `${file}: ${m[0]}`);
+      return [...text.matchAll(/#[0-9a-fA-F]{3,8}(?![\w-])/g)].map((m) => `${file}: ${m[0]}`);
     });
     expect(hits).toEqual([]);
   });
@@ -33,7 +33,7 @@ describe('token adoption', () => {
   it('removes the safelist and the blue scale from Tailwind', () => {
     const config = readFileSync(new URL('../tailwind.config.mjs', import.meta.url), 'utf8');
     expect(config).not.toContain('safelist');
-    expect(config).not.toMatch(/\bprimary\s*:/);
+    expect(config).not.toMatch(/["']?primary["']?\s*:/);
   });
 });
 

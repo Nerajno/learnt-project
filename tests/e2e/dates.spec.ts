@@ -18,7 +18,16 @@ test('duration is born to died and does not age with today', async ({ page }) =>
   await page.goto('/learnt/side-project-status/');
   await expect(page.locator(`time[datetime="${side.died}"]`).first()).toBeVisible();
   // 2025-04-15 -> 2025-06-01 = 47 days
-  await expect(page.locator('dd').filter({ hasText: '47 days' })).toBeVisible();
+  await expect(page.getByText('47 days', { exact: true })).toBeVisible();
+});
+
+test('visible dates match the stored calendar date', async ({ page }) => {
+  await page.goto('/learnt/trumma-drum-machine/');
+  await expect(page.locator(`time[datetime="${trumma.born}"]`).first()).toHaveText('August 15, 2024');
+
+  await page.goto('/learnt/');
+  await expect(page.locator('article[data-slug="trumma-drum-machine"] time')).toHaveText('Aug 2024');
+  await expect(page.locator('article[data-slug="digital-garden"] time')).toHaveText('Sep 2025');
 });
 
 test('an open project shows no duration', async ({ page }) => {

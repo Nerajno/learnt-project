@@ -32,13 +32,17 @@ const relatedProjects = Array.isArray(project.tags)
       .slice(0, 3)
   : [];
 
-// Format dates nicely
+// Format dates nicely without shifting date-only values by timezone
 const formatDate = (dateString: string) => {
   if (!dateString) return "";
-  return new Date(dateString).toLocaleDateString("en-US", {
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(dateString)
+    ? new Date(`${dateString}T00:00:00Z`)
+    : new Date(dateString);
+  return date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
+    timeZone: "UTC",
   });
 };
 

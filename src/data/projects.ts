@@ -11,9 +11,9 @@ export interface Project {
   phase: 'active' | 'sunset' | 'archived';
   born: string;
   died?: string;
-  causeOfDeath?: 'shipped' | 'superseded' | 'outgrew-stack' | 'course-ended' | 'abandoned' | 'merged-into';
-  supersededBy?: string;
-  epitaph?: string;
+  causeOfDeath?: 'shipped' | 'superseded' | 'outgrew-stack' | 'course-ended' | 'abandoned' | 'merged-into'; // TODO(#39): populate
+  supersededBy?: string; // TODO(#25): slug of the successor
+  epitaph?: string; // TODO(#25): one sentence on what it taught me
   short?: string;
   learned?: string[];
   altText?: string;

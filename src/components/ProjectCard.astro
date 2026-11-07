@@ -1,5 +1,7 @@
 ---
 import type { Project } from "../data/projects";
+import ProjectImage from "./ProjectImage.astro";
+import { repoLabel } from "../lib/images";
 
 export interface Props {
   project: Project;
@@ -57,13 +59,14 @@ function getCategoryIcon(category: string) {
 >
   <!-- Project Image -->
   <div class="relative overflow-hidden rounded-t-xl bg-gray-100 dark:bg-gray-800">
-    <img
-      src={project.screenshot || '/images/project-placeholder.svg'}
-      alt={project.altText || `Screenshot of ${project.title}`}
+    <ProjectImage
+      src={project.screenshot}
+      alt={project.altText}
+      title={project.title}
+      slug={project.slug}
+      repo={repoLabel(project.githubUrl, project.slug)}
       class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
-      loading="lazy"
-      decoding="async"
-      onerror="this.src='/images/project-placeholder.svg'"
+      heightClass="h-48"
     />
 
     <!-- Overlay with links on hover -->

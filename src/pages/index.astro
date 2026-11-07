@@ -1,12 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ProjectList from '../components/ProjectList.astro';
-import { getAllProjects } from '../data/projects';
+import { getFeaturedProjects } from '../data/projects';
 
-// Learnt is for past projects; living ones are listed on the About page.
-const featuredProjects = getAllProjects().filter(
-  project => project.featured && project.phase !== 'active'
-);
+const featuredProjects = getFeaturedProjects();
 ---
 
 <Layout title="Welcome | Learnt">

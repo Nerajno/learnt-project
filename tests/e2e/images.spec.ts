@@ -11,15 +11,19 @@ for (const path of pages) {
 
     await page.goto(path);
 
-    // Load lazy images: scroll to the bottom, then wait until every img is complete.
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    // Scroll each image into view so native `loading="lazy"` images actually load,
+    // then wait until every img is complete. A single scroll-to-bottom jump misses
+    // images in the middle of a long page.
+    const images = page.locator('img');
+    const count = await images.count();
+    for (let i = 0; i < count; i++) {
+      await images.nth(i).scrollIntoViewIfNeeded();
+    }
     await page.waitForFunction(() =>
       Array.from(document.images).every((img) => img.complete)
     );
 
     // Every real image must have loaded and carry alt text.
-    const images = page.locator('img');
-    const count = await images.count();
     for (let i = 0; i < count; i++) {
       const img = images.nth(i);
       expect(await img.evaluate((el: HTMLImageElement) => el.naturalWidth)).toBeGreaterThan(0);
@@ -30,10 +34,11 @@ for (const path of pages) {
     // With no screenshots captured yet, every project image is a designed placeholder.
     expect(await page.locator('[data-placeholder="true"]').count()).toBeGreaterThan(0);
 
-    // No request on the page may 404, including images and the OG asset.
+    // The OG asset must exist in THIS build, not just on the deployed site.
     const og = await page.locator('meta[property="og:image"]').getAttribute('content');
     expect(og).toBeTruthy();
-    const ogResponse = await page.request.get(new URL(og!, page.url()).toString());
+    const ogPath = new URL(og!, page.url()).pathname;
+    const ogResponse = await page.request.get(ogPath);
     expect(ogResponse.ok()).toBe(true);
 
     expect(failures).toEqual([]);

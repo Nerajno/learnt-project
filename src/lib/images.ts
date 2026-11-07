@@ -1,5 +1,5 @@
-import { existsSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, readdirSync, statSync } from 'node:fs';
+import { join, resolve, sep } from 'node:path';
 
 const PUBLIC_DIR = join(process.cwd(), 'public');
 
@@ -8,8 +8,18 @@ export function publicFileExists(pathname?: string): boolean {
   if (!pathname) return false;
   const clean = pathname.split('?')[0].split('#')[0].replace(/^\//, '');
   if (!clean) return false;
-  const full = join(PUBLIC_DIR, clean);
-  return existsSync(full) && statSync(full).isFile();
+  const full = resolve(PUBLIC_DIR, clean);
+  if (!full.startsWith(PUBLIC_DIR + sep)) return false;
+  if (!existsSync(full) || !statSync(full).isFile()) return false;
+  // macOS is case-insensitive; Linux hosting is not. Verify every path segment
+  // matches the on-disk entry exactly, directories included.
+  const segments = full.slice(PUBLIC_DIR.length + sep.length).split(sep);
+  let current = PUBLIC_DIR;
+  for (const segment of segments) {
+    if (!readdirSync(current).includes(segment)) return false;
+    current = join(current, segment);
+  }
+  return true;
 }
 
 /** `https://github.com/Nerajno/foo` -> `Nerajno/foo`; otherwise the slug. */

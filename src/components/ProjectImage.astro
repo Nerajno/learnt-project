@@ -33,7 +33,7 @@ const label = repo ?? repoLabel(undefined, slug);
   hasImage ? (
     <img
       src={src}
-      alt={alt || `Screenshot of ${title}`}
+      alt={alt ?? `Screenshot of ${title}`}
       class={className}
       loading={loading}
       decoding="async"

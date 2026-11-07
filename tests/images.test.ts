@@ -22,6 +22,17 @@ describe('publicFileExists', () => {
   it('returns false for a directory', () => {
     expect(publicFileExists('/images')).toBe(false);
   });
+
+  it('rejects a path whose case does not match the file on disk', () => {
+    expect(publicFileExists('/images/PLACEHOLDER.png')).toBe(false);
+    expect(publicFileExists('/Images/placeholder.png')).toBe(false);
+  });
+
+  it('never escapes the public directory', () => {
+    expect(publicFileExists('../package.json')).toBe(false);
+    expect(publicFileExists('/../package.json')).toBe(false);
+    expect(publicFileExists('images/../package.json')).toBe(false);
+  });
 });
 
 describe('repoLabel', () => {

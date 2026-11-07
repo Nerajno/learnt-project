@@ -115,8 +115,8 @@ const ogImage = image && publicFileExists(image) ? image : '/images/placeholder.
       <div class="container-custom">
         <div class="flex items-center justify-between h-16">
           <!-- Logo/Brand -->
-          <a href="/" class="flex items-center space-x-2 text-xl font-bold text-gray-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-            <svg class="w-8 h-8 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
+          <a href="/" class="flex items-center space-x-2 text-xl font-bold text-gray-900 dark:text-white hover:text-accent-hover transition-colors">
+            <svg class="w-8 h-8 text-accent" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
             <span>Learnt</span>
@@ -183,7 +183,7 @@ const ogImage = image && publicFileExists(image) ? image : '/images/placeholder.
           <!-- Brand -->
           <div class="col-span-1 md:col-span-2">
             <div class="flex items-center space-x-2 text-xl font-bold text-gray-900 dark:text-white mb-4">
-              <svg class="w-8 h-8 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="w-8 h-8 text-accent" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
               <span>Learnt</span>
@@ -294,16 +294,16 @@ const ogImage = image && publicFileExists(image) ? image : '/images/placeholder.
       
       /* Navigation styles */
       .nav-link {
-        @apply text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 px-3 py-2 rounded-md text-sm font-medium transition-colors relative;
+        @apply text-gray-600 dark:text-gray-300 hover:text-accent-hover px-3 py-2 rounded-md text-sm font-medium transition-colors relative;
       }
       
       .nav-link.active {
-        @apply text-primary-600 dark:text-primary-400;
+        @apply text-accent;
       }
       
       .nav-link::after {
         content: '';
-        @apply absolute bottom-0 left-1/2 w-0 h-0.5 bg-primary-600 transition-all duration-300 transform -translate-x-1/2;
+        @apply absolute bottom-0 left-1/2 w-0 h-0.5 bg-accent transition-all duration-300 transform -translate-x-1/2;
       }
       
       .nav-link:hover::after {
@@ -311,11 +311,11 @@ const ogImage = image && publicFileExists(image) ? image : '/images/placeholder.
       }
       
       .mobile-nav-link {
-        @apply block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors;
+        @apply block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:text-accent-hover hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors;
       }
       
       .footer-link {
-        @apply text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors;
+        @apply text-gray-600 dark:text-gray-400 hover:text-accent-hover transition-colors;
       }
       
       .social-link {

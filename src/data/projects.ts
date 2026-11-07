@@ -1,3 +1,19 @@
+// VWC §4 Artifact Deep Dive, headstone projects only (#17). Rendered by #24.
+export interface DeepDive {
+  problem: string; // 4-1
+  successCriteria: string[]; // 4-2
+  approach: string; // 4-3
+  tradeoffs: { decision: string; why: string; adrUrl?: string }[]; // 4-4, 4-14
+  measurableOutcome: string; // 4-5
+  v2: string[]; // 4-6
+  walkthroughVideo?: string; // 4-7, 4-10
+  // 4-8, 4-9. Pre-2023 projects may answer 'No AI tools used'.
+  ai?: { tools: string[]; aiDid: string; iOwned: string; aiGotWrong: string } | 'No AI tools used';
+  architectureDiagram?: string; // 4-13
+  dataModel?: string; // 4-15
+  relatedPosts?: string[]; // 4-14
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -25,6 +41,7 @@ export interface Project {
     lighthouse?: number;
     ci?: boolean;
   };
+  deepDive?: DeepDive; // headstones only; TODO(#26/#50): write the content
   short?: string;
   altText?: string;
   githubUrl?: string;
@@ -36,7 +53,7 @@ export interface Project {
   features: string[];
   learnings: string[];
   challenges: string[];
-  nextSteps?: string[];
+  nextSteps?: string[]; // roadmap for living projects; headstones use deepDive.v2
   tags: string[];
   featured: boolean;
   changelog?: { date: string; note: string }[];

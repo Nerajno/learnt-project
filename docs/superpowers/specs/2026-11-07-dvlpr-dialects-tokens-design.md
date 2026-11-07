@@ -88,7 +88,7 @@ PR, so the ticket and the code agree.
 | `from-primary-600 to-purple-600 bg-clip-text text-transparent` (gradient text) | `color: var(--accent)` |
 | `from-primary-50 to-purple-50 ...` (archive hero) | `bg-surface-alt` |
 | `text-white` on an accent fill | `text-surface` |
-| `ring-offset-white dark:ring-offset-gray-900` | `ring-offset-surface` |
+| `ring-offset-white dark:ring-offset-gray-900` | delete; the base `focus-visible` outline owns the offset |
 
 Where a class appears with a `dark:` counterpart for the same role, the token
 replaces both. Leave non-colour utilities (sizes, spacing, radius) untouched.

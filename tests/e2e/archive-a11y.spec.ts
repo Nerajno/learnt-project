@@ -11,10 +11,8 @@ test.describe('without JavaScript', () => {
   });
 });
 
-test('the footer category link filters the archive', async ({ page }) => {
-  await page.goto('/learnt/');
-  await page.locator('footer a[href="/learnt?category=frontend"]').click();
-  await page.waitForURL(/category=frontend/);
+test('the category query filters the archive', async ({ page }) => {
+  await page.goto('/learnt/?category=frontend');
 
   const visible = page.locator('#project-list article[data-slug]:not([hidden])');
   const count = await visible.count();

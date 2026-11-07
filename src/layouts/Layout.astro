@@ -214,10 +214,17 @@ const current =
 
     <!-- Scripts -->
     <script>
-      // Theme toggle functionality
+      // Theme toggle
       const themeToggle = document.getElementById('theme-toggle');
       const html = document.documentElement;
-      
+
+      const setThemeButton = () => {
+        const dark = html.classList.contains('dark');
+        themeToggle?.setAttribute('aria-pressed', String(dark));
+        themeToggle?.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+      };
+
+      setThemeButton();
       themeToggle?.addEventListener('click', () => {
         const isDark = html.classList.contains('dark');
 
@@ -225,20 +232,37 @@ const current =
         html.classList.toggle('light', isDark);
         html.setAttribute('data-theme', isDark ? 'light' : 'dark');
         localStorage.setItem('theme', isDark ? 'light' : 'dark');
+        setThemeButton();
       });
 
-      // Mobile menu toggle
+      // Mobile menu
       const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
       const mobileMenu = document.getElementById('mobile-menu');
-      
+
+      const setMenu = (open: boolean) => {
+        if (!mobileMenu || !mobileMenuToggle) return;
+        mobileMenu.classList.toggle('hidden', !open);
+        mobileMenuToggle.setAttribute('aria-expanded', String(open));
+        if (open) mobileMenu.querySelector('a')?.focus();
+      };
+
       mobileMenuToggle?.addEventListener('click', () => {
-        mobileMenu?.classList.toggle('hidden');
+        setMenu(mobileMenu?.classList.contains('hidden') ?? false);
       });
 
-      // Close mobile menu when clicking outside
-      document.addEventListener('click', (e) => {
-        if (!mobileMenuToggle?.contains(e.target as Node) && !mobileMenu?.contains(e.target as Node)) {
-          mobileMenu?.classList.add('hidden');
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && mobileMenu && !mobileMenu.classList.contains('hidden')) {
+          setMenu(false);
+          mobileMenuToggle?.focus();
+        }
+      });
+
+      document.addEventListener('click', (event) => {
+        if (
+          !mobileMenuToggle?.contains(event.target as Node) &&
+          !mobileMenu?.contains(event.target as Node)
+        ) {
+          setMenu(false);
         }
       });
 

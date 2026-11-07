@@ -42,3 +42,87 @@ test('footer has the new links and no categories column', async ({ page }) => {
   await expect(footer).toContainText(`© ${new Date().getFullYear()}`);
   await expect(footer.getByRole('link', { name: site.name })).toHaveAttribute('href', site.portfolio);
 });
+
+test('theme toggle mirrors dark mode on load and click', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('/');
+  const toggle = page.locator('#theme-toggle');
+  await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+  await expect(toggle).toHaveAttribute('aria-label', 'Switch to light mode');
+
+  await toggle.click();
+  await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+  await expect(toggle).toHaveAttribute('aria-label', 'Switch to dark mode');
+
+  await page.reload();
+  await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+});
+
+test('mobile menu opens, closes with Escape, and returns focus', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.goto('/');
+  const button = page.locator('#mobile-menu-toggle');
+  const menu = page.locator('#mobile-menu');
+
+  await expect(button).toHaveAttribute('aria-expanded', 'false');
+  await expect(menu).toBeHidden();
+
+  await button.click();
+  await expect(button).toHaveAttribute('aria-expanded', 'true');
+  await expect(menu).toBeVisible();
+  await expect(menu.getByRole('link', { name: 'Home', exact: true })).toBeFocused();
+
+  await page.keyboard.press('Escape');
+  await expect(button).toHaveAttribute('aria-expanded', 'false');
+  await expect(menu).toBeHidden();
+  await expect(button).toBeFocused();
+
+  await page.keyboard.press('Enter');
+  await expect(button).toHaveAttribute('aria-expanded', 'true');
+});
+
+test('tap targets are at least 44px', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/');
+  const targets = [
+    ...(await page.locator('.nav-link').all()),
+    page.locator('#theme-toggle'),
+  ];
+  for (const target of targets) {
+    const box = await target.boundingBox();
+    expect(box).not.toBeNull();
+    expect(box!.width).toBeGreaterThanOrEqual(44);
+    expect(box!.height).toBeGreaterThanOrEqual(44);
+  }
+
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.reload();
+  for (const target of [page.locator('#theme-toggle'), page.locator('#mobile-menu-toggle')]) {
+    const box = await target.boundingBox();
+    expect(box).not.toBeNull();
+    expect(box!.width).toBeGreaterThanOrEqual(44);
+    expect(box!.height).toBeGreaterThanOrEqual(44);
+  }
+});
+
+test('keyboard focus is visible', async ({ page }) => {
+  await page.goto('/');
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
+  const outline = await page.evaluate(() => {
+    const el = document.activeElement as HTMLElement;
+    const style = getComputedStyle(el);
+    return { outlineStyle: style.outlineStyle, outlineWidth: style.outlineWidth };
+  });
+  expect(outline.outlineStyle).not.toBe('none');
+  expect(outline.outlineWidth).not.toBe('0px');
+});
+
+test('no horizontal overflow at 360px', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.goto('/');
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(overflow).toBeLessThanOrEqual(1);
+});

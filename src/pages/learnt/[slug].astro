@@ -44,15 +44,13 @@ const formatDate = (dateString: string) => {
 
 // Calculate project duration
 const getProjectDuration = (start: string, end?: string) => {
-  if (!start) return null;
-  const startDate = new Date(start);
-  const endDate = end ? new Date(end) : new Date();
-  const months = Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 30));
-  if (months < 1) {
-    const days = Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-    return `${days} days`;
-  }
-  return months >= 12 ? `${Math.floor(months / 12)} year${months >= 24 ? 's' : ''}` : `${months} months`;
+  if (!start || !end) return null;
+  const days = Math.max(0, Math.round((Date.parse(end) - Date.parse(start)) / 86_400_000));
+  if (days < 60) return `${days} day${days === 1 ? '' : 's'}`;
+  const months = Math.round(days / 30.44);
+  return months >= 12
+    ? `${Math.floor(months / 12)} year${months >= 24 ? 's' : ''}`
+    : `${months} months`;
 };
 
 // Canonical URL for sharing
@@ -103,7 +101,7 @@ const structuredData = {
   "@type": "CreativeWork",
   name: project.title,
   description: project.description,
-  dateCreated: project.dateCreated,
+  dateCreated: project.born,
   url: canonicalUrl,
   image: new URL(ogImage, Astro.site).toString(),
   author: {
@@ -120,7 +118,7 @@ const getProgressPercentage = () => {
 };
 
 const progressPercentage = getProgressPercentage();
-const duration = getProjectDuration(project.dateCreated, project.sunsetDate);
+const duration = getProjectDuration(project.born, project.died);
 ---
 
 <Layout
@@ -471,7 +469,7 @@ const duration = getProjectDuration(project.dateCreated, project.sunsetDate);
 
         {/* Sunset Information */}
         {
-          project.sunsetDate && project.status === "sunset" && (
+          project.phase === "sunset" && project.died && (
             <section class="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 border border-orange-200 dark:border-orange-800 rounded-xl p-6">
               <div class="flex items-start gap-3">
                 <svg
@@ -494,8 +492,8 @@ const duration = getProjectDuration(project.dateCreated, project.sunsetDate);
                   <p class="text-orange-700 dark:text-orange-300 mb-2">
                     This project achieved its learning objectives and was archived on{" "}
                     <strong>
-                      <time datetime={project.sunsetDate}>
-                        {formatDate(project.sunsetDate)}
+                      <time datetime={project.died}>
+                        {formatDate(project.died)}
                       </time>
                     </strong>
                     .
@@ -543,14 +541,14 @@ const duration = getProjectDuration(project.dateCreated, project.sunsetDate);
               )
             }
             {
-              project.dateCreated && (
+              project.born && (
                 <div>
                   <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
                     Started
                   </dt>
                   <dd class="text-sm text-gray-900 dark:text-white mt-1">
-                    <time datetime={project.dateCreated}>
-                      {formatDate(project.dateCreated)}
+                    <time datetime={project.born}>
+                      {formatDate(project.born)}
                     </time>
                   </dd>
                 </div>
@@ -569,14 +567,14 @@ const duration = getProjectDuration(project.dateCreated, project.sunsetDate);
               )
             }
             {
-              project.sunsetDate && (
+              project.died && (
                 <div>
                   <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
                     Completed
                   </dt>
                   <dd class="text-sm text-gray-900 dark:text-white mt-1">
-                    <time datetime={project.sunsetDate}>
-                      {formatDate(project.sunsetDate)}
+                    <time datetime={project.died}>
+                      {formatDate(project.died)}
                     </time>
                   </dd>
                 </div>

@@ -26,9 +26,9 @@ const { project } = Astro.props as { project: Project };
     <div><strong>Category:</strong> {project.category}</div>
     <div><strong>Technologies:</strong> {project.technologies.join(", ")}</div>
     {
-      project.dateSunset && (
+      project.died && (
         <div>
-          <strong>Sunset Date:</strong> {project.dateSunset}
+          <strong>Sunset Date:</strong> {project.died}
         </div>
       )
     }

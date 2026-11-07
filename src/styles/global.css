@@ -199,3 +199,7 @@
     @apply focus-within:ring-2 focus-within:ring-primary-500 focus-within:ring-offset-2;
   }
 }
+/* Filtered archive cards must stay hidden even when a utility sets display. */
+[hidden] {
+  display: none !important;
+}

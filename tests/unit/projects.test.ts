@@ -92,9 +92,15 @@ describe('tiers (#16)', () => {
     expect(total).toBe(projects.length);
   });
 
-  it('has three to five headstones', () => {
-    const headstones = projects.filter((p) => p.tier === 'headstone').length;
-    expect(headstones).toBeGreaterThanOrEqual(3);
-    expect(headstones).toBeLessThanOrEqual(5);
+  it('has the agreed 5 headstone / 9 coursework / 28 marker split', () => {
+    expect(projects.filter((p) => p.tier === 'headstone')).toHaveLength(5);
+    expect(projects.filter((p) => p.tier === 'coursework')).toHaveLength(9);
+    expect(projects.filter((p) => p.tier === 'marker')).toHaveLength(28);
+  });
+
+  it('treats fcc-d3-story as exactly one headstone', () => {
+    const matches = projects.filter((p) => p.slug === 'fcc-d3-story');
+    expect(matches).toHaveLength(1);
+    expect(matches[0].tier).toBe('headstone');
   });
 });

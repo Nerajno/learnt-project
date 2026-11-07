@@ -15,6 +15,7 @@ function project(overrides: Partial<Project> = {}): Project {
     difficulty: 'beginner',
     phase: 'active',
     born: '2024-01-01',
+    tier: 'marker',
     features: [],
     learnings: ['Learned something'],
     challenges: [],

@@ -20,10 +20,21 @@ describe('ProjectCard', () => {
     expect(html).toContain('Burble V1');
   });
 
-  it('shows no progress value for in-progress projects (#10)', async () => {
-    const html = await render(makeProject({ status: 'in-progress' }));
+  it('shows no progress value for living projects (#10)', async () => {
+    const html = await render(makeProject({ stage: 'sprout' }));
     expect(html).not.toContain('width: 75%');
     expect(html).not.toContain('>75%<');
+  });
+
+  it('renders the stage label and stage data attribute', async () => {
+    const html = await render(makeProject({ stage: 'composted' }));
+    expect(html).toContain('Composted');
+    expect(html).toContain('data-stage="composted"');
+  });
+
+  it('renders Sprout for a living project', async () => {
+    const html = await render(makeProject({ stage: 'sprout' }));
+    expect(html).toContain('Sprout');
   });
 
   it('renders no live or source links when the urls are missing', async () => {

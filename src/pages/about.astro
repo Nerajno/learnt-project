@@ -1,8 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { getProjectsByPhase } from "../data/projects";
+import { getProjectsByStage } from "../data/projects";
 
-const activeProjects = getProjectsByPhase("active");
+const activeProjects = [
+  ...getProjectsByStage("seed"),
+  ...getProjectsByStage("sprout"),
+];
 ---
 
 <Layout title="About">

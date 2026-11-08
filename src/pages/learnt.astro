@@ -3,14 +3,15 @@ import Layout from "../layouts/Layout.astro";
 import SearchBar from "../components/SearchBar.astro";
 import ProjectList from "../components/ProjectList.astro";
 import CourseworkList from "../components/CourseworkList.astro";
-import { getCardProjects, getCourseworkProjects, getProjectStats } from "../data/projects";
+import { getCardProjects, getCourseworkProjects } from "../data/projects";
 import { countByStage, toArchiveItem } from "../lib/archive";
+import { getStats } from "../lib/projects";
 
 const archiveProjects = getCardProjects();
 const archiveItems = archiveProjects.map(toArchiveItem);
 const courseworkProjects = getCourseworkProjects();
 const counts = countByStage(archiveItems);
-const stats = getProjectStats();
+const stats = getStats();
 ---
 
 <Layout
@@ -39,24 +40,24 @@ const stats = getProjectStats();
           </div>
 
           <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-            <div class="text-3xl font-bold text-green-600 dark:text-green-400">
-              {stats.completed}
+            <div class="text-3xl font-bold text-blue-600 dark:text-blue-400">
+              {stats.byStage.seed + stats.byStage.sprout}
             </div>
-            <div class="text-sm text-gray-600 dark:text-gray-400">Completed</div>
+            <div class="text-sm text-gray-600 dark:text-gray-400">Growing</div>
           </div>
 
           <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-            <div class="text-3xl font-bold text-blue-600 dark:text-blue-400">
-              {stats.active}
+            <div class="text-3xl font-bold text-green-600 dark:text-green-400">
+              {stats.byStage.shipped}
             </div>
-            <div class="text-sm text-gray-600 dark:text-gray-400">Active</div>
+            <div class="text-sm text-gray-600 dark:text-gray-400">Shipped</div>
           </div>
 
           <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
             <div class="text-3xl font-bold text-purple-600 dark:text-purple-400">
-              {stats.technologies}
+              {stats.byStage.composted}
             </div>
-            <div class="text-sm text-gray-600 dark:text-gray-400">Technologies</div>
+            <div class="text-sm text-gray-600 dark:text-gray-400">Composted</div>
           </div>
         </div>
 

@@ -1,0 +1,40 @@
+---
+// #46 (#23's surface): shown when a project was superseded.
+import type { Project } from "../../data/projects";
+
+interface Props {
+  successor?: Project;
+}
+
+const { successor } = Astro.props;
+---
+
+{successor && (
+  <aside class="successor" aria-label="Successor">
+    <p>Superseded by <strong>{successor.title}</strong></p>
+    <a href={`/learnt/${successor.slug}`}>Open the successor →</a>
+  </aside>
+)}
+
+<style>
+  .successor {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1.25rem;
+    border-left: 3px solid var(--warning);
+    border-radius: var(--radius-md);
+    background: var(--warning-soft);
+    color: var(--text-strong);
+  }
+  p {
+    margin: 0;
+  }
+  a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+</style>

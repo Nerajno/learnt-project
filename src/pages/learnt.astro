@@ -2,10 +2,11 @@
 import Layout from "../layouts/Layout.astro";
 import SearchBar from "../components/SearchBar.astro";
 import ProjectList from "../components/ProjectList.astro";
-import { getAllProjects, getProjectStats } from "../data/projects";
+import CourseworkList from "../components/CourseworkList.astro";
+import { getCardProjects, getCourseworkProjects, getProjectStats } from "../data/projects";
 import { countByStage, toArchiveItem } from "../lib/archive";
 
-const archiveProjects = getAllProjects();
+const archiveProjects = getCardProjects();
 const archiveItems = archiveProjects.map(toArchiveItem);
 const counts = countByStage(archiveItems);
 const stats = getProjectStats();
@@ -85,6 +86,8 @@ const stats = getProjectStats();
     </div>
 
     <ProjectList id="project-list" projects={archiveProjects} />
+
+    <CourseworkList projects={getCourseworkProjects()} />
   </section>
 
   <!-- Additional Info Section -->

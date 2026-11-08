@@ -49,6 +49,7 @@ function readControls(): ArchiveFilters {
     category: categorySelect?.value ?? '',
     year: yearSelect?.value ? Number(yearSelect.value) : null,
     sort: (sortSelect?.value ?? DEFAULT_FILTERS.sort) as Sort,
+    view: parseFilters(location.search).view, // #21: toggle replaces this in Task 3
   };
 }
 

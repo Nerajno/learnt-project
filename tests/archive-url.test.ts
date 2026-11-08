@@ -10,11 +10,17 @@ describe('parseFilters', () => {
   it('parses every supported param', () => {
     expect(
       parseFilters('?q=Rails&stage=composted&category=backend&year=2024&sort=oldest'),
-    ).toEqual({ q: 'Rails', stage: 'composted', category: 'backend', year: 2024, sort: 'oldest' });
+    ).toEqual({ q: 'Rails', stage: 'composted', category: 'backend', year: 2024, sort: 'oldest', view: 'grid' });
   });
 
   it('ignores invalid stage, sort, and year values', () => {
     expect(parseFilters('?stage=dead&sort=weird&year=abc')).toEqual(DEFAULT_FILTERS);
+  });
+
+  it('parses view, falling back to grid (#21)', () => {
+    expect(parseFilters('?view=timeline').view).toBe('timeline');
+    expect(parseFilters('?view=bogus').view).toBe('grid');
+    expect(parseFilters('').view).toBe('grid');
   });
 
   it('trims the search term', () => {
@@ -27,10 +33,15 @@ describe('buildQuery', () => {
     expect(buildQuery(DEFAULT_FILTERS)).toBe('');
   });
 
+  it('emits view only when it is timeline (#21)', () => {
+    expect(buildQuery({ ...DEFAULT_FILTERS, view: 'timeline' })).toBe('?view=timeline');
+    expect(buildQuery({ ...DEFAULT_FILTERS, view: 'grid' })).toBe('');
+  });
+
   it('emits non-default params in stable order', () => {
     expect(
-      buildQuery({ q: 'rails', stage: 'composted', category: 'backend', year: 2024, sort: 'oldest' }),
-    ).toBe('?q=rails&stage=composted&category=backend&year=2024&sort=oldest');
+      buildQuery({ q: 'rails', stage: 'composted', category: 'backend', year: 2024, sort: 'oldest', view: 'timeline' }),
+    ).toBe('?q=rails&stage=composted&category=backend&year=2024&sort=oldest&view=timeline');
   });
 
   it('round-trips through parseFilters', () => {
@@ -40,6 +51,7 @@ describe('buildQuery', () => {
       category: 'fullstack',
       year: 2023,
       sort: 'shortest' as const,
+      view: 'timeline' as const,
     };
     expect(parseFilters(buildQuery(filters))).toEqual(filters);
   });

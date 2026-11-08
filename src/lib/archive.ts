@@ -7,6 +7,7 @@ export { STAGES } from './stages';
 export type { Stage } from './stages';
 
 export type Sort = 'newest' | 'oldest' | 'longest' | 'shortest';
+export type ArchiveView = 'grid' | 'timeline';
 
 export interface ArchiveFilters {
   q: string;
@@ -14,6 +15,7 @@ export interface ArchiveFilters {
   category: string;
   year: number | null;
   sort: Sort;
+  view: ArchiveView;
 }
 
 export const DEFAULT_FILTERS: ArchiveFilters = {
@@ -22,6 +24,7 @@ export const DEFAULT_FILTERS: ArchiveFilters = {
   category: '',
   year: null,
   sort: 'newest',
+  view: 'grid',
 };
 
 export const SORTS: ReadonlyArray<{ value: Sort; label: string }> = [
@@ -34,7 +37,7 @@ export const SORTS: ReadonlyArray<{ value: Sort; label: string }> = [
 const STAGE_VALUES = new Set<string>(STAGES.map((s) => s.value));
 const SORT_VALUES = new Set<string>(SORTS.map((s) => s.value));
 
-/** Parse `?q=&stage=&category=&year=&sort=`; unknown or invalid values fall back. */
+/** Parse `?q=&stage=&category=&year=&sort=&view=`; unknown or invalid values fall back. */
 export function parseFilters(search: string): ArchiveFilters {
   const params = new URLSearchParams(search);
   const rawYear = params.get('year');
@@ -48,6 +51,7 @@ export function parseFilters(search: string): ArchiveFilters {
     category: (params.get('category') ?? '').trim(),
     year,
     sort: SORT_VALUES.has(rawSort) ? (rawSort as Sort) : 'newest',
+    view: params.get('view') === 'timeline' ? 'timeline' : 'grid',
   };
 }
 
@@ -59,6 +63,7 @@ export function buildQuery(filters: ArchiveFilters): string {
   if (filters.category) params.set('category', filters.category);
   if (filters.year !== null) params.set('year', String(filters.year));
   if (filters.sort !== DEFAULT_FILTERS.sort) params.set('sort', filters.sort);
+  if (filters.view !== DEFAULT_FILTERS.view) params.set('view', filters.view);
   const query = params.toString();
   return query ? `?${query}` : '';
 }

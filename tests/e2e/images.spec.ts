@@ -32,7 +32,10 @@ for (const path of pages) {
     }
 
     // With no screenshots captured yet, every project image is a designed placeholder.
-    expect(await page.locator('[data-placeholder="true"]').count()).toBeGreaterThan(0);
+    // Home (#45) has no project images, so only pages with cards or a hero shot are checked.
+    if (path !== '/') {
+      expect(await page.locator('[data-placeholder="true"]').count()).toBeGreaterThan(0);
+    }
 
     // The OG asset must exist in THIS build, not just on the deployed site.
     const og = await page.locator('meta[property="og:image"]').getAttribute('content');

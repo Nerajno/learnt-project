@@ -55,12 +55,12 @@ test('coursework list opens from the keyboard', async ({ page }) => {
   await expect(page.locator('details#coursework')).toHaveAttribute('open', '');
 });
 
-test('home Featured shows no coursework', async ({ page }) => {
+test('home never headlines coursework', async ({ page }) => {
   await page.goto('/');
-  const featured = page.locator('section', { has: page.getByRole('heading', { name: 'Featured Projects' }) });
-  await expect(featured.locator('a[href^="/learnt/"]').first()).toBeVisible();
+  const main = page.locator('main');
+  await expect(main.locator('a[href^="/learnt/"]').first()).toBeVisible();
   for (const p of coursework) {
-    await expect(featured.locator(`a[href="/learnt/${p.slug}"]`)).toHaveCount(0);
+    await expect(main.locator(`a[href="/learnt/${p.slug}"]`)).toHaveCount(0);
   }
 });
 

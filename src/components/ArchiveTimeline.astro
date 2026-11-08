@@ -1,0 +1,118 @@
+---
+// #21: archive timeline — projects grouped by the year they ended (see getTimeline).
+// Rendered hidden; src/scripts/archive-filter.ts shows it for ?view=timeline and
+// hides rows/years by slug with the same filters as the card grid.
+import StageChip from "./StageChip.astro";
+import type { TimelineYear } from "../lib/timeline";
+
+interface Props {
+  years: TimelineYear[];
+}
+
+const { years } = Astro.props;
+
+const monthYear = (iso: string) =>
+  new Date(`${iso.slice(0, 10)}T00:00:00Z`).toLocaleDateString("en-US", {
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+---
+
+<section id="project-timeline" class="timeline" aria-labelledby="timeline-h" hidden>
+  <h2 id="timeline-h" class="sr-only">Timeline</h2>
+  <ol class="years" role="list">
+    {years.map(({ year, projects }) => (
+      <li class="year" data-year-group={year}>
+        <h3>{year}</h3>
+        <ol class="rows" role="list">
+          {projects.map((p) => (
+            <li class="row" data-slug={p.slug}>
+              <StageChip stage={p.stage} cause={p.causeOfDeath} />
+              <span class="what">
+                <a href={`/learnt/${p.slug}`}>{p.title}</a>
+                {p.short && <span class="short">{p.short}</span>}
+              </span>
+              <span class="when">
+                <time datetime={p.born}>{monthYear(p.born)}</time>
+                {p.died && (p.stage === "shipped" || p.stage === "composted") && (
+                  <> → <time datetime={p.died}>{monthYear(p.died)}</time></>
+                )}
+              </span>
+            </li>
+          ))}
+        </ol>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  .years,
+  .rows {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .year {
+    position: relative;
+    padding: 0 0 1.75rem 1.5rem;
+    border-left: 1px solid var(--border-strong);
+  }
+  .year::before {
+    content: "";
+    position: absolute;
+    left: -0.3125rem;
+    top: 0.45rem;
+    width: 0.5625rem;
+    height: 0.5625rem;
+    border-radius: 999px;
+    background: var(--accent);
+  }
+  h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.5rem 1rem;
+    align-items: center;
+    padding: 0.75rem 0.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .what {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .what a {
+    font-weight: 600;
+    color: var(--text-strong);
+  }
+  .short,
+  .when {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+  }
+  .when {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  /* Scoped display rules would otherwise beat the hidden attribute. */
+  .row[hidden],
+  .year[hidden] {
+    display: none;
+  }
+  @media (max-width: 640px) {
+    .row {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+    .when {
+      grid-column: 2;
+    }
+  }
+</style>

@@ -8,6 +8,7 @@ import { countByStage, toArchiveItem } from "../lib/archive";
 
 const archiveProjects = getCardProjects();
 const archiveItems = archiveProjects.map(toArchiveItem);
+const courseworkProjects = getCourseworkProjects();
 const counts = countByStage(archiveItems);
 const stats = getProjectStats();
 ---
@@ -34,7 +35,7 @@ const stats = getProjectStats();
             <div class="text-3xl font-bold text-accent">
               {stats.total}
             </div>
-            <div class="text-sm text-gray-600 dark:text-gray-400">Total Projects</div>
+            <div class="text-sm text-gray-600 dark:text-gray-400">All Projects</div>
           </div>
 
           <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
@@ -58,6 +59,10 @@ const stats = getProjectStats();
             <div class="text-sm text-gray-600 dark:text-gray-400">Technologies</div>
           </div>
         </div>
+
+        <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">
+          {archiveItems.length} archive cards · {courseworkProjects.length} coursework
+        </p>
       </div>
     </div>
   </section>
@@ -67,7 +72,7 @@ const stats = getProjectStats();
     <SearchBar counts={counts} total={archiveItems.length} />
 
     <p id="archive-result" class="text-sm text-gray-600 dark:text-gray-400 mb-6" aria-live="polite">
-      Showing <span id="archive-count">{archiveItems.length}</span> of {archiveItems.length}
+      Showing <span id="archive-count">{archiveItems.length}</span> of {archiveItems.length} archive cards
     </p>
 
     <div id="archive-empty" hidden class="text-center py-12">
@@ -87,7 +92,7 @@ const stats = getProjectStats();
 
     <ProjectList id="project-list" projects={archiveProjects} />
 
-    <CourseworkList projects={getCourseworkProjects()} />
+    <CourseworkList projects={courseworkProjects} />
   </section>
 
   <!-- Additional Info Section -->

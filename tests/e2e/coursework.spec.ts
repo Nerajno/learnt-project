@@ -33,6 +33,15 @@ test('coursework sits in a collapsed list at the bottom of the archive', async (
   }
 });
 
+test('the page names the archive and coursework split', async ({ page }) => {
+  await page.goto('/learnt/');
+  await expect(page.locator('#archive-result')).toContainText(
+    `Showing ${cardCount} of ${cardCount} archive cards`,
+  );
+  await expect(page.getByText(`${coursework.length} coursework`)).toBeVisible();
+  await expect(page.getByText('All Projects')).toBeVisible();
+});
+
 test('coursework list opens from the keyboard', async ({ page }) => {
   test.skip(test.info().project.name !== 'desktop', 'keyboard check on desktop');
   await page.goto('/learnt/');

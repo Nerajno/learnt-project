@@ -4,6 +4,7 @@ import {
   getCourseworkProjects,
   getFeaturedProjects,
   getProjectYears,
+  getUniqueCategories,
   getProjectsByYear,
   getRecentProjects,
   projects,
@@ -89,6 +90,13 @@ describe('coursework plot (#20)', () => {
     expect(getCardProjects().every((p) => p.tier !== 'coursework')).toBe(true);
     expect(getCourseworkProjects().every((p) => p.tier === 'coursework')).toBe(true);
     expect([...cards, ...coursework].sort()).toEqual(projects.map((p) => p.slug).sort());
+  });
+
+  it('archive option helpers can be scoped to a project list', () => {
+    const [one] = getCardProjects();
+    const only = [{ ...one, born: '1999-01-01', category: 'mobile' as const }];
+    expect(getProjectYears(only)).toEqual([1999]);
+    expect(getUniqueCategories(only)).toEqual(['mobile']);
   });
 
   it('lists coursework newest first by born', () => {

@@ -74,18 +74,7 @@ test('back returns to the grid', async ({ page }) => {
   await expect(timeline(page)).toBeHidden();
 });
 
-test('reduced motion: nothing in the timeline animates', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/learnt/?view=timeline');
-  const moving = await timeline(page).locator('*').evaluateAll((els) =>
-    els.filter((el) => {
-      const s = getComputedStyle(el);
-      const secs = (v: string) => Math.max(...v.split(',').map((x) => parseFloat(x) || 0));
-      return secs(s.transitionDuration) > 0 || secs(s.animationDuration) > 0;
-    }).length,
-  );
-  expect(moving).toBe(0);
-});
+// Reduced motion for the timeline is covered site-wide in qa.spec.ts (#47).
 
 test('no horizontal scroll at 360px in the timeline', async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 800 });

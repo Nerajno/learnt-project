@@ -62,7 +62,7 @@ function getCategoryIcon(category: string) {
       title={project.title}
       slug={project.slug}
       repo={repoLabel(project.githubUrl, project.slug)}
-      class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+      class="w-full h-48 object-cover motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:scale-105"
       heightClass="h-48"
     />
 

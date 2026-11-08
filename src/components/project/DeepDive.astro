@@ -1,0 +1,106 @@
+---
+// #24: headstone deep dive (VWC §4): situation → approach → result → reflection.
+// Every section is omitted when its data is empty.
+import ProjectImage from "../ProjectImage.astro";
+import type { Project } from "../../data/projects";
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const d = project.deepDive;
+const ai = d?.ai;
+const evidence = d && (d.walkthroughVideo || d.dataModel || (d.relatedPosts?.length ?? 0) > 0);
+---
+
+{d && (
+  <div class="deep-dive">
+    <section aria-labelledby="dd-problem"><h2 id="dd-problem">Problem</h2><p>{d.problem}</p></section>
+
+    {d.successCriteria.length > 0 && (
+      <section aria-labelledby="dd-criteria">
+        <h2 id="dd-criteria">Success criteria</h2>
+        <ul role="list">{d.successCriteria.map((c) => <li>{c}</li>)}</ul>
+      </section>
+    )}
+
+    <section aria-labelledby="dd-approach">
+      <h2 id="dd-approach">Approach</h2>
+      <p>{d.approach}</p>
+      {d.architectureDiagram && (
+        <ProjectImage src={d.architectureDiagram} alt={`${project.title} architecture diagram`} title={project.title} slug={project.slug} class="w-full" />
+      )}
+    </section>
+
+    {d.tradeoffs.length > 0 && (
+      <section aria-labelledby="dd-tradeoffs">
+        <h2 id="dd-tradeoffs">Tradeoffs</h2>
+        <div class="scroll">
+          <table>
+            <thead><tr><th scope="col">Decision</th><th scope="col">Why</th></tr></thead>
+            <tbody>
+              {d.tradeoffs.map((t) => (
+                <tr>
+                  <td>{t.adrUrl ? <a href={t.adrUrl}>{t.decision}</a> : t.decision}</td>
+                  <td>{t.why}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    )}
+
+    <section aria-labelledby="dd-outcome"><h2 id="dd-outcome">Measurable outcome</h2><p>{d.measurableOutcome}</p></section>
+
+    {ai && (
+      <section aria-labelledby="dd-ai">
+        <h2 id="dd-ai">AI collaboration</h2>
+        {ai === "No AI tools used" ? (
+          <p>No AI tools used.</p>
+        ) : (
+          <dl>
+            <dt>Tools</dt><dd>{ai.tools.join(", ")}</dd>
+            <dt>What AI did</dt><dd>{ai.aiDid}</dd>
+            <dt>What I owned</dt><dd>{ai.iOwned}</dd>
+            <dt>Where AI got it wrong</dt><dd>{ai.aiGotWrong}</dd>
+          </dl>
+        )}
+      </section>
+    )}
+
+    {d.v2.length > 0 && (
+      <section aria-labelledby="dd-v2">
+        <h2 id="dd-v2">What I'd change in v2</h2>
+        <ul role="list">{d.v2.map((c) => <li>{c}</li>)}</ul>
+      </section>
+    )}
+
+    {evidence && (
+      <section aria-labelledby="dd-evidence">
+        <h2 id="dd-evidence">Evidence</h2>
+        <ul role="list">
+          {d.walkthroughVideo && <li><a href={d.walkthroughVideo}>Walkthrough video</a></li>}
+          {d.dataModel && <li><a href={d.dataModel}>Data model</a></li>}
+          {d.relatedPosts?.map((url) => <li><a href={url}>{url.replace(/^https?:\/\//, "")}</a></li>)}
+        </ul>
+      </section>
+    )}
+  </div>
+)}
+
+<style>
+  .deep-dive { display: flex; flex-direction: column; gap: 2rem; }
+  h2 { margin: 0 0 0.75rem; font-size: 0.8125rem; font-weight: 600; color: var(--accent); }
+  p, li, dd { color: var(--text-body); max-width: 68ch; }
+  p { margin: 0 0 0.75rem; }
+  ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 0.375rem; }
+  .scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  th, td { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--text-muted); font-weight: 600; }
+  dl { display: grid; grid-template-columns: minmax(0, 10rem) minmax(0, 1fr); gap: 0.5rem 1rem; margin: 0; }
+  dt { color: var(--text-muted); }
+  dd { margin: 0; }
+</style>

@@ -104,3 +104,43 @@ for (const scheme of ['light', 'dark'] as const) {
     expect(serious).toEqual([]);
   });
 }
+
+// Review fixes (#21 final review).
+test('switching from a filtered grid keeps the filter', async ({ page }) => {
+  await page.goto('/learnt/?stage=composted');
+  await page.getByRole('button', { name: 'Timeline' }).click();
+  await expect(page).toHaveURL(/stage=composted&view=timeline/);
+  const composted = getCardProjects().filter((p) => p.stage === 'composted').map((p) => p.slug);
+  expect((await visibleSlugs(page)).sort()).toEqual([...composted].sort());
+});
+
+test('a timeline deep link loads with the grid hidden and Timeline pressed', async ({ page }) => {
+  await page.goto('/learnt/?view=timeline');
+  await expect(page.locator('#project-list')).toBeHidden();
+  await expect(page.getByRole('button', { name: 'Timeline' })).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('clicking the active view again adds no history entry', async ({ page }) => {
+  await page.goto('/learnt/');
+  await page.getByRole('button', { name: 'Timeline' }).click();
+  await page.getByRole('button', { name: 'Timeline' }).click();
+  await page.goBack();
+  await expect(page.locator('#project-list')).toBeVisible();
+});
+
+test('sort is disabled in the timeline, which is always in year order', async ({ page }) => {
+  await page.goto('/learnt/');
+  await expect(page.locator('#archive-sort')).toBeEnabled();
+  await page.getByRole('button', { name: 'Timeline' }).click();
+  await expect(page.locator('#archive-sort')).toBeDisabled();
+});
+
+test.describe('without JavaScript', () => {
+  test.use({ javaScriptEnabled: false });
+  test('only the grid shows and the view toggle is hidden', async ({ page }) => {
+    await page.goto('/learnt/?view=timeline');
+    await expect(page.locator('#project-list')).toBeVisible();
+    await expect(page.locator('#project-timeline')).toBeHidden();
+    await expect(page.getByRole('group', { name: 'View' })).toBeHidden();
+  });
+});

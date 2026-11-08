@@ -64,7 +64,11 @@ function syncControls(filters: ArchiveFilters) {
   if (searchInput && searchInput.value !== filters.q) searchInput.value = filters.q;
   if (categorySelect) categorySelect.value = filters.category;
   if (yearSelect) yearSelect.value = filters.year === null ? '' : String(filters.year);
-  if (sortSelect) sortSelect.value = filters.sort;
+  if (sortSelect) {
+    sortSelect.value = filters.sort;
+    // The timeline is always in year order, so sort doesn't apply there.
+    sortSelect.disabled = filters.view === 'timeline';
+  }
 
   for (const button of stageButtons) {
     button.setAttribute('aria-pressed', String((button.dataset.stageFilter ?? '') === filters.stage));
@@ -141,8 +145,13 @@ form?.addEventListener('submit', (event) => {
   apply(readControls(), 'replace');
 });
 
+// Without JS the toggle can't work, so it only appears once this script runs.
+const viewToggle = document.querySelector<HTMLElement>('[data-view-toggle]');
+if (viewToggle) viewToggle.hidden = false;
+
 for (const button of viewButtons) {
   button.addEventListener('click', () => {
+    if (button.getAttribute('aria-pressed') === 'true') return; // already showing this view
     for (const other of viewButtons) other.setAttribute('aria-pressed', String(other === button));
     apply(readControls(), 'push');
   });

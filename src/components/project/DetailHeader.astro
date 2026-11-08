@@ -1,0 +1,89 @@
+---
+// #46: detail-page header — breadcrumb, chips, title, lifeline.
+import StageChip from "../StageChip.astro";
+import type { Project } from "../../data/projects";
+import { getLifespan } from "../../lib/projects";
+import { STAGES } from "../../lib/stages";
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+
+const longDate = (iso: string) =>
+  new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC",
+  });
+
+const stageLabel = STAGES.find((s) => s.value === project.stage)!.label;
+const lifeline = project.died
+  ? `Born ${longDate(project.born)} · ${stageLabel} ${longDate(project.died)} · It was ${getLifespan(project)} days old.`
+  : `Born ${longDate(project.born)} · Still growing`;
+---
+
+<header class="detail-header">
+  <nav aria-label="Breadcrumb" class="crumbs">
+    <a href="/">learnt</a> / <a href="/learnt">archive</a> / <span aria-current="page">{project.slug}</span>
+  </nav>
+  <div class="tags">
+    <StageChip stage={project.stage} cause={project.causeOfDeath} />
+    <span class="tag">{project.category}</span>
+    <span class="tag">{project.tier}</span>
+  </div>
+  <h1>{project.title}</h1>
+  <p class="lede">{project.short ?? project.description}</p>
+  <p class={`lifeline${project.stage === "composted" ? " lifeline--composted" : ""}`}>{lifeline}</p>
+</header>
+
+<style>
+  .detail-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+  .crumbs {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .tag {
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    background: var(--bg-alt);
+    color: var(--text-body);
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .lede {
+    margin: 0;
+    max-width: 62ch;
+    color: var(--text-soft);
+  }
+  .lifeline {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+  }
+  .lifeline--composted {
+    color: var(--text-strong);
+    border-left: 3px solid var(--warning);
+    padding-left: 0.625rem;
+  }
+</style>

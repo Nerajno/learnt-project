@@ -43,7 +43,7 @@ const hasAnything = statements.length > 0 || project.githubUrl || demo || strip.
       </dl>
     )}
     {(project.githubUrl || demo) && (
-      <ul class="evidence">
+      <ul class="evidence" role="list">
         {project.githubUrl && (
           <li><a href={project.githubUrl} rel="noopener noreferrer">Repo: {repoLabel(project.githubUrl, project.slug)}</a></li>
         )}

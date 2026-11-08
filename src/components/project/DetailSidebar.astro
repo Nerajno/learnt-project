@@ -1,0 +1,120 @@
+---
+// #46: sidebar — quick info, stack, View code, lineage (getLineage()).
+import type { Project } from "../../data/projects";
+import { getLifespan, type Lineage } from "../../lib/projects";
+
+interface Props {
+  project: Project;
+  lineage: Lineage;
+}
+
+const { project, lineage } = Astro.props;
+const longDate = (iso: string) =>
+  new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC",
+  });
+const lifespan = getLifespan(project);
+const hasLineage = lineage.predecessors.length > 0 || lineage.successors.length > 0;
+---
+
+<aside class="sidebar" aria-label="Project details">
+  <section class="panel" aria-labelledby="info-h">
+    <h2 id="info-h">Quick info</h2>
+    <dl>
+      <div><dt>Born</dt><dd><time datetime={project.born}>{longDate(project.born)}</time></dd></div>
+      {project.died && <div><dt>Died</dt><dd><time datetime={project.died}>{longDate(project.died)}</time></dd></div>}
+      {lifespan > 0 && <div><dt>Lifespan</dt><dd>{lifespan} days</dd></div>}
+    </dl>
+    {project.githubUrl && (
+      <a class="btn-secondary min-h-[44px]" href={project.githubUrl} rel="noopener noreferrer">View code</a>
+    )}
+  </section>
+
+  {project.technologies.length > 0 && (
+    <section aria-labelledby="stack-h">
+      <h2 id="stack-h">Stack</h2>
+      <ul class="stack" role="list">
+        {project.technologies.map((t) => <li>{t}</li>)}
+      </ul>
+    </section>
+  )}
+
+  {hasLineage && (
+    <section class="panel" aria-labelledby="lineage-h">
+      <h2 id="lineage-h">Lineage</h2>
+      <ol class="lineage" role="list">
+        {lineage.predecessors.map((p) => <li><a href={`/learnt/${p.slug}`}>{p.title}</a></li>)}
+        <li aria-current="page"><strong>{project.title}</strong></li>
+        {lineage.successors.map((p) => <li><a href={`/learnt/${p.slug}`}>{p.title}</a></li>)}
+      </ol>
+    </section>
+  )}
+</aside>
+
+<style>
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.125rem 1.25rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+  h2 {
+    margin: 0;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  dl {
+    margin: 0;
+  }
+  dl div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.375rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  dt {
+    color: var(--text-muted);
+  }
+  dd {
+    margin: 0;
+    color: var(--text-strong);
+  }
+  ul,
+  ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .stack li {
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    background: var(--bg-alt);
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+  .lineage li {
+    padding: 0.25rem 0 0.25rem 0.875rem;
+    border-left: 2px solid var(--border-strong);
+  }
+  .lineage li[aria-current] {
+    border-left-color: var(--accent);
+  }
+</style>

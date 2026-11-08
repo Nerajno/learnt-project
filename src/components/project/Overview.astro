@@ -1,0 +1,99 @@
+---
+// #46: the project's own story — long description, features, next steps, changelog.
+// Each part is hidden when empty; nothing renders if there's no content at all.
+import type { Project } from "../../data/projects";
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const { longDescription, features = [], nextSteps = [], changelog = [] } = project;
+const hasAbout = Boolean(longDescription) || features.length > 0;
+
+const shortDate = (iso: string) =>
+  new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  });
+---
+
+{hasAbout && (
+  <section aria-labelledby="about-h">
+    <h2 id="about-h">About this project</h2>
+    {longDescription && <p class="long">{longDescription}</p>}
+    {features.length > 0 && (
+      <ul class="features" role="list">
+        {features.map((item) => <li>{item}</li>)}
+      </ul>
+    )}
+  </section>
+)}
+
+{nextSteps.length > 0 && (
+  <section aria-labelledby="next-h">
+    <h2 id="next-h">Next steps</h2>
+    <ul class="features" role="list">
+      {nextSteps.map((item) => <li>{item}</li>)}
+    </ul>
+  </section>
+)}
+
+{changelog.length > 0 && (
+  <section aria-labelledby="log-h">
+    <h2 id="log-h">Changelog</h2>
+    <ol class="log" role="list">
+      {changelog.map((entry) => (
+        <li><time datetime={entry.date}>{shortDate(entry.date)}</time><span>{entry.note}</span></li>
+      ))}
+    </ol>
+  </section>
+)}
+
+<style>
+  h2 {
+    margin: 0 0 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .long {
+    margin: 0 0 1rem;
+    max-width: 68ch;
+    color: var(--text-body);
+  }
+  ul,
+  ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .features {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+  .features li {
+    display: flex;
+    gap: 0.625rem;
+    color: var(--text-body);
+  }
+  .features li::before {
+    content: "+";
+    color: var(--success);
+    font-weight: 700;
+  }
+  .log li {
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 1fr);
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .log time {
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+</style>

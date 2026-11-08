@@ -42,7 +42,7 @@ test('every card matches its detail page on date and learnings count', async ({ 
 
   for (const slug of cardFixtureSlugs) {
     const html = await (await page.request.get(`/learnt/${slug}/`)).text();
-    const list = html.match(/data-testid="learnings-list"[^>]*>([\s\S]*?)<\/ul>/)?.[1] ?? '';
+    const list = html.match(/data-testid="learnings-list"[^>]*>([\s\S]*?)<\/ol>/)?.[1] ?? '';
     const rendered = (list.match(/<li\b/g) ?? []).length;
     const want = fromCards.get(slug)!;
     expect(want.count, `${slug} card count`).toBeGreaterThan(0);

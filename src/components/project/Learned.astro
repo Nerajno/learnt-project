@@ -1,0 +1,83 @@
+---
+// #46: what was hard, what I learned, retrospective. Empty sections are hidden.
+import type { Project } from "../../data/projects";
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const { challenges = [], learnings = [], retrospective } = project;
+---
+
+{challenges.length > 0 && (
+  <section aria-labelledby="hard-h">
+    <h2 id="hard-h">What was hard</h2>
+    <ul class="hard" role="list">
+      {challenges.map((item) => <li>{item}</li>)}
+    </ul>
+  </section>
+)}
+
+{learnings.length > 0 && (
+  <section aria-labelledby="learned-h">
+    <h2 id="learned-h">What I learned</h2>
+    <ol class="learned" role="list" data-testid="learnings-list">
+      {learnings.map((item) => <li>{item}</li>)}
+    </ol>
+  </section>
+)}
+
+{retrospective && (
+  <section aria-labelledby="retro-h">
+    <h2 id="retro-h">Retrospective</h2>
+    <blockquote>{retrospective}</blockquote>
+  </section>
+)}
+
+<style>
+  h2 {
+    margin: 0 0 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  ul,
+  ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .hard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 0.625rem;
+  }
+  .hard li {
+    background: var(--bg-alt);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 0.875rem;
+  }
+  .learned {
+    counter-reset: learned;
+  }
+  .learned li {
+    counter-increment: learned;
+    display: flex;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-strong);
+  }
+  .learned li::before {
+    content: counter(learned, decimal-leading-zero);
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  blockquote {
+    margin: 0;
+    padding-left: 1rem;
+    border-left: 3px solid var(--warning);
+    color: var(--text-body);
+  }
+</style>

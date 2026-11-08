@@ -1,24 +1,24 @@
 import { projects, type CauseOfDeath, type Project, type Tier } from '../data/projects';
 import type { Stage } from './stages';
 
-const DAY_MS = 86_400_000;
+import { daysBetween } from './dates';
 
-/** Whole days between two ISO dates; `null` when either is missing or invalid. */
-export function daysBetween(born: string, died: string): number | null {
-  if (!born || !died) return null;
-  const start = Date.parse(born);
-  const end = Date.parse(died);
-  if (Number.isNaN(start) || Number.isNaN(end)) return null;
-  return Math.max(0, Math.round((end - start) / DAY_MS));
-}
+export { daysBetween } from './dates';
 
-/** Days from born to died, or to today when the project is still alive. */
+/**
+ * Days from born to died. Only living projects (seed, sprout) count to today;
+ * a finished project without `died` has no measurable lifespan, so it is 0
+ * rather than a number that keeps growing.
+ */
 export function getLifespan(
-  project: Pick<Project, 'born' | 'died'>,
+  project: Pick<Project, 'born' | 'died' | 'stage'>,
   now: Date = new Date(),
 ): number {
-  const end = project.died ?? now.toISOString().slice(0, 10);
-  return daysBetween(project.born, end) ?? 0;
+  if (project.died) return daysBetween(project.born, project.died) ?? 0;
+  if (project.stage === 'seed' || project.stage === 'sprout') {
+    return daysBetween(project.born, now.toISOString().slice(0, 10)) ?? 0;
+  }
+  return 0;
 }
 
 export interface Lineage {

@@ -38,13 +38,29 @@ describe('daysBetween', () => {
 
 describe('getLifespan', () => {
   it('uses died when present', () => {
-    expect(getLifespan({ born: '2024-01-01', died: '2024-01-11' })).toBe(10);
+    expect(getLifespan({ born: '2024-01-01', died: '2024-01-11', stage: 'shipped' })).toBe(10);
   });
 
   it('uses today when died is absent', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2024-01-31T00:00:00Z'));
-    expect(getLifespan({ born: '2024-01-01' })).toBe(30);
+    expect(getLifespan({ born: '2024-01-01', stage: 'sprout' })).toBe(30);
+  });
+
+  it('never counts to today for a finished project without died (#39)', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2025-01-31T00:00:00Z'));
+    expect(getLifespan({ born: '2024-01-01', stage: 'shipped' })).toBe(0);
+    expect(getLifespan({ born: '2024-01-01', stage: 'composted' })).toBe(0);
+  });
+
+  it('a shipped lifespan does not grow a year later', () => {
+    vi.useFakeTimers();
+    const shipped = { born: '2024-01-01', died: '2024-03-01', stage: 'shipped' as const };
+    vi.setSystemTime(new Date('2024-06-01T00:00:00Z'));
+    const before = getLifespan(shipped);
+    vi.setSystemTime(new Date('2025-06-01T00:00:00Z'));
+    expect(getLifespan(shipped)).toBe(before);
   });
 });
 

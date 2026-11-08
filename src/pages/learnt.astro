@@ -11,7 +11,8 @@ const archiveProjects = getCardProjects();
 const archiveItems = archiveProjects.map(toArchiveItem);
 const courseworkProjects = getCourseworkProjects();
 const counts = countByStage(archiveItems);
-const stats = getStats();
+// Same set as the card grid and its filter counts; coursework is listed separately.
+const stats = getStats(archiveProjects);
 ---
 
 <Layout
@@ -33,28 +34,28 @@ const stats = getStats();
         <!-- Stats Grid -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
           <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-            <div class="text-3xl font-bold text-accent">
+            <div class="text-3xl font-bold text-accent" data-stat="total">
               {stats.total}
             </div>
             <div class="text-sm text-gray-600 dark:text-gray-400">All Projects</div>
           </div>
 
           <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-            <div class="text-3xl font-bold text-blue-600 dark:text-blue-400">
+            <div class="text-3xl font-bold text-blue-600 dark:text-blue-400" data-stat="growing">
               {stats.byStage.seed + stats.byStage.sprout}
             </div>
             <div class="text-sm text-gray-600 dark:text-gray-400">Growing</div>
           </div>
 
           <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-            <div class="text-3xl font-bold text-green-600 dark:text-green-400">
+            <div class="text-3xl font-bold text-green-600 dark:text-green-400" data-stat="shipped">
               {stats.byStage.shipped}
             </div>
             <div class="text-sm text-gray-600 dark:text-gray-400">Shipped</div>
           </div>
 
           <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-            <div class="text-3xl font-bold text-purple-600 dark:text-purple-400">
+            <div class="text-3xl font-bold text-purple-600 dark:text-purple-400" data-stat="composted">
               {stats.byStage.composted}
             </div>
             <div class="text-sm text-gray-600 dark:text-gray-400">Composted</div>

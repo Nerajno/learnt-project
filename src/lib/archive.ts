@@ -1,6 +1,6 @@
 import { STAGES } from './stages';
 import type { Stage } from './stages';
-import { daysBetween } from './projects';
+import { daysBetween } from './dates';
 import type { Project } from '../data/projects';
 
 export { STAGES } from './stages';

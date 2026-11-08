@@ -78,7 +78,8 @@ const monthYear = (iso: string) =>
   }
   .row {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: 8.5rem minmax(0, 1fr) auto;
+    justify-items: start;
     gap: 0.5rem 1rem;
     align-items: center;
     padding: 0.75rem 0.25rem;
@@ -109,10 +110,11 @@ const monthYear = (iso: string) =>
   }
   @media (max-width: 640px) {
     .row {
-      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.25rem;
     }
     .when {
-      grid-column: 2;
+      grid-column: auto;
     }
   }
 </style>

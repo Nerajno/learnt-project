@@ -5,6 +5,7 @@ import {
   parseFilters,
   type ArchiveFilters,
   type ArchiveItem,
+  type ArchiveView,
   type Sort,
   type Stage,
 } from '../lib/archive';
@@ -20,6 +21,11 @@ const emptyEl = document.querySelector<HTMLElement>('#archive-empty');
 const clearBtn = document.querySelector<HTMLButtonElement>('#archive-clear');
 const emptyClearBtn = document.querySelector<HTMLButtonElement>('#archive-empty-clear');
 const stageButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-stage-filter]'));
+// #21: grid/timeline toggle; timeline rows are hidden by slug like the cards.
+const viewButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-view]'));
+const timelineEl = document.querySelector<HTMLElement>('#project-timeline');
+const timelineRows = timelineEl ? Array.from(timelineEl.querySelectorAll<HTMLElement>('li[data-slug]')) : [];
+const timelineYears = timelineEl ? Array.from(timelineEl.querySelectorAll<HTMLElement>('[data-year-group]')) : [];
 
 const cards = list ? Array.from(list.querySelectorAll<HTMLElement>('article[data-slug]')) : [];
 const cardsBySlug = new Map(cards.map((card) => [card.dataset.slug ?? '', card]));
@@ -49,7 +55,8 @@ function readControls(): ArchiveFilters {
     category: categorySelect?.value ?? '',
     year: yearSelect?.value ? Number(yearSelect.value) : null,
     sort: (sortSelect?.value ?? DEFAULT_FILTERS.sort) as Sort,
-    view: parseFilters(location.search).view, // #21: toggle replaces this in Task 3
+    view: (viewButtons.find((b) => b.getAttribute('aria-pressed') === 'true')?.dataset.view ??
+      DEFAULT_FILTERS.view) as ArchiveView,
   };
 }
 
@@ -61,6 +68,9 @@ function syncControls(filters: ArchiveFilters) {
 
   for (const button of stageButtons) {
     button.setAttribute('aria-pressed', String((button.dataset.stageFilter ?? '') === filters.stage));
+  }
+  for (const button of viewButtons) {
+    button.setAttribute('aria-pressed', String(button.dataset.view === filters.view));
   }
 }
 
@@ -76,6 +86,14 @@ function apply(filters: ArchiveFilters, mode: 'push' | 'replace' | 'none') {
   for (const item of ordered) {
     const card = cardsBySlug.get(item.slug);
     if (card) list.appendChild(card);
+  }
+
+  const isTimeline = filters.view === 'timeline';
+  list.hidden = isTimeline;
+  if (timelineEl) timelineEl.hidden = !isTimeline;
+  for (const row of timelineRows) row.hidden = !visibleSlugs.has(row.dataset.slug ?? '');
+  for (const group of timelineYears) {
+    group.hidden = !Array.from(group.querySelectorAll<HTMLElement>('li[data-slug]')).some((row) => !row.hidden);
   }
 
   if (countEl) countEl.textContent = String(ordered.length);
@@ -123,8 +141,16 @@ form?.addEventListener('submit', (event) => {
   apply(readControls(), 'replace');
 });
 
+for (const button of viewButtons) {
+  button.addEventListener('click', () => {
+    for (const other of viewButtons) other.setAttribute('aria-pressed', String(other === button));
+    apply(readControls(), 'push');
+  });
+}
+
 function clearAll() {
-  apply(DEFAULT_FILTERS, 'push');
+  // Clearing filters keeps the chosen view.
+  apply({ ...DEFAULT_FILTERS, view: readControls().view }, 'push');
   searchInput?.focus();
 }
 

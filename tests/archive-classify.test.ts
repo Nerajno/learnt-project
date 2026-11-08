@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import type { Project } from '../src/data/projects';
-import { deriveStage, lifespanDays, toArchiveItem, cardDataset } from '../src/lib/archive';
+import { lifespanDays, toArchiveItem, cardDataset } from '../src/lib/archive';
 
 function project(overrides: Partial<Project> = {}): Project {
   return {
@@ -11,9 +11,8 @@ function project(overrides: Partial<Project> = {}): Project {
     longDescription: 'A longer thing',
     technologies: ['Rails'],
     category: 'backend',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'beginner',
-    phase: 'active',
     born: '2024-01-01',
     tier: 'marker',
     features: [],
@@ -25,16 +24,11 @@ function project(overrides: Partial<Project> = {}): Project {
   };
 }
 
-describe('deriveStage', () => {
-  it.each([
-    ['planned', 'active', 'seed'],
-    ['in-progress', 'active', 'sprout'],
-    ['completed', 'active', 'shipped'],
-    ['completed', 'archived', 'shipped'],
-    ['completed', 'sunset', 'composted'],
-    ['archived', 'any', 'composted'],
-  ] as const)('%s + %s -> %s', (status, phase, expected) => {
-    expect(deriveStage(project({ status, phase: phase === 'any' ? 'archived' : phase }))).toBe(expected);
+describe('stage passthrough', () => {
+  it('carries the project stage into the archive item', () => {
+    for (const stage of ['seed', 'sprout', 'shipped', 'composted'] as const) {
+      expect(toArchiveItem(project({ stage })).stage).toBe(stage);
+    }
   });
 });
 

@@ -1,5 +1,4 @@
 import { getCardProjects } from '../../src/data/projects';
-import { deriveStage } from '../../src/lib/archive';
 import { test, expect } from './test';
 
 const cardProjects = getCardProjects();
@@ -10,7 +9,7 @@ const visible = (page: import('@playwright/test').Page) =>
 test('deep link filters by stage and marks the button pressed', async ({ page }) => {
   await page.goto('/learnt/?stage=composted');
   const expected = cardProjects
-    .filter((p) => deriveStage(p) === 'composted')
+    .filter((p) => p.stage === 'composted')
     .map((p) => p.slug)
     .sort();
   await expect(visible(page)).toHaveCount(expected.length);

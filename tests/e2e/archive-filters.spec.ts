@@ -1,13 +1,15 @@
-import { projects } from '../../src/data/projects';
+import { getCardProjects } from '../../src/data/projects';
 import { deriveStage } from '../../src/lib/archive';
 import { test, expect } from './test';
+
+const cardProjects = getCardProjects();
 
 const visible = (page: import('@playwright/test').Page) =>
   page.locator('#project-list article[data-slug]:not([hidden])');
 
 test('deep link filters by stage and marks the button pressed', async ({ page }) => {
   await page.goto('/learnt/?stage=composted');
-  const expected = projects
+  const expected = cardProjects
     .filter((p) => deriveStage(p) === 'composted')
     .map((p) => p.slug)
     .sort();
@@ -28,7 +30,7 @@ test('typing filters without navigation and updates the URL', async ({ page }) =
 
   const count = await visible(page).count();
   expect(count).toBeGreaterThan(0);
-  expect(count).toBeLessThan(projects.length);
+  expect(count).toBeLessThan(cardProjects.length);
   expect(loads).toBe(0);
 });
 
@@ -63,7 +65,7 @@ test('clear all resets the list and the URL', async ({ page }) => {
   await page.goto('/learnt/?stage=composted&q=rails');
   await page.locator('#archive-clear').click();
   await page.waitForURL(/\/learnt\/$/);
-  await expect(visible(page)).toHaveCount(projects.length);
+  await expect(visible(page)).toHaveCount(cardProjects.length);
   await expect(page.locator('[data-stage-filter=""]')).toHaveAttribute('aria-pressed', 'true');
 });
 

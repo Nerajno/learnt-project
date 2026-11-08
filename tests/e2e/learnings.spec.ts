@@ -1,9 +1,14 @@
 import { readFileSync } from 'node:fs';
+import { getCardProjects } from '../../src/data/projects';
 import { test, expect } from './test';
 
 const slugs: string[] = JSON.parse(
   readFileSync(new URL('./fixtures/slugs.json', import.meta.url), 'utf8'),
 );
+
+// Coursework is listed outside the card grid (#20), so it has no card to compare.
+const cardSlugs = new Set(getCardProjects().map((p) => p.slug));
+const cardFixtureSlugs = slugs.filter((slug) => cardSlugs.has(slug));
 
 // #49: what a card says about a project must match its detail page.
 const card = (page: import('@playwright/test').Page, slug: string) =>
@@ -27,7 +32,7 @@ test('every card matches its detail page on date and learnings count', async ({ 
   test.skip(test.info().project.name !== 'desktop', 'data check; one viewport is enough');
   await page.goto('/learnt/');
   const fromCards = new Map<string, { born: string | null; count: number }>();
-  for (const slug of slugs) {
+  for (const slug of cardFixtureSlugs) {
     const c = card(page, slug);
     fromCards.set(slug, {
       born: await c.locator('time').first().getAttribute('datetime'),
@@ -35,7 +40,7 @@ test('every card matches its detail page on date and learnings count', async ({ 
     });
   }
 
-  for (const slug of slugs) {
+  for (const slug of cardFixtureSlugs) {
     const html = await (await page.request.get(`/learnt/${slug}/`)).text();
     const list = html.match(/data-testid="learnings-list"[^>]*>([\s\S]*?)<\/ul>/)?.[1] ?? '';
     const rendered = (list.match(/<li\b/g) ?? []).length;

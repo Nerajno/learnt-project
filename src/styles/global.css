@@ -203,7 +203,7 @@
 
   /* Hover lift effect */
   .hover-lift {
-    @apply transition-transform duration-200 hover:-translate-y-1;
+    @apply motion-safe:transition-transform motion-safe:duration-200 motion-safe:hover:-translate-y-1;
   }
 
   /* Focus within styles */
@@ -220,4 +220,16 @@
    animation makes all 42 cards flash on each keystroke. */
 #project-list .animate-fade-in {
   animation: none;
+}
+
+/* #47: honour prefers-reduced-motion everywhere (WCAG 2.3.3). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

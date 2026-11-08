@@ -37,7 +37,7 @@ const years = getProjectYears(cardProjects);
           type="button"
           data-stage-filter=""
           aria-pressed="true"
-          class="rounded-full border border-gray-300 dark:border-gray-600 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 hover:border-accent aria-pressed:bg-accent aria-pressed:!text-surface aria-pressed:border-accent"
+          class="rounded-full border border-[var(--border-strong)] px-3 py-1.5 text-sm text-[var(--text-body)] hover:border-accent aria-pressed:bg-accent aria-pressed:!text-surface aria-pressed:border-accent"
         >
           All <span class="ml-1 text-xs">{total}</span>
         </button>
@@ -46,7 +46,7 @@ const years = getProjectYears(cardProjects);
             type="button"
             data-stage-filter={stage.value}
             aria-pressed="false"
-            class="rounded-full border border-gray-300 dark:border-gray-600 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 hover:border-accent aria-pressed:bg-accent aria-pressed:!text-surface aria-pressed:border-accent"
+            class="rounded-full border border-[var(--border-strong)] px-3 py-1.5 text-sm text-[var(--text-body)] hover:border-accent aria-pressed:bg-accent aria-pressed:!text-surface aria-pressed:border-accent"
           >
             {stage.label} <span class="ml-1 text-xs">{counts[stage.value]}</span>
           </button>
@@ -95,8 +95,8 @@ const years = getProjectYears(cardProjects);
 
     <div class="flex flex-wrap items-center justify-between gap-3">
       <div role="group" aria-label="View" class="flex gap-2" data-view-toggle hidden>
-        <button type="button" data-view="grid" aria-pressed="true" class="rounded-full border border-gray-300 dark:border-gray-600 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 hover:border-accent aria-pressed:bg-accent aria-pressed:!text-surface aria-pressed:border-accent">Grid</button>
-        <button type="button" data-view="timeline" aria-pressed="false" class="rounded-full border border-gray-300 dark:border-gray-600 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 hover:border-accent aria-pressed:bg-accent aria-pressed:!text-surface aria-pressed:border-accent">Timeline</button>
+        <button type="button" data-view="grid" aria-pressed="true" class="rounded-full border border-[var(--border-strong)] px-3 py-1.5 text-sm text-[var(--text-body)] hover:border-accent aria-pressed:bg-accent aria-pressed:!text-surface aria-pressed:border-accent">Grid</button>
+        <button type="button" data-view="timeline" aria-pressed="false" class="rounded-full border border-[var(--border-strong)] px-3 py-1.5 text-sm text-[var(--text-body)] hover:border-accent aria-pressed:bg-accent aria-pressed:!text-surface aria-pressed:border-accent">Timeline</button>
       </div>
       <button type="button" id="archive-clear" class="btn-secondary">Clear all</button>
     </div>

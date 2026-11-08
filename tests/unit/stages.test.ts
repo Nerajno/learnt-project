@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { STAGES, STAGE_LABELS, STAGE_VALUES, stageLabel } from '../../src/lib/stages';
+import { STAGES, STAGE_VALUES } from '../../src/lib/stages';
 
 describe('stage vocabulary (#39)', () => {
   it('defines exactly the four stages in lifecycle order', () => {
@@ -9,8 +9,7 @@ describe('stage vocabulary (#39)', () => {
 
   it('labels every stage', () => {
     for (const stage of STAGES) {
-      expect(stageLabel(stage.value)).toBe(stage.label);
-      expect(STAGE_LABELS[stage.value]).toBe(stage.label);
+      expect(stage.label.trim().length).toBeGreaterThan(0);
     }
   });
 

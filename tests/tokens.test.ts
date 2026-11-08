@@ -128,6 +128,19 @@ describe('learn token contrast', () => {
   ] as const) {
     const tokens = tokensIn(block);
     const grounds = ['bg', 'bg-alt', 'bg-card'] as const;
+
+    // #40 stage chips: --text-strong label on a 15% wash composited over --bg.
+    for (const wash of ['success-soft', 'warning-soft'] as const) {
+      it(`${mode}: --text-strong reaches 4.5:1 on --${wash} over --bg`, () => {
+        const raw = tokens[wash];
+        const alpha = Number(/\/\s*([\d.]+)\s*\)/.exec(raw)?.[1]);
+        expect(alpha).toBeGreaterThan(0);
+        const fill = color(raw.replace(/\s*\/\s*[\d.]+\s*\)/, ')'));
+        const ground = color(tokens.bg);
+        const blended = fill.map((c, i) => c * alpha + ground[i] * (1 - alpha)) as [number, number, number];
+        expect(contrast(color(tokens['text-strong']), blended)).toBeGreaterThanOrEqual(4.5);
+      });
+    }
     const texts = ['text-strong', 'text-body', 'text-soft', 'text-muted', 'accent'] as const;
 
     for (const ground of grounds) {

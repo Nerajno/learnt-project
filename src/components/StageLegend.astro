@@ -4,7 +4,7 @@ import StageChip from "./StageChip.astro";
 import { STAGES } from "../lib/stages";
 ---
 
-<section data-stage-legend aria-labelledby="stage-legend-heading" class="not-prose">
+<section data-stage-legend aria-labelledby="stage-legend-heading">
   <h2 id="stage-legend-heading" class="text-2xl font-bold mb-6">Four stages, no shame</h2>
   <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
     {STAGES.map(({ value, definition }) => (

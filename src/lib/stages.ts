@@ -14,12 +14,4 @@ export const STAGES: readonly StageMeta[] = [
   { value: 'composted', label: 'Composted', definition: 'Ended; lessons kept', icon: '✕' },
 ];
 
-export const STAGE_LABELS: Record<Stage, string> = Object.fromEntries(
-  STAGES.map((stage) => [stage.value, stage.label]),
-) as Record<Stage, string>;
-
 export const STAGE_VALUES = new Set<Stage>(STAGES.map((stage) => stage.value));
-
-export function stageLabel(stage: Stage): string {
-  return STAGE_LABELS[stage];
-}

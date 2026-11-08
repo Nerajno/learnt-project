@@ -51,7 +51,7 @@ describe('StageLegend', () => {
 });
 
 describe('chip markup lives only in StageChip', () => {
-  it('no other source renders a stage label directly', () => {
+  it('no .astro file uses the retired stage badge helpers or classes', () => {
     const src = fileURLToPath(new URL('../../src', import.meta.url));
     const walk = (dir: string): string[] =>
       readdirSync(dir).flatMap((name) => {
@@ -60,7 +60,7 @@ describe('chip markup lives only in StageChip', () => {
       });
     const offenders = walk(src)
       .filter((path) => path.endsWith('.astro') && !path.endsWith('StageChip.astro'))
-      .filter((path) => /stageLabel\(|stage-(seed|sprout|shipped|composted)\b|stageStyles/.test(readFileSync(path, 'utf8')));
+      .filter((path) => /stageLabel\(|getStageClass|stageStyles|stage-(seed|sprout|shipped|composted)\b/.test(readFileSync(path, 'utf8')));
     expect(offenders.map((p) => p.slice(src.length + 1))).toEqual([]);
   });
 });

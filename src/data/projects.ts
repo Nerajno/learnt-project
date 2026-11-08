@@ -1914,8 +1914,8 @@ export function searchProjects(query: string): Project[] {
   );
 }
 
-export function getUniqueCategories(): string[] {
-  return [...new Set(projects.map(project => project.category))];
+export function getUniqueCategories(list: Project[] = projects): string[] {
+  return [...new Set(list.map(project => project.category))];
 }
 
 export function getUniqueTechnologies(): string[] {
@@ -1934,8 +1934,8 @@ export function getProjectsByYear(year: number): Project[] {
 }
 
 // Get all years with projects
-export function getProjectYears(): number[] {
-  const years = projects.map(project => Number(project.born.slice(0, 4)));
+export function getProjectYears(list: Project[] = projects): number[] {
+  const years = list.map(project => Number(project.born.slice(0, 4)));
   return [...new Set(years)].sort((a, b) => b - a);
 }
 

@@ -20,6 +20,7 @@ test('coursework sits in a collapsed list at the bottom of the archive', async (
   await expect(section).toHaveCount(1);
   await expect(section).not.toHaveAttribute('open', /.*/);
   await expect(section.locator('summary')).toContainText(`Coursework (${coursework.length})`);
+  await expect(section.locator('summary h2')).toHaveText(`Coursework (${coursework.length})`);
 
   await section.locator('summary').click();
   await expect(section).toHaveAttribute('open', '');
@@ -46,7 +47,9 @@ test('coursework list opens from the keyboard', async ({ page }) => {
   test.skip(test.info().project.name !== 'desktop', 'keyboard check on desktop');
   await page.goto('/learnt/');
   const summary = page.locator('details#coursework summary');
-  await summary.focus();
+  // Reach the summary by real keyboard navigation: back one stop from the next link.
+  await page.getByRole('link', { name: 'Learn More About Me' }).focus();
+  await page.keyboard.press('Shift+Tab');
   await expect(summary).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.locator('details#coursework')).toHaveAttribute('open', '');
@@ -54,8 +57,10 @@ test('coursework list opens from the keyboard', async ({ page }) => {
 
 test('home Featured shows no coursework', async ({ page }) => {
   await page.goto('/');
+  const featured = page.locator('section', { has: page.getByRole('heading', { name: 'Featured Projects' }) });
+  await expect(featured.locator('a[href^="/learnt/"]').first()).toBeVisible();
   for (const p of coursework) {
-    await expect(page.locator(`article a[href="/learnt/${p.slug}"]`)).toHaveCount(0);
+    await expect(featured.locator(`a[href="/learnt/${p.slug}"]`)).toHaveCount(0);
   }
 });
 

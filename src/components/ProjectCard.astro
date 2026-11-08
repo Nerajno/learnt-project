@@ -3,7 +3,7 @@ import type { Project } from "../data/projects";
 import ProjectImage from "./ProjectImage.astro";
 import { repoLabel } from "../lib/images";
 import { toArchiveItem, cardDataset } from "../lib/archive";
-import { stageLabel } from "../lib/stages";
+import StageChip from "./StageChip.astro";
 
 export interface Props {
   project: Project;
@@ -24,17 +24,6 @@ function formatDate(dateString: string) {
     month: "short",
     timeZone: "UTC",
   });
-}
-
-// Get stage badge class
-function getStageClass(stage: string) {
-  const classes = {
-    seed: "stage-seed",
-    sprout: "stage-sprout",
-    shipped: "stage-shipped",
-    composted: "stage-composted",
-  };
-  return classes[stage as keyof typeof classes] || "stage-composted";
 }
 
 // Get difficulty badge class
@@ -184,9 +173,7 @@ function getCategoryIcon(category: string) {
 
     <!-- Badges -->
     <div class="flex flex-wrap gap-2 mb-4">
-      <span class={getStageClass(project.stage)}>
-        {stageLabel(project.stage)}
-      </span>
+      <StageChip stage={project.stage} cause={project.causeOfDeath} />
       <span class={getDifficultyClass(project.difficulty)}>
         {project.difficulty}
       </span>

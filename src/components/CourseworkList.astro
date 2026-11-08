@@ -1,6 +1,7 @@
 ---
 // #20: tier 'coursework' projects as a compact, collapsed list (VWC 3-7).
 import type { Project } from "../data/projects";
+import StageChip from "./StageChip.astro";
 
 interface Props {
   projects: Project[];
@@ -25,6 +26,7 @@ const formatDate = (iso: string) =>
     <ul class="divide-y divide-surface border-t border-surface">
       {projects.map((project) => (
         <li class="flex flex-wrap items-baseline gap-x-3 gap-y-1 px-5 py-3">
+          <StageChip stage={project.stage} cause={project.causeOfDeath} />
           <a href={`/learnt/${project.slug}`} class="font-medium">{project.title}</a>
           <time datetime={project.born} class="text-sm text-soft">{formatDate(project.born)}</time>
           {project.githubUrl && (

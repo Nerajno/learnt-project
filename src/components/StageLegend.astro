@@ -1,0 +1,17 @@
+---
+// #40: legend for Home and About. Copy comes from the STAGES map (#39).
+import StageChip from "./StageChip.astro";
+import { STAGES } from "../lib/stages";
+---
+
+<section data-stage-legend aria-labelledby="stage-legend-heading">
+  <h2 id="stage-legend-heading" class="text-2xl font-bold mb-6">Four stages, no shame</h2>
+  <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    {STAGES.map(({ value, definition }) => (
+      <li class="rounded-lg border border-surface bg-surface-card p-4">
+        <StageChip stage={value} />
+        <p class="mt-3 text-sm text-body">{definition}</p>
+      </li>
+    ))}
+  </ul>
+</section>

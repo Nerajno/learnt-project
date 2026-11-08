@@ -6,6 +6,7 @@ const activeProjects = [
   ...getProjectsByStage("seed"),
   ...getProjectsByStage("sprout"),
 ];
+import StageLegend from "../components/StageLegend.astro";
 ---
 
 <Layout title="About">
@@ -41,5 +42,9 @@ const activeProjects = [
         </ul>
       </>
     )}
+
+    <div class="mt-12">
+      <StageLegend />
+    </div>
   </section>
 </Layout>

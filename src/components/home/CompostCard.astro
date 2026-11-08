@@ -1,0 +1,50 @@
+---
+// #45: one "recently composted" card.
+import StageChip from "../StageChip.astro";
+import type { Project } from "../../data/projects";
+import { compostLine } from "../../lib/home";
+
+interface Props {
+  project: Project;
+  successor?: Project;
+}
+
+const { project, successor } = Astro.props;
+---
+
+<article class="compost">
+  <StageChip stage={project.stage} cause={project.causeOfDeath} />
+  <h3><a href={`/learnt/${project.slug}`}>{project.title}</a></h3>
+  <p class="compost-line">{compostLine(project)}</p>
+  {successor && (
+    <p class="successor">
+      Superseded by → <a href={`/learnt/${successor.slug}`}>{successor.title}</a>
+    </p>
+  )}
+</article>
+
+<style>
+  .compost {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 1.125rem 1.25rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+  h3 {
+    margin: 0.25rem 0 0;
+    font-size: 1rem;
+  }
+  h3 a {
+    color: var(--text-strong);
+  }
+  .compost-line,
+  .successor {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--text-soft);
+  }
+</style>

@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@astrojs/partytown": "^2.1.4",
+    "@astrojs/rss": "^4.0.19",
     "@fontsource/jetbrains-mono": "^5.3.0",
     "@kbyte-tech/astro-clarity": "^0.0.8",
     "@nerajno/dialects": "git+https://github.com/Nerajno/dvlpr-dialects.git#v0.1.0",

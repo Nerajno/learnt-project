@@ -67,6 +67,7 @@ const current =
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={new URL(ogImage, Astro.url)} />
     
+    <link rel="alternate" type="application/rss+xml" title="Learnt: new burials" href={new URL("/rss.xml", Astro.site)} />
     <!-- JSON-LD structured data (#28) -->
     {jsonLd && <script type="application/ld+json" is:inline set:html={serializeJsonLd(jsonLd)} />}
     <!-- GA4 || Google Analytics -->

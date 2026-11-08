@@ -15,7 +15,7 @@ const { related, prev, next } = Astro.props;
   <section aria-labelledby="soil-h">
     <h2 id="soil-h">Same soil</h2>
     <p class="hint">Other projects built with the same tools.</p>
-    <ul class="soil">
+    <ul class="soil" role="list">
       {related.map((r) => (
         <li>
           <a href={`/learnt/${r.slug}`}>{r.title}</a>

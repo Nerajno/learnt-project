@@ -24,8 +24,8 @@ const hasLineage = lineage.predecessors.length > 0 || lineage.successors.length 
   <section class="panel" aria-labelledby="info-h">
     <h2 id="info-h">Quick info</h2>
     <dl>
-      <div><dt>Born</dt><dd>{longDate(project.born)}</dd></div>
-      {project.died && <div><dt>Died</dt><dd>{longDate(project.died)}</dd></div>}
+      <div><dt>Born</dt><dd><time datetime={project.born}>{longDate(project.born)}</time></dd></div>
+      {project.died && <div><dt>Died</dt><dd><time datetime={project.died}>{longDate(project.died)}</time></dd></div>}
       {lifespan > 0 && <div><dt>Lifespan</dt><dd>{lifespan} days</dd></div>}
     </dl>
     {project.githubUrl && (
@@ -36,7 +36,7 @@ const hasLineage = lineage.predecessors.length > 0 || lineage.successors.length 
   {project.technologies.length > 0 && (
     <section aria-labelledby="stack-h">
       <h2 id="stack-h">Stack</h2>
-      <ul class="stack">
+      <ul class="stack" role="list">
         {project.technologies.map((t) => <li>{t}</li>)}
       </ul>
     </section>
@@ -45,7 +45,7 @@ const hasLineage = lineage.predecessors.length > 0 || lineage.successors.length 
   {hasLineage && (
     <section class="panel" aria-labelledby="lineage-h">
       <h2 id="lineage-h">Lineage</h2>
-      <ol class="lineage">
+      <ol class="lineage" role="list">
         {lineage.predecessors.map((p) => <li><a href={`/learnt/${p.slug}`}>{p.title}</a></li>)}
         <li aria-current="page"><strong>{project.title}</strong></li>
         {lineage.successors.map((p) => <li><a href={`/learnt/${p.slug}`}>{p.title}</a></li>)}

@@ -1,781 +1,144 @@
 ---
+// #46: project detail page, composed from src/components/project/*.
 import Layout from "../../layouts/Layout.astro";
-import ProjectNav from "../../components/ProjectNav.astro";
 import ProjectImage from "../../components/ProjectImage.astro";
-import { projects } from "../../data/projects";
-import { publicFileExists, repoLabel } from "../../lib/images";
+import DetailHeader from "../../components/project/DetailHeader.astro";
+import SuccessorBanner from "../../components/project/SuccessorBanner.astro";
+import Overview from "../../components/project/Overview.astro";
+import ProofOfWork from "../../components/project/ProofOfWork.astro";
+import Learned from "../../components/project/Learned.astro";
+import DetailSidebar from "../../components/project/DetailSidebar.astro";
+import SameSoil from "../../components/project/SameSoil.astro";
+import { projects, getProjectBySlug, type Project } from "../../data/projects";
+import { publicFileExists } from "../../lib/images";
 import { projectJsonLd } from "../../lib/jsonld";
-import StageChip from "../../components/StageChip.astro";
-import { Image } from 'astro:assets';
+import { getLineage } from "../../lib/projects";
+import { getNeighbours, getRelated } from "../../lib/detail";
 
-// Generate static paths for all projects
-export const getStaticPaths = () => {
-  return projects.map((project) => ({
-    params: { slug: project.slug },
-    props: { project },
-  }));
-};
+export const getStaticPaths = () =>
+  projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
 
-const { project } = Astro.props;
+const { project } = Astro.props as { project: Project };
 
-if (!project) {
-  return Astro.redirect("/404");
-}
+const successor = project.supersededBy ? getProjectBySlug(project.supersededBy) : undefined;
+const { prev, next } = getNeighbours(project);
 
-// Related projects (same tags, different project)
-const relatedProjects = Array.isArray(project.tags)
-  ? projects
-      .filter(
-        (p) =>
-          p.id !== project.id &&
-          Array.isArray(p.tags) &&
-          p.tags.some((tag) => project.tags.includes(tag))
-      )
-      .slice(0, 3)
-  : [];
-
-// Format dates nicely without shifting date-only values by timezone
-const formatDate = (dateString: string) => {
-  if (!dateString) return "";
-  const date = /^\d{4}-\d{2}-\d{2}$/.test(dateString)
-    ? new Date(`${dateString}T00:00:00Z`)
-    : new Date(dateString);
-  return date.toLocaleDateString("en-US", {
+const longDate = (iso: string) =>
+  new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
     timeZone: "UTC",
   });
-};
 
-// Calculate project duration
-const getProjectDuration = (start: string, end?: string) => {
-  if (!start || !end) return null;
-  const days = Math.max(0, Math.round((Date.parse(end) - Date.parse(start)) / 86_400_000));
-  if (days < 60) return `${days} day${days === 1 ? '' : 's'}`;
-  const months = Math.round(days / 30.44);
-  return months >= 12
-    ? `${Math.floor(months / 12)} year${months >= 24 ? 's' : ''}`
-    : `${months} months`;
-};
-
-// Canonical URL for sharing
-const canonicalUrl = Astro.url
-  ? Astro.url.href
-  : Astro.site + "learnt/" + project.slug;
-
-const difficultyStyles = {
-  beginner: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
-  intermediate:
-    "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400",
-  advanced: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
-};
-
-// Tech stack icons (add more as needed)
-const techIcons: Record<string, string> = {
-  astro: "🚀",
-  react: "⚛️",
-  typescript: "📘",
-  javascript: "🟨",
-  python: "🐍",
-  nodejs: "💚",
-  tailwind: "🎨",
-  vue: "💚",
-  svelte: "🧡",
-  nextjs: "▲",
-};
-
-// Structured data for SEO
-const ogImage = publicFileExists(project.screenshot)
-  ? project.screenshot ?? '/images/placeholder.png'
-  : '/images/placeholder.png';
-const structuredData = projectJsonLd(
+const hasShot = publicFileExists(project.screenshot);
+const ogImage = hasShot ? project.screenshot ?? "/images/placeholder.png" : "/images/placeholder.png";
+const jsonLd = projectJsonLd(
   project,
   new URL(Astro.url.pathname, Astro.site), // same as Layout's canonical link
   new URL(ogImage, Astro.site),
 );
-
-const duration = getProjectDuration(project.born, project.died);
 ---
 
 <Layout
   title={`${project.title} - Learnt Project`}
   description={project.short || project.description}
   image={project.screenshot}
-  jsonLd={structuredData}
+  jsonLd={jsonLd}
 >
+  <article class="detail container-custom">
+    <DetailHeader project={project} />
+    <SuccessorBanner successor={successor} />
 
-  {/* Breadcrumb Navigation */}
-  <nav
-    class="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10 backdrop-blur-sm"
-    aria-label="Breadcrumb"
-  >
-    <div class="container mx-auto px-4 py-3">
-      <ol class="flex items-center space-x-2 text-sm">
-        <li>
-          <a
-            href="/"
-            class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors"
-            >Home</a
-          >
-        </li>
-        <li class="text-gray-400 dark:text-gray-600">/</li>
-        <li>
-          <a
-            href="/learnt"
-            class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors"
-            >Projects</a
-          >
-        </li>
-        <li class="text-gray-400 dark:text-gray-600">/</li>
-        <li
-          class="text-gray-900 dark:text-white font-medium truncate max-w-[200px]"
-          aria-current="page"
-          title={project.title}
-        >
-          {project.title}
-        </li>
-      </ol>
-    </div>
-  </nav>
+    {project.stage === "composted" && project.died && (
+      <section class="composted" aria-labelledby="composted-h">
+        <h2 id="composted-h">Composted</h2>
+        <p>
+          Work on this project stopped on <strong><time datetime={project.died}>{longDate(project.died)}</time></strong>.
+          The code and what it taught me stay here as a reference.
+        </p>
+      </section>
+    )}
 
-  <article class="container mx-auto px-4 py-8 max-w-4xl" role="main">
-    <a href="/learnt" class="inline-flex items-center gap-2 mb-6 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors group">
-      <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-      </svg>
-      Back to Projects
-    </a>
-
-    {/* Project Header */}
-    <header class="mb-8">
-      <div class="flex flex-wrap gap-3 mb-4">
-        <StageChip stage={project.stage} cause={project.causeOfDeath} />
-        {
-          project.difficulty && (
-            <span
-              class={`px-3 py-1 text-sm font-medium rounded-full ${difficultyStyles[project.difficulty]}`}
-            >
-              {project.difficulty}
-            </span>
-          )
-        }
-        {
-          duration && (
-            <span class="px-3 py-1 text-sm bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 rounded-full">
-              Duration: {duration}
-            </span>
-          )
-        }
-      </div>
-
-      <h1
-        class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 leading-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent"
-      >
-        {project.title}
-      </h1>
-      
-      <p class="text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
-        {project.short || project.description}
-      </p>
-
-      {/* Action Buttons */}
-      <div class="flex flex-wrap gap-4 mb-6">
-        {
-          project.githubUrl && (
-            <a
-              href={project.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100 rounded-lg transition-all hover:scale-105"
-              aria-label="View on GitHub"
-            >
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-              </svg>
-              View Code
-            </a>
-          )
-        }
-        {
-          project.liveUrl && (
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg transition-all hover:scale-105"
-              aria-label="View live demo"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-              </svg>
-              Live Demo
-            </a>
-          )
-        }
-        {
-          project.notesUrl && (
-            <a
-              href={project.notesUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-all"
-              aria-label="View notes"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-              </svg>
-              Notes
-            </a>
-          )
-        }
-      </div>
-
-      {/* Social Share Buttons */}
-      <div class="flex flex-wrap gap-2">
-        <button
-          onclick={`navigator.share({title: '${project.title}', url: '${canonicalUrl}'}).catch(()=>{})`}
-          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 text-sm font-medium transition-colors"
-          aria-label="Share this project"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m9.032 4.026a3 3 0 10-4.732 2.684m0 0a3 3 0 00-4.732-2.684M8.684 10.658L4.732 7.974m0 0a3 3 0 110-2.684m0 2.684l3.952 2.684"></path>
-          </svg>
-          Share
-        </button>
-        
-        <a
-          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(project.title)}&url=${encodeURIComponent(canonicalUrl)}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 text-sm font-medium transition-colors"
-          aria-label="Share on Twitter"
-        >
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M22.46 6c-.77.35-1.6.58-2.47.69a4.3 4.3 0 0 0 1.88-2.37 8.59 8.59 0 0 1-2.72 1.04A4.28 4.28 0 0 0 16.11 4c-2.37 0-4.29 1.92-4.29 4.29 0 .34.04.67.1.99C7.69 9.13 4.07 7.3 1.64 4.6c-.37.64-.58 1.38-.58 2.17 0 1.5.76 2.82 1.92 3.6-.7-.02-1.36-.21-1.94-.53v.05c0 2.1 1.5 3.85 3.5 4.25-.36.1-.74.16-1.13.16-.28 0-.54-.03-.8-.08.54 1.7 2.1 2.94 3.95 2.97A8.6 8.6 0 0 1 2 19.54c-.65 0-1.28-.04-1.9-.11A12.13 12.13 0 0 0 7.29 21c7.55 0 11.68-6.26 11.68-11.68 0-.18-.01-.36-.02-.54A8.18 8.18 0 0 0 22.46 6z"></path>
-          </svg>
-          Tweet
-        </a>
-        
-        <a
-          href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(canonicalUrl)}&title=${encodeURIComponent(project.title)}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600/10 text-blue-700 hover:bg-blue-600/20 dark:bg-blue-400/10 dark:text-blue-400 dark:hover:bg-blue-400/20 text-sm font-medium transition-colors"
-          aria-label="Share on LinkedIn"
-        >
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5v-14c0-2.76-2.24-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.28c-.97 0-1.75-.79-1.75-1.75s.78-1.75 1.75-1.75 1.75.78 1.75 1.75-.78 1.75-1.75 1.75zm15.5 11.28h-3v-5.6c0-1.34-.03-3.07-1.87-3.07-1.87 0-2.16 1.46-2.16 2.97v5.7h-3v-10h2.88v1.36h.04c.4-.75 1.38-1.54 2.84-1.54 3.04 0 3.6 2 3.6 4.59v5.59z"></path>
-          </svg>
-          Share
-        </a>
-      </div>
-    </header>
-
-    {/* Project Image with Lightbox (lightbox only for real screenshots) */}
-    <div class="mb-8">
-      {
-        publicFileExists(project.screenshot) ? (
-          <div class="rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 p-1">
-            <button
-              onclick="this.nextElementSibling.showModal()"
-              class="block w-full rounded-lg overflow-hidden cursor-zoom-in group"
-              aria-label="Click to enlarge image"
-            >
-              <ProjectImage
-                src={project.screenshot}
-                alt={project.altText}
-                title={project.title}
-                slug={project.slug}
-                loading="eager"
-                class="w-full h-auto transform transition-transform duration-300 group-hover:scale-[1.02]"
-              />
-            </button>
-            <dialog class="backdrop:bg-black/80 bg-transparent max-w-[90vw] max-h-[90vh] overflow-auto">
-              <div class="cursor-zoom-out" onclick="this.closest('dialog').close()">
-                <ProjectImage
-                  src={project.screenshot}
-                  alt={project.altText}
-                  title={project.title}
-                  slug={project.slug}
-                  class="w-full h-auto"
-                />
-              </div>
-            </dialog>
-          </div>
-        ) : (
-          <ProjectImage
-            src={project.screenshot}
-            alt={project.altText}
-            title={project.title}
-            slug={project.slug}
-            class="w-full h-auto rounded-xl"
-          />
-        )
-      }
+    <div class="shot">
+      <ProjectImage
+        src={project.screenshot}
+        alt={project.altText}
+        title={project.title}
+        slug={project.slug}
+        loading="eager"
+        heightClass={hasShot ? undefined : "h-40"}
+        class={hasShot ? "w-full h-auto" : "w-full"}
+      />
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      {/* Main Content */}
-      <div class="lg:col-span-2 space-y-8">
-        {/* Project Description */}
-        <section class="prose prose-lg dark:prose-invert max-w-none">
-          <p class="lead">{project.longDescription || project.description}</p>
-          
-          {
-            Array.isArray(project.features) && project.features.length > 0 && (
-              <div>
-                <h3 class="flex items-center gap-2">
-                  <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                  Key Features
-                </h3>
-                <ul class="space-y-2">
-                  {project.features.map((f: string) => (
-                    <li class="flex items-start gap-2">
-                      <span class="text-green-600 dark:text-green-400 mt-1">✓</span>
-                      <span>{f}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )
-          }
-          
-          {
-            Array.isArray(project.challenges) && project.challenges.length > 0 && (
-              <div>
-                <h3 class="flex items-center gap-2">
-                  <svg class="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-                  </svg>
-                  Challenges
-                </h3>
-                <ul class="space-y-2">
-                  {project.challenges.map((c: string) => (
-                    <li class="flex items-start gap-2">
-                      <span class="text-orange-600 dark:text-orange-400 mt-1">•</span>
-                      <span>{c}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )
-          }
-          
-          {
-            Array.isArray(project.nextSteps) && project.nextSteps.length > 0 && (
-              <div>
-                <h3 class="flex items-center gap-2">
-                  <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                  </svg>
-                  Next Steps
-                </h3>
-                <ul class="space-y-2">
-                  {project.nextSteps.map((n: string) => (
-                    <li class="flex items-start gap-2">
-                      <span class="text-blue-600 dark:text-blue-400 mt-1">→</span>
-                      <span>{n}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )
-          }
-        </section>
-
-        {/* Changelog */}
-        {
-          Array.isArray(project.changelog) && project.changelog.length > 0 && (
-            <section class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                Changelog
-              </h3>
-              <div class="space-y-3">
-                {project.changelog.map((entry: any) => (
-                  <div class="flex gap-3 pb-3 border-b border-gray-200 dark:border-gray-700 last:border-0">
-                    <time datetime={entry.date} class="text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                      {formatDate(entry.date)}
-                    </time>
-                    <span class="text-gray-700 dark:text-gray-300">{entry.note}</span>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )
-        }
-
-        {/* Retrospective */}
-        {
-          project.retrospective && (
-            <section class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6">
-              <h3 class="text-lg font-semibold text-blue-900 dark:text-blue-200 mb-3 flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-                </svg>
-                Retrospective
-              </h3>
-              <p class="text-blue-800 dark:text-blue-200">{project.retrospective}</p>
-            </section>
-          )
-        }
-
-        {/* Sunset Information */}
-        {
-          project.stage === "composted" && project.died && (
-            <section class="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 border border-orange-200 dark:border-orange-800 rounded-xl p-6">
-              <div class="flex items-start gap-3">
-                <svg
-                  class="w-6 h-6 text-orange-500 mt-1 flex-shrink-0"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-                  />
-                </svg>
-                <div>
-                  <h3 class="text-lg font-semibold text-orange-800 dark:text-orange-200 mb-2">
-                    Composted
-                  </h3>
-                  <p class="text-orange-700 dark:text-orange-300 mb-2">
-                    Work on this project stopped on{" "}
-                    <strong>
-                      <time datetime={project.died}>
-                        {formatDate(project.died)}
-                      </time>
-                    </strong>
-                    .
-                  </p>
-                  <p class="text-sm text-orange-600 dark:text-orange-400">
-                    The code and learnings remain available as a reference for future projects and fellow developers.
-                  </p>
-                </div>
-              </div>
-            </section>
-          )
-        }
+    <div class="body">
+      <div class="main">
+        <Overview project={project} />
+        <ProofOfWork project={project} />
+        <Learned project={project} />
       </div>
-
-      {/* Sidebar */}
-      <aside class="space-y-6">
-        {/* Quick Info Card */}
-        <div class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            Quick Info
-          </h3>
-          <dl class="space-y-4">
-            {
-              project.difficulty && (
-                <div>
-                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                    Difficulty
-                  </dt>
-                  <dd
-                    class={`inline-flex items-center px-2.5 py-0.5 text-sm font-medium rounded-full mt-1 ${difficultyStyles[project.difficulty]}`}
-                  >
-                    {project.difficulty}
-                  </dd>
-                </div>
-              )
-            }
-            {
-              project.born && (
-                <div>
-                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                    Started
-                  </dt>
-                  <dd class="text-sm text-gray-900 dark:text-white mt-1">
-                    <time datetime={project.born}>
-                      {formatDate(project.born)}
-                    </time>
-                  </dd>
-                </div>
-              )
-            }
-            {
-              duration && (
-                <div>
-                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                    Duration
-                  </dt>
-                  <dd class="text-sm text-gray-900 dark:text-white mt-1">
-                    {duration}
-                  </dd>
-                </div>
-              )
-            }
-            {
-              project.died && (
-                <div>
-                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                    Completed
-                  </dt>
-                  <dd class="text-sm text-gray-900 dark:text-white mt-1">
-                    <time datetime={project.died}>
-                      {formatDate(project.died)}
-                    </time>
-                  </dd>
-                </div>
-              )
-            }
-          </dl>
-        </div>
-
-        {/* Technologies */}
-        <div class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            Technologies
-          </h3>
-          <div class="flex flex-wrap gap-2">
-            {
-              project.tags.map((tag: string) => (
-                <a
-                  href={`/learnt?tag=${encodeURIComponent(tag)}`}
-                  class="inline-flex items-center gap-1 text-sm font-medium bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-700 dark:hover:text-blue-300 hover:border-blue-300 dark:hover:border-blue-600 transition-all hover:scale-105"
-                  title={`View all ${tag} projects`}
-                >
-                  <span>{techIcons[tag.toLowerCase()] || "💻"}</span>
-                  {tag}
-                </a>
-              ))
-            }
-          </div>
-        </div>
-
-        {/* Learning Outcomes */}
-        {
-          project.learnings.length > 0 && (
-            <div class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl p-6 border border-green-200 dark:border-green-800">
-              <h3 class="text-lg font-semibold text-green-900 dark:text-green-200 mb-4 flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
-                </svg>
-                What I Learned
-              </h3>
-              <ul class="space-y-2" data-testid="learnings-list">
-                {project.learnings.map((item: string) => (
-                  <li class="flex items-start gap-2">
-                    <svg class="w-4 h-4 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="text-sm text-green-800 dark:text-green-200">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )
-        }
-
-        {/* Related Projects */}
-        {
-          relatedProjects.length > 0 && (
-            <div class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                Related Projects
-              </h3>
-              <div class="space-y-4">
-                {relatedProjects.map((rp: any) => (
-                  <a
-                    href={`/learnt/${rp.slug}`}
-                    class="flex items-center gap-3 group hover:bg-white dark:hover:bg-gray-800 rounded-lg p-2 -m-2 transition-colors"
-                  >
-                    <div class="w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-700 group-hover:border-blue-400 dark:group-hover:border-blue-500 transition-colors bg-gray-100 dark:bg-gray-800">
-                      <ProjectImage
-                        src={rp.screenshot}
-                        alt={rp.altText ?? rp.title}
-                        title={rp.title}
-                        slug={rp.slug}
-                        repo={repoLabel(rp.githubUrl, rp.slug)}
-                        class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-300"
-                        heightClass="h-full"
-                        compact
-                      />
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <h4 class="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 line-clamp-1 transition-colors">
-                        {rp.title}
-                      </h4>
-                      <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mt-0.5">
-                        {rp.short || rp.description}
-                      </p>
-                    </div>
-                    <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                  </a>
-                ))}
-              </div>
-            </div>
-          )
-        }
-      </aside>
+      <DetailSidebar project={project} lineage={getLineage(project)} />
     </div>
 
-    {/* Navigation to Previous/Next Projects */}
-    <ProjectNav currentSlug={project.slug} />
-    
-    {/* Keyboard navigation hints */}
-    <div class="mt-8 flex justify-center gap-4 text-sm">
-      <button
-        id="nav-prev-btn"
-        class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        <kbd class="px-2 py-1 text-xs bg-white dark:bg-gray-900 rounded border border-gray-300 dark:border-gray-600">←</kbd>
-        <span>Previous</span>
-      </button>
-      <button
-        id="nav-next-btn"
-        class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        <span>Next</span>
-        <kbd class="px-2 py-1 text-xs bg-white dark:bg-gray-900 rounded border border-gray-300 dark:border-gray-600">→</kbd>
-      </button>
-    </div>
-    
-    <div aria-live="polite" id="nav-announcer" class="sr-only"></div>
+    <SameSoil related={getRelated(project)} prev={prev} next={next} />
 
-    <p class="mt-8 text-center text-sm">
+    <p class="report">
       <a href={`/contact?project=${encodeURIComponent(project.slug)}`} data-testid="report-link">
         Spot something wrong? Tell me
       </a>
     </p>
   </article>
-
-  {/* Enhanced keyboard navigation and interactions */}
-  <script is:inline>
-    // Navigation helper functions
-    function navigateToPrevious() {
-      const prev = document.querySelector('a[rel="prev"]');
-      if (prev) {
-        const announcer = document.getElementById("nav-announcer");
-        if (announcer) announcer.textContent = "Navigating to previous project.";
-        prev.click();
-      }
-    }
-
-    function navigateToNext() {
-      const next = document.querySelector('a[rel="next"]');
-      if (next) {
-        const announcer = document.getElementById("nav-announcer");
-        if (announcer) announcer.textContent = "Navigating to next project.";
-        next.click();
-      }
-    }
-
-    // Initialize button click handlers
-    document.addEventListener("DOMContentLoaded", function() {
-      const prevBtn = document.getElementById("nav-prev-btn");
-      const nextBtn = document.getElementById("nav-next-btn");
-      const prevLink = document.querySelector('a[rel="prev"]');
-      const nextLink = document.querySelector('a[rel="next"]');
-
-      if (prevBtn) {
-        prevBtn.addEventListener("click", navigateToPrevious);
-        if (!prevLink) prevBtn.disabled = true;
-      }
-
-      if (nextBtn) {
-        nextBtn.addEventListener("click", navigateToNext);
-        if (!nextLink) nextBtn.disabled = true;
-      }
-    });
-
-    // Keyboard navigation
-    document.addEventListener("keydown", function (e) {
-      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
-
-      if (e.key === "ArrowLeft") {
-        navigateToPrevious();
-      }
-
-      if (e.key === "ArrowRight") {
-        navigateToNext();
-      }
-
-      // Press 'g' to go back to gallery
-      if (e.key === "g" || e.key === "G") {
-        window.location.href = "/learnt";
-      }
-    });
-
-    // Copy link button functionality
-    function copyToClipboard(text) {
-      navigator.clipboard.writeText(text).then(() => {
-        const btn = event.target.closest('button');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '✓ Copied!';
-        setTimeout(() => {
-          btn.innerHTML = originalText;
-        }, 2000);
-      });
-    }
-
-    // Image lightbox escape key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        const dialog = document.querySelector('dialog[open]');
-        if (dialog) dialog.close();
-      }
-    });
-
-    // Add view transition API if supported
-    if ('startViewTransition' in document) {
-      document.addEventListener('click', (e) => {
-        const link = e.target.closest('a[href^="/learnt/"]');
-        if (link && !e.metaKey && !e.ctrlKey) {
-          e.preventDefault();
-          document.startViewTransition(() => {
-            window.location.href = link.href;
-          });
-        }
-      });
-    }
-  </script>
-
-  <style>
-    /* Smooth view transitions */
-    ::view-transition-old(root),
-    ::view-transition-new(root) {
-      animation-duration: 0.3s;
-    }
-
-    /* Dialog backdrop blur */
-    dialog::backdrop {
-      backdrop-filter: blur(10px);
-    }
-
-    /* Custom scrollbar for code blocks */
-    .prose pre::-webkit-scrollbar {
-      height: 8px;
-    }
-    
-    .prose pre::-webkit-scrollbar-track {
-      @apply bg-gray-100 dark:bg-gray-800 rounded;
-    }
-    
-    .prose pre::-webkit-scrollbar-thumb {
-      @apply bg-gray-400 dark:bg-gray-600 rounded hover:bg-gray-500;
-    }
-
-    /* Print styles */
-    @media print {
-      nav, aside, .no-print {
-        display: none;
-      }
-      
-      article {
-        max-width: 100%;
-      }
-    }
-  </style>
 </Layout>
+
+<style>
+  .detail {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    padding-block: 2rem 4rem;
+  }
+  .composted {
+    padding: 1rem 1.25rem;
+    border-left: 3px solid var(--warning);
+    border-radius: var(--radius-sm);
+    background: var(--bg-alt);
+  }
+  .composted h2 {
+    margin: 0 0 0.25rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-strong);
+  }
+  .composted p {
+    margin: 0;
+    color: var(--text-body);
+  }
+  .shot {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 18rem);
+    gap: 2.5rem;
+    align-items: start;
+  }
+  .main {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    min-width: 0;
+  }
+  .report {
+    margin: 0;
+    text-align: center;
+    font-size: 0.875rem;
+  }
+  @media (max-width: 860px) {
+    .body {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

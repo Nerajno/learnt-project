@@ -13,7 +13,7 @@ const { challenges = [], learnings = [], retrospective } = project;
 {challenges.length > 0 && (
   <section aria-labelledby="hard-h">
     <h2 id="hard-h">What was hard</h2>
-    <ul class="hard">
+    <ul class="hard" role="list">
       {challenges.map((item) => <li>{item}</li>)}
     </ul>
   </section>
@@ -22,7 +22,7 @@ const { challenges = [], learnings = [], retrospective } = project;
 {learnings.length > 0 && (
   <section aria-labelledby="learned-h">
     <h2 id="learned-h">What I learned</h2>
-    <ol class="learned" data-testid="learnings-list">
+    <ol class="learned" role="list" data-testid="learnings-list">
       {learnings.map((item) => <li>{item}</li>)}
     </ol>
   </section>

@@ -13,7 +13,7 @@ describe('SuccessorBanner (#46 Task 3)', () => {
     expect(text(html)).toContain('Superseded by Next One');
     expect(html).toMatch(/<strong[^>]*>Next One<\/strong>/);
     expect(html).toContain('href="/learnt/next"');
-    expect(text(html)).toContain('Open the successor →');
+    expect(text(html)).toContain('Open Next One →');
   });
 
   it('renders nothing without a successor', async () => {

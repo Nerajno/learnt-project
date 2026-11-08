@@ -12,7 +12,7 @@ const { successor } = Astro.props;
 {successor && (
   <aside class="successor" aria-label="Successor">
     <p>Superseded by <strong>{successor.title}</strong></p>
-    <a href={`/learnt/${successor.slug}`}>Open the successor →</a>
+    <a href={`/learnt/${successor.slug}`}>Open {successor.title} →</a>
   </aside>
 )}
 

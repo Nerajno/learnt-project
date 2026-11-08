@@ -3,9 +3,11 @@ import Layout from "../layouts/Layout.astro";
 import SearchBar from "../components/SearchBar.astro";
 import ProjectList from "../components/ProjectList.astro";
 import CourseworkList from "../components/CourseworkList.astro";
+import ArchiveTimeline from "../components/ArchiveTimeline.astro";
 import { getCardProjects, getCourseworkProjects } from "../data/projects";
 import { countByStage, toArchiveItem } from "../lib/archive";
 import { getStats } from "../lib/projects";
+import { getTimeline } from "../lib/timeline";
 
 const archiveProjects = getCardProjects();
 const archiveItems = archiveProjects.map(toArchiveItem);
@@ -93,6 +95,7 @@ const stats = getStats(archiveProjects);
     </div>
 
     <ProjectList id="project-list" projects={archiveProjects} />
+    <ArchiveTimeline years={getTimeline(archiveProjects)} />
 
     <CourseworkList projects={courseworkProjects} />
   </section>

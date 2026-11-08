@@ -1,66 +1,157 @@
-// VWC §4 Artifact Deep Dive, headstone projects only (#17). Rendered by #24.
-export interface DeepDive {
-  problem: string; // 4-1
-  successCriteria: string[]; // 4-2
-  approach: string; // 4-3
-  tradeoffs: { decision: string; why: string; adrUrl?: string }[]; // 4-4, 4-14
-  measurableOutcome: string; // 4-5
-  v2: string[]; // 4-6
-  walkthroughVideo?: string; // 4-7, 4-10
-  // 4-8, 4-9. Pre-2023 projects may answer 'No AI tools used'.
-  ai?: { tools: string[]; aiDid: string; iOwned: string; aiGotWrong: string } | 'No AI tools used';
-  architectureDiagram?: string; // 4-13
-  dataModel?: string; // 4-15
-  relatedPosts?: string[]; // 4-14
+import { z } from 'astro/zod';
+import type { Stage } from '../lib/stages';
+
+export type { Stage } from '../lib/stages';
+
+export type Category = 'frontend' | 'backend' | 'fullstack' | 'mobile' | 'design' | 'api';
+export type Difficulty = 'beginner' | 'intermediate' | 'advanced';
+export type Tier = 'headstone' | 'marker' | 'coursework';
+export type CauseOfDeath =
+  | 'shipped'
+  | 'superseded'
+  | 'outgrew-stack'
+  | 'course-ended'
+  | 'abandoned'
+  | 'merged-into';
+
+const aiSchema = z.union([
+  z.object({
+    tools: z.array(z.string()),
+    aiDid: z.string(),
+    iOwned: z.string(),
+    aiGotWrong: z.string(),
+  }),
+  z.literal('No AI tools used'),
+]);
+
+const deepDiveSchema = z.object({
+  problem: z.string(),
+  successCriteria: z.array(z.string()),
+  approach: z.string(),
+  tradeoffs: z.array(
+    z.object({
+      decision: z.string(),
+      why: z.string(),
+      adrUrl: z.string().optional(),
+    }),
+  ),
+  measurableOutcome: z.string(),
+  v2: z.array(z.string()),
+  walkthroughVideo: z.string().optional(),
+  ai: aiSchema.optional(),
+  architectureDiagram: z.string().optional(),
+  dataModel: z.string().optional(),
+  relatedPosts: z.array(z.string()).optional(),
+});
+
+const proofSchema = z.object({
+  tests: z.string().optional(),
+  lastDeploy: z.string().optional(),
+  lighthouse: z.number().optional(),
+  ci: z.boolean().optional(),
+});
+
+const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Expected YYYY-MM-DD');
+
+const baseProjectSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  slug: z.string(),
+  description: z.string(),
+  longDescription: z.string(),
+  technologies: z.array(z.string()),
+  category: z.enum(['frontend', 'backend', 'fullstack', 'mobile', 'design', 'api']),
+  difficulty: z.enum(['beginner', 'intermediate', 'advanced']),
+  stage: z.enum(['seed', 'sprout', 'shipped', 'composted']),
+  born: isoDate,
+  died: isoDate.optional(),
+  causeOfDeath: z
+    .enum(['shipped', 'superseded', 'outgrew-stack', 'course-ended', 'abandoned', 'merged-into'])
+    .optional(),
+  supersededBy: z.string().optional(),
+  epitaph: z.string().optional(),
+  tier: z.enum(['headstone', 'marker', 'coursework']),
+  outcome: z.string().optional(),
+  impact: z.string().optional(),
+  demoVideo: z.string().optional(),
+  proof: proofSchema.optional(),
+  deepDive: deepDiveSchema.optional(),
+  short: z.string().optional(),
+  altText: z.string().optional(),
+  githubUrl: z.string().optional(),
+  liveUrl: z.string().optional(),
+  screenshot: z.string().optional(),
+  gallery: z.array(z.string()).optional(),
+  youtubeId: z.string().optional(),
+  notesUrl: z.string().optional(),
+  features: z.array(z.string()),
+  learnings: z.array(z.string()),
+  challenges: z.array(z.string()),
+  nextSteps: z.array(z.string()).optional(),
+  tags: z.array(z.string()),
+  featured: z.boolean(),
+  changelog: z.array(z.object({ date: isoDate, note: z.string() })).optional(),
+  retrospective: z.string().optional(),
+});
+
+export type DeepDive = z.infer<typeof deepDiveSchema>;
+export type Project = z.infer<typeof baseProjectSchema>;
+
+type ProjectInput = z.infer<typeof baseProjectSchema>;
+
+function addIssue(ctx: z.RefinementCtx, path: string, message: string) {
+  ctx.addIssue({ code: z.ZodIssueCode.custom, path: [path], message });
 }
 
-export interface Project {
-  id: string;
-  title: string;
-  slug: string;
-  description: string;
-  longDescription: string;
-  technologies: string[];
-  category: 'frontend' | 'backend' | 'fullstack' | 'mobile' | 'design' | 'api';
-  status: 'completed' | 'in-progress' | 'planned' | 'archived';
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  phase: 'active' | 'sunset' | 'archived';
-  born: string;
-  died?: string;
-  causeOfDeath?: 'shipped' | 'superseded' | 'outgrew-stack' | 'course-ended' | 'abandoned' | 'merged-into'; // TODO(#39): populate
-  supersededBy?: string; // TODO(#25): slug of the successor
-  epitaph?: string; // TODO(#25): one sentence on what it taught me
-  tier: 'headstone' | 'marker' | 'coursework';
-  outcome?: string; // 3-1 what it did; TODO(#25)
-  impact?: string; // 3-2 one-sentence impact; TODO(#25)
-  demoVideo?: string; // 3-4 for apps that no longer deploy
-  proof?: {
-    // 3-6 visual proof strip; leave keys unset when unknown
-    tests?: string;
-    lastDeploy?: string;
-    lighthouse?: number;
-    ci?: boolean;
-  };
-  deepDive?: DeepDive; // headstones only; TODO(#26/#50): write the content
-  short?: string;
-  altText?: string;
-  githubUrl?: string;
-  liveUrl?: string;
-  screenshot?: string;
-  gallery?: string[];
-  youtubeId?: string;
-  notesUrl?: string;
-  features: string[];
-  learnings: string[];
-  challenges: string[];
-  nextSteps?: string[]; // roadmap for living projects; headstones use deepDive.v2
-  tags: string[];
-  featured: boolean;
-  changelog?: { date: string; note: string }[];
-  retrospective?: string;
+function structuralRules(project: ProjectInput, ctx: z.RefinementCtx) {
+  if (project.stage === 'seed' || project.stage === 'sprout') {
+    if (project.died) addIssue(ctx, 'died', `${project.stage} projects cannot have died`);
+    if (project.causeOfDeath) addIssue(ctx, 'causeOfDeath', `${project.stage} projects cannot have causeOfDeath`);
+  }
+
+  if (project.stage === 'shipped' && project.causeOfDeath && project.causeOfDeath !== 'shipped') {
+    addIssue(ctx, 'causeOfDeath', 'shipped projects may only use causeOfDeath "shipped"');
+  }
+
+  if (project.stage === 'composted') {
+    if (!project.died) addIssue(ctx, 'died', 'composted projects require died');
+    if (project.causeOfDeath === 'shipped') {
+      addIssue(ctx, 'causeOfDeath', 'composted projects cannot use causeOfDeath "shipped"');
+    }
+  }
+
+  if (
+    (project.causeOfDeath === 'superseded' || project.causeOfDeath === 'merged-into') &&
+    !project.supersededBy
+  ) {
+    addIssue(ctx, 'supersededBy', `${project.causeOfDeath} projects require supersededBy`);
+  }
+
+  if ((project.stage === 'shipped' || project.stage === 'composted') && !project.githubUrl) {
+    addIssue(ctx, 'githubUrl', `${project.stage} projects require githubUrl`);
+  }
+
+  if (project.died && project.died < project.born) {
+    addIssue(ctx, 'died', 'died must be on or after born');
+  }
 }
 
-export const projects: Project[] = [
+function contentRules(project: ProjectInput, ctx: z.RefinementCtx) {
+  if (project.stage === 'composted' && !project.causeOfDeath) {
+    addIssue(ctx, 'causeOfDeath', 'composted projects require causeOfDeath (#25)');
+  }
+  if ((project.stage === 'shipped' || project.stage === 'composted') && !project.outcome) {
+    addIssue(ctx, 'outcome', `${project.stage} projects require outcome (#16, #25)`);
+  }
+}
+
+export const projectSchema = baseProjectSchema.superRefine(structuralRules);
+export const strictProjectSchema = baseProjectSchema.superRefine((project, ctx) => {
+  structuralRules(project, ctx);
+  contentRules(project, ctx);
+});
+
+const rawProjects: Project[] = [
   // ACTIVE PROJECTS (2025)
   {
     id: '1',
@@ -72,12 +163,11 @@ export const projects: Project[] = [
     longDescription: 'Built the third iteration of my portfolio using Astro for optimal performance. This version focuses on showcasing my learning journey and project documentation with modern design patterns and excellent Core Web Vitals scores.',
     technologies: ['Astro', 'TypeScript', 'Tailwind CSS', 'Markdown'],
     category: 'frontend',
-    status: 'in-progress',
+    stage: 'sprout',
     difficulty: 'intermediate',
     born: '2025-08-01',
     tier: 'marker',
     githubUrl: 'https://github.com/Nerajno/portfolio_v3',
-    phase: 'active',
     features: [
       'Static site generation with Astro',
       'Dark mode support',
@@ -116,13 +206,12 @@ export const projects: Project[] = [
     longDescription: 'Third attempt at creating a comprehensive archive of my learning projects. Inspired by "Killed by Google", this site documents every project I have built, learned from, or sunset. Features advanced filtering, search, and detailed retrospectives for each project.',
     technologies: ['Astro', 'TypeScript', 'Tailwind CSS', 'Markdown'],
     category: 'frontend',
-    status: 'in-progress',
+    stage: 'sprout',
     difficulty: 'intermediate',
     born: '2025-08-01',
     tier: 'marker',
     githubUrl: 'https://github.com/Nerajno/learnt-project',
     liveUrl: 'https://learnt.developingdvlpr.com',
-    phase: 'active',
     features: [
       'Project timeline visualization',
       'Status tracking (active, sunset, archived)',
@@ -169,12 +258,11 @@ export const projects: Project[] = [
     longDescription: 'My personal digital garden where I cultivate and share knowledge. A living document that grows and evolves with my learning. Embraces the concept of learning in public and building knowledge incrementally.',
     technologies: ['CSS', 'HTML', 'JavaScript', 'Markdown'],
     category: 'frontend',
-    status: 'in-progress',
+    stage: 'sprout',
     difficulty: 'beginner',
     born: '2025-09-01',
     tier: 'marker',
     githubUrl: 'https://github.com/Nerajno/digital_garden',
-    phase: 'active',
     features: [
       'Interconnected notes',
       'Progressive disclosure',
@@ -214,12 +302,11 @@ export const projects: Project[] = [
     longDescription: 'Forked status keeper project to track my own project completion status. A playful way to keep myself accountable and share progress with the community.',
     technologies: ['Vue', 'JavaScript', 'CSS'],
     category: 'frontend',
-    status: 'in-progress',
+    stage: 'sprout',
     difficulty: 'beginner',
     born: '2025-09-20',
     tier: 'marker',
     githubUrl: 'https://github.com/Nerajno/isnerandodoneyet-com',
-    phase: 'active',
     features: [
       'Status display',
       'Progress tracking',
@@ -250,12 +337,11 @@ export const projects: Project[] = [
     longDescription: 'A meta-repository serving as a mausoleum for various learning projects. Each project represents a learning journey and exploration of new technologies or techniques. A respectful archive of code that served its purpose.',
     technologies: ['Various', 'Documentation', 'Git', 'Markdown'],
     category: 'design',
-    status: 'in-progress',
+    stage: 'sprout',
     difficulty: 'beginner',
     born: '2024-11-01',
     tier: 'marker',
     githubUrl: 'https://github.com/NerajnoLearning/My-digital-Mausoleum',
-    phase: 'active',
     features: [
       'Project archive',
       'Learning logs',
@@ -290,13 +376,12 @@ export const projects: Project[] = [
     longDescription: 'The second attempt at building a comprehensive project archive. Learned valuable lessons about scope and structure that informed the third iteration. Sometimes you need to build something twice to understand what you really need.',
     technologies: ['Astro', 'JavaScript', 'CSS'],
     category: 'frontend',
-    status: 'archived',
+    stage: 'composted',
     difficulty: 'intermediate',
     born: '2025-08-10',
     tier: 'marker',
     died: '2025-08-20',
     githubUrl: 'https://github.com/Nerajno/learnt_2',
-    phase: 'sunset',
     features: [
       'Basic project listing',
       'Simple filtering',
@@ -328,13 +413,12 @@ export const projects: Project[] = [
     longDescription: 'The first attempt at building Learnt. While it didn\'t work out, it provided crucial learning experiences that shaped the later iterations. Every journey starts with a first step, even if it\'s in the wrong direction.',
     technologies: ['Astro', 'JavaScript', 'CSS'],
     category: 'frontend',
-    status: 'archived',
+    stage: 'composted',
     difficulty: 'beginner',
     born: '2025-08-05',
     tier: 'marker',
     died: '2025-08-16',
     githubUrl: 'https://github.com/Nerajno/learnt',
-    phase: 'archived',
     features: [
       'Basic project pages',
       'Static site generation',
@@ -364,13 +448,12 @@ export const projects: Project[] = [
     longDescription: 'Built a Vue application to manage and track the status of all my side projects. Helps visualize what\'s active, on hold, or completed. Eventually superseded by the Learnt project which provides more comprehensive documentation.',
     technologies: ['Vue', 'JavaScript', 'CSS'],
     category: 'frontend',
-    status: 'completed',
+    stage: 'composted',
     difficulty: 'intermediate',
     born: '2025-04-15',
     tier: 'marker',
     died: '2025-06-01',
     githubUrl: 'https://github.com/Nerajno/v0-Side_project_Status',
-    phase: 'sunset',
     features: [
       'Multiple project tracking',
       'Status categorization',
@@ -404,13 +487,12 @@ export const projects: Project[] = [
     longDescription: 'A React application mimicking Netflix\'s interface and functionality. Built to understand streaming app architecture and modern React patterns. Features smooth carousels, hover previews, and category-based browsing.',
     technologies: ['React', 'JavaScript', 'CSS', 'REST API'],
     category: 'frontend',
-    status: 'completed',
+    stage: 'composted',
     difficulty: 'intermediate',
     born: '2024-09-15',
     tier: 'headstone',
     died: '2024-11-15',
     githubUrl: 'https://github.com/Nerajno/Burble-V1',
-    phase: 'sunset',
     features: [
       'Netflix-style carousel',
       'Video playback interface',
@@ -446,13 +528,12 @@ export const projects: Project[] = [
     longDescription: 'A functional calculator built to meet FreeCodeCamp\'s Front End Development Library certification requirements. Implemented with TypeScript for type safety and proper calculator logic handling.',
     technologies: ['TypeScript', 'HTML', 'CSS'],
     category: 'frontend',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'beginner',
     born: '2024-10-01',
     tier: 'coursework',
     died: '2024-10-29',
     githubUrl: 'https://github.com/Nerajno/Ber-kna-FCCFEDL',
-    phase: 'archived',
     features: [
       'Basic arithmetic operations',
       'Clear and reset functions',
@@ -487,14 +568,13 @@ export const projects: Project[] = [
     longDescription: 'Built an interactive drum machine for FreeCodeCamp\'s front-end certification. Features multiple drum pads, keyboard support, and volume control. Learned the intricacies of the Web Audio API.',
     technologies: ['React', 'JavaScript', 'Web Audio API', 'CSS'],
     category: 'frontend',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'intermediate',
     born: '2024-08-15',
     tier: 'marker',
     died: '2024-09-01',
     githubUrl: 'https://github.com/NerajnoLearning/Trumma',
     liveUrl: 'https://drum-machine.freecodecamp.rocks/',
-    phase: 'archived',
     features: [
       '9 drum pads with unique sounds',
       'Keyboard support (Q,W,E,A,S,D,Z,X,C)',
@@ -529,13 +609,12 @@ export const projects: Project[] = [
     longDescription: 'Worked through Wes Bos\'s excellent JavaScript30 course, building 30 different projects in 30 days using vanilla JavaScript. No frameworks, no libraries - just pure JavaScript. Projects ranged from drum kits to video players to canvas drawing.',
     technologies: ['JavaScript', 'HTML', 'CSS', 'Canvas', 'LocalStorage'],
     category: 'frontend',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'beginner',
     born: '2024-03-01',
     tier: 'coursework',
     died: '2024-03-30',
     githubUrl: 'https://github.com/Nerajno/JavaScript30',
-    phase: 'archived',
     features: [
       '30 unique JavaScript projects',
       'Vanilla JS only - no frameworks',
@@ -572,13 +651,12 @@ export const projects: Project[] = [
     longDescription: 'Attended and worked through Ben Codezen\'s proven patterns workshop at Vue Conference 2025. Learned advanced Vue.js patterns and best practices from industry experts. Covered composition API, advanced patterns, and real-world scenarios.',
     technologies: ['TypeScript', 'Vue.js', 'Vite', 'Composition API'],
     category: 'frontend',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'advanced',
     born: '2025-05-19',
     tier: 'marker',
     died: '2025-05-19',
     githubUrl: 'https://github.com/Nerajno/vue-conf-25-proven-patterns-workshop',
-    phase: 'archived',
     features: [
       'Advanced Vue patterns',
       'Composition API deep dive',
@@ -613,13 +691,12 @@ export const projects: Project[] = [
     longDescription: 'Created an interactive bar chart using D3.js as part of FreeCodeCamp\'s Data Visualization certification. Features tooltips, smooth animations, and responsive SVG design. Visualizes economic data over time.',
     technologies: ['JavaScript', 'D3.js', 'SVG', 'HTML', 'CSS'],
     category: 'frontend',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'intermediate',
     born: '2024-05-20',
     tier: 'coursework',
     died: '2024-06-01',
     githubUrl: 'https://github.com/NerajnoLearning/FCC_D3_Bars',
-    phase: 'archived',
     features: [
       'Interactive bar chart',
       'Hover tooltips with data',
@@ -654,13 +731,12 @@ export const projects: Project[] = [
     longDescription: 'Capstone D3.js project bringing together all learned visualization techniques. Creates an interactive data story with multiple chart types, coordinated views, and compelling narrative. Final project for FreeCodeCamp Data Visualization certification.',
     technologies: ['JavaScript', 'D3.js', 'SVG', 'HTML', 'CSS'],
     category: 'frontend',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'advanced',
     born: '2024-06-05',
     tier: 'headstone',
     died: '2024-06-15',
     githubUrl: 'https://github.com/NerajnoLearning/FCC_D3_story',
-    phase: 'archived',
     features: [
       'Multiple visualization types',
       'Interactive data story',
@@ -695,13 +771,12 @@ export const projects: Project[] = [
     longDescription: 'Built an interactive holiday card maker using Vue.js. Users can customize text, colors, and images to create personalized holiday cards. Features canvas rendering and image export functionality.',
     technologies: ['Vue', 'JavaScript', 'CSS', 'HTML Canvas'],
     category: 'frontend',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'intermediate',
     born: '2024-11-15',
     tier: 'marker',
     died: '2024-12-01',
     githubUrl: 'https://github.com/NerajnoLearning/Vue_Holiday_Card_Maker',
-    phase: 'archived',
     features: [
       'Customizable text and colors',
       'Image upload',
@@ -735,13 +810,12 @@ export const projects: Project[] = [
     longDescription: 'Completed the first project in the FreeCodeCamp Front End Development Libraries certification track. Built a responsive web application meeting all certification requirements and user stories.',
     technologies: ['JavaScript', 'HTML', 'CSS'],
     category: 'frontend',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'beginner',
     born: '2023-09-01',
     tier: 'coursework',
     died: '2023-09-16',
     githubUrl: 'https://github.com/Nerajno/Assaggio-1-FCC_FEDLC',
-    phase: 'archived',
     features: [
       'Meets all FCC requirements',
       'Responsive layout',
@@ -773,13 +847,12 @@ export const projects: Project[] = [
     longDescription: 'Advanced FreeCodeCamp certification project demonstrating mastery of React and modern JavaScript patterns. Implements complex state management and component interactions.',
     technologies: ['React', 'JavaScript', 'CSS'],
     category: 'frontend',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'intermediate',
     born: '2024-04-15',
     tier: 'coursework',
     died: '2024-05-01',
     githubUrl: 'https://github.com/NerajnoLearning/bRavur-4-FCC_FEDLC',
-    phase: 'archived',
     features: [
       'React components',
       'Complex state management',
@@ -812,13 +885,12 @@ export const projects: Project[] = [
     longDescription: 'Capstone project for FreeCodeCamp\'s Front End Development Libraries certification. Demonstrates comprehensive understanding of modern front-end development, React, and JavaScript.',
     technologies: ['React', 'JavaScript', 'CSS', 'HTML'],
     category: 'frontend',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'intermediate',
     born: '2024-05-15',
     tier: 'coursework',
     died: '2024-06-01',
     githubUrl: 'https://github.com/NerajnoLearning/NerajnoLearning-sToppur-5-FCC_FEDLC',
-    phase: 'archived',
     features: [
       'Complete React application',
       'Multiple components',
@@ -852,13 +924,12 @@ export const projects: Project[] = [
     longDescription: 'The 2023 version of my portfolio website. Built with vanilla HTML, CSS, and JavaScript before transitioning to modern frameworks. Served as my professional presence for over a year.',
     technologies: ['HTML', 'CSS', 'JavaScript'],
     category: 'frontend',
-    status: 'archived',
+    stage: 'composted',
     difficulty: 'beginner',
     born: '2024-02-01',
     tier: 'marker',
     died: '2024-08-01',
     githubUrl: 'https://github.com/Nerajno/Current_Portfolio_2023',
-    phase: 'sunset',
     features: [
       'Project showcase',
       'About section',
@@ -893,13 +964,12 @@ export const projects: Project[] = [
     longDescription: 'The third iteration of my personal blog, rebuilt with Vue.js and TypeScript. Features markdown support, tagging system, and search functionality. Evolved through multiple versions to find the right balance.',
     technologies: ['TypeScript', 'Vue', 'Markdown', 'CSS'],
     category: 'frontend',
-    status: 'archived',
+    stage: 'composted',
     difficulty: 'intermediate',
     born: '2023-12-01',
     tier: 'marker',
     died: '2024-06-01',
     githubUrl: 'https://github.com/Nerajno/hosted_Blog_v3',
-    phase: 'sunset',
     features: [
       'Markdown blog posts',
       'Tag system',
@@ -934,13 +1004,12 @@ export const projects: Project[] = [
     longDescription: 'Experimented with Astro for building a static blog. Learned about Astro\'s content collections and static site generation capabilities. This experiment led to adopting Astro for other projects.',
     technologies: ['Astro', 'Markdown', 'JavaScript', 'CSS'],
     category: 'frontend',
-    status: 'archived',
+    stage: 'composted',
     difficulty: 'beginner',
     born: '2024-01-15',
     tier: 'marker',
     died: '2024-03-01',
     githubUrl: 'https://github.com/Nerajno/blog-Astro',
-    phase: 'sunset',
     features: [
       'Static site generation',
       'Markdown blog posts',
@@ -973,13 +1042,12 @@ export const projects: Project[] = [
     longDescription: 'Forked and customized a Next.js blog template using MDX for content. Features TypeScript for type safety and Tailwind CSS for styling. Explored the Next.js ecosystem and MDX capabilities.',
     technologies: ['TypeScript', 'Next.js', 'MDX', 'Tailwind CSS', 'React'],
     category: 'frontend',
-    status: 'archived',
+    stage: 'composted',
     difficulty: 'intermediate',
     born: '2024-01-15',
     tier: 'marker',
     died: '2024-04-01',
     githubUrl: 'https://github.com/Nerajno/My-Self-hosted-TypeScript-Mdx-blog',
-    phase: 'sunset',
     features: [
       'MDX blog posts',
       'TypeScript throughout',
@@ -1014,13 +1082,12 @@ export const projects: Project[] = [
     longDescription: 'Forked and customized a minimalist CV template. Features print-optimized CSS and clean, professional design. Built with TypeScript and modern tooling for a single-page resume.',
     technologies: ['TypeScript', 'CSS', 'HTML', 'Print CSS'],
     category: 'frontend',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'beginner',
     born: '2023-12-20',
     tier: 'marker',
     died: '2023-12-27',
     githubUrl: 'https://github.com/Nerajno/cv',
-    phase: 'active',
     features: [
       'Print-optimized layout',
       'One-page design',
@@ -1056,13 +1123,12 @@ export const projects: Project[] = [
     longDescription: 'A Single Page Application built with Rails for managing an address book. Implements full CRUD functionality for contact management with a clean API and responsive frontend.',
     technologies: ['Ruby', 'Ruby on Rails', 'JavaScript', 'PostgreSQL', 'Bootstrap'],
     category: 'fullstack',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'intermediate',
     born: '2025-07-01',
     tier: 'headstone',
     died: '2025-08-11',
     githubUrl: 'https://github.com/Nerajno/Trapper_Keeper-v1',
-    phase: 'archived',
     features: [
       'Add, edit, delete contacts',
       'Search and filter contacts',
@@ -1097,13 +1163,12 @@ export const projects: Project[] = [
     longDescription: 'Followed Brad Traversy\'s MERN stack course to build a full-featured social network for developers. Includes user profiles, posts, comments, likes, and GitHub integration. Complete authentication system with JWT.',
     technologies: ['MongoDB', 'Express', 'React', 'Node.js', 'Redux', 'JWT'],
     category: 'fullstack',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'advanced',
     born: '2023-05-01',
     tier: 'headstone',
     died: '2023-06-08',
     githubUrl: 'https://github.com/NerajnoLearning/devconnector_2.0',
-    phase: 'archived',
     features: [
       'User authentication and authorization',
       'Developer profiles with experience and education',
@@ -1140,13 +1205,12 @@ export const projects: Project[] = [
     longDescription: 'Capstone project demonstrating all skills learned during the Flatiron School bootcamp. Built a complete application from planning through deployment, presenting to instructors and peers.',
     technologies: ['JavaScript', 'React', 'CSS', 'REST API', 'Git'],
     category: 'fullstack',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'intermediate',
     born: '2023-02-15',
     tier: 'coursework',
     died: '2023-03-15',
     githubUrl: 'https://github.com/Nerajno/frontend_final_project',
-    phase: 'archived',
     features: [
       'Full CRUD functionality',
       'User authentication',
@@ -1181,13 +1245,12 @@ export const projects: Project[] = [
     longDescription: 'Built a complete backend system with database, RESTful API, and authentication as the final project for bootcamp certification. Demonstrates mastery of server-side development.',
     technologies: ['Ruby', 'Rails', 'PostgreSQL', 'REST API', 'JWT'],
     category: 'backend',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'intermediate',
     born: '2023-10-01',
     tier: 'coursework',
     died: '2023-10-24',
     githubUrl: 'https://github.com/Nerajno/backend_final-project',
-    phase: 'archived',
     features: [
       'RESTful API',
       'Database with complex relationships',
@@ -1222,13 +1285,12 @@ export const projects: Project[] = [
     longDescription: 'Built a RESTful API to catalog and manage information about regional treats and local food items. Features search, filtering, and user contributions with geographic data.',
     technologies: ['Node.js', 'Express', 'MongoDB', 'REST API'],
     category: 'backend',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'intermediate',
     born: '2023-09-01',
     tier: 'marker',
     died: '2023-09-21',
     githubUrl: 'https://github.com/Nerajno/Native_treats_api',
-    phase: 'archived',
     features: [
       'CRUD operations',
       'Search and filtering',
@@ -1263,13 +1325,12 @@ export const projects: Project[] = [
     longDescription: 'Worked through JP Morgan Chase\'s software engineering virtual experience program on Forage, completing real-world tasks involving financial data processing and visualization. Gained insight into enterprise software development.',
     technologies: ['Python', 'React', 'TypeScript', 'Financial APIs', 'Git'],
     category: 'fullstack',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'intermediate',
     born: '2023-07-01',
     tier: 'marker',
     died: '2023-07-10',
     githubUrl: 'https://github.com/Nerajno/forage-jpmc-swe-task-2',
-    phase: 'archived',
     features: [
       'Live data feeds',
       'Financial data processing',
@@ -1306,13 +1367,12 @@ export const projects: Project[] = [
     longDescription: 'Final project submission for Harvard\'s CS50P course. Demonstrates understanding of Python fundamentals, data structures, and problem-solving. Includes comprehensive testing and documentation.',
     technologies: ['Python', 'pytest', 'CLI'],
     category: 'backend',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'intermediate',
     born: '2024-07-01',
     tier: 'headstone',
     died: '2024-08-02',
     githubUrl: 'https://github.com/NerajnoLearning/CS50P-Final_Project',
-    phase: 'archived',
     features: [
       'Command-line interface',
       'File I/O operations',
@@ -1348,13 +1408,12 @@ export const projects: Project[] = [
     longDescription: 'Committed to coding every day for 100 days and documenting the journey. Tracked progress, learnings, and challenges faced during the challenge. Public accountability drove consistency.',
     technologies: ['Various', 'Git', 'Markdown'],
     category: 'design',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'beginner',
     born: '2024-05-01',
     tier: 'coursework',
     died: '2024-08-02',
     githubUrl: 'https://github.com/Nerajno/100DaysOfCodeLog',
-    phase: 'archived',
     features: [
       'Daily log entries',
       'Progress tracking',
@@ -1390,13 +1449,12 @@ export const projects: Project[] = [
     longDescription: 'Forked the FreeCodeCamp repository to study the codebase, work through challenges, and understand how a large open-source education platform is built. Learned about community-driven development.',
     technologies: ['TypeScript', 'React', 'Node.js', 'MongoDB', 'Gatsby'],
     category: 'fullstack',
-    status: 'archived',
+    stage: 'composted',
     difficulty: 'advanced',
     born: '2023-12-01',
     tier: 'marker',
     died: '2024-01-01',
     githubUrl: 'https://github.com/Nerajno/freeCodeCamp',
-    phase: 'archived',
     features: [
       'Complete curriculum platform',
       'Interactive challenges',
@@ -1429,13 +1487,12 @@ export const projects: Project[] = [
     longDescription: 'Completed bootcamp exercise on Redux reducers, learning state management patterns and how to build scalable React applications with predictable state.',
     technologies: ['JavaScript', 'React', 'Redux'],
     category: 'frontend',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'intermediate',
     born: '2023-04-10',
     tier: 'marker',
     died: '2023-04-12',
     githubUrl: 'https://github.com/Nerajno/redux-reducer-atlanta-web-060319',
-    phase: 'archived',
     features: [
       'Reducer functions',
       'Action creators',
@@ -1469,13 +1526,12 @@ export const projects: Project[] = [
     longDescription: 'Made open source contributions to the Folkmusic.com project, focusing on CSS improvements and isolated component enhancements. First significant open source contribution.',
     technologies: ['CSS', 'HTML', 'JavaScript'],
     category: 'frontend',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'beginner',
     born: '2023-06-01',
     tier: 'marker',
     died: '2023-06-08',
     githubUrl: 'https://github.com/Nerajno/folkmusic',
-    phase: 'archived',
     features: [
       'CSS improvements',
       'Component enhancements',
@@ -1508,13 +1564,12 @@ export const projects: Project[] = [
     longDescription: 'Explored GitHub Actions by building automated workflows for continuous integration. Learned how to set up testing, linting, and deployment pipelines.',
     technologies: ['GitHub Actions', 'YAML', 'CI/CD', 'Node.js'],
     category: 'backend',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'intermediate',
     born: '2023-03-15',
     tier: 'marker',
     died: '2023-04-01',
     githubUrl: 'https://github.com/Nerajno/github-actions-for-ci',
-    phase: 'archived',
     features: [
       'Automated testing',
       'Lint checks',
@@ -1549,13 +1604,12 @@ export const projects: Project[] = [
     longDescription: 'Built along with workshop at Connect Tech 2021 conference. Learned modern React patterns and TypeScript best practices from industry experts in a hands-on setting.',
     technologies: ['TypeScript', 'React', 'JavaScript'],
     category: 'frontend',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'intermediate',
     born: '2023-03-25',
     tier: 'marker',
     died: '2023-04-01',
     githubUrl: 'https://github.com/NerajnoLearning/conf-app-connecttech-2021',
-    phase: 'archived',
     features: [
       'Conference schedule display',
       'Session management',
@@ -1589,13 +1643,12 @@ export const projects: Project[] = [
     longDescription: 'Completed the "Test-driven Development: The Big Picture" course on Pluralsight. Learned TDD principles, red-green-refactor cycle, and testing best practices using C#.',
     technologies: ['C#', 'Testing', 'TDD', 'xUnit'],
     category: 'backend',
-    status: 'completed',
+    stage: 'shipped',
     difficulty: 'intermediate',
     born: '2023-01-15',
     tier: 'marker',
     died: '2023-02-01',
     githubUrl: 'https://github.com/NerajnoLearning/TDD-TheBigPicture',
-    phase: 'archived',
     features: [
       'TDD examples',
       'Unit tests',
@@ -1629,13 +1682,12 @@ export const projects: Project[] = [
     longDescription: 'Explored Microsoft\'s .NET command line tools collection. Learned about the .NET ecosystem, CLI utilities, and ASP.NET development workflows.',
     technologies: ['C#', '.NET', 'ASP.NET', 'CLI'],
     category: 'backend',
-    status: 'archived',
+    stage: 'composted',
     difficulty: 'beginner',
     born: '2022-12-15',
     tier: 'marker',
     died: '2023-01-01',
     githubUrl: 'https://github.com/NerajnoLearning/DotNetTools',
-    phase: 'archived',
     features: [
       'CLI tools exploration',
       'Development utilities',
@@ -1668,13 +1720,12 @@ export const projects: Project[] = [
     longDescription: 'An experimental project built out of curiosity to explore new ideas and technologies. Sometimes the best learning comes from just being nosey and trying things out without a specific goal.',
     technologies: ['JavaScript', 'Experimental'],
     category: 'frontend',
-    status: 'archived',
+    stage: 'composted',
     difficulty: 'beginner',
     born: '2025-02-15',
     tier: 'marker',
     died: '2025-03-15',
     githubUrl: 'https://github.com/Nerajno/yup-nosey',
-    phase: 'sunset',
     features: [
       'Experimental features',
       'Rapid prototyping',
@@ -1707,13 +1758,12 @@ export const projects: Project[] = [
     longDescription: 'Explored creating a Gulp plugin for the Jest testing library. Learned about build automation, task runners, and plugin architecture patterns.',
     technologies: ['JavaScript', 'Gulp', 'Jest', 'Node.js', 'Streams'],
     category: 'backend',
-    status: 'archived',
+    stage: 'composted',
     difficulty: 'advanced',
     born: '2022-07-15',
     tier: 'marker',
     died: '2022-08-01',
     githubUrl: 'https://github.com/Nerajno/gulp-jest',
-    phase: 'archived',
     features: [
       'Gulp task integration',
       'Jest test runner',
@@ -1748,12 +1798,11 @@ export const projects: Project[] = [
     longDescription: 'Created a custom GitHub profile README to showcase projects, skills, and contributions. Features stats, badges, and links to various profiles. A living document that represents my developer brand.',
     technologies: ['Markdown', 'GitHub', 'Shields.io'],
     category: 'design',
-    status: 'in-progress',
+    stage: 'sprout',
     difficulty: 'beginner',
     born: '2025-03-20',
     tier: 'marker',
     githubUrl: 'https://github.com/Nerajno/nerajno',
-    phase: 'active',
     features: [
       'GitHub stats display',
       'Tech stack showcase',
@@ -1779,9 +1828,35 @@ export const projects: Project[] = [
   },
 ];
 
+const parsed = z.array(projectSchema).safeParse(rawProjects);
+
+if (!parsed.success) {
+  const details = parsed.error.issues
+    .map((issue) => {
+      const [index, ...rest] = issue.path;
+      const slug = rawProjects[Number(index)]?.slug ?? String(index);
+      return `${slug}${rest.length ? `.${rest.join('.')}` : ''}: ${issue.message}`;
+    })
+    .join('\n');
+  throw new Error(`Invalid project data:\n${details}`);
+}
+
+export const projects: Project[] = parsed.data;
+
 // UTILITY FUNCTIONS FOR WORKING WITH PROJECTS
 export function getAllProjects(): Project[] {
   return [...projects];
+}
+
+// #20: coursework is honest history, listed compactly instead of as cards.
+export function getCardProjects(): Project[] {
+  return projects.filter(project => project.tier !== 'coursework');
+}
+
+export function getCourseworkProjects(): Project[] {
+  return projects
+    .filter(project => project.tier === 'coursework')
+    .sort((a, b) => b.born.localeCompare(a.born));
 }
 
 export function filterProjects(filters: Partial<Project>): Project[] {
@@ -1805,17 +1880,19 @@ export function getProjectsByCategory(category: string): Project[] {
   return projects.filter(project => project.category === category);
 }
 
-export function getProjectsByStatus(status: string): Project[] {
-  return projects.filter(project => project.status === status);
-}
-
-export function getProjectsByPhase(phase: string): Project[] {
-  return projects.filter(project => project.phase === phase);
+export function getProjectsByStage(stage: Stage): Project[] {
+  return projects.filter(project => project.stage === stage);
 }
 
 // Learnt is for past projects; living ones are listed on the About page.
+// Coursework never headlines (#20).
 export function getFeaturedProjects(): Project[] {
-  return projects.filter(project => project.featured && project.phase !== 'active');
+  return projects.filter(
+    project =>
+      project.featured &&
+      (project.stage === 'shipped' || project.stage === 'composted') &&
+      project.tier !== 'coursework',
+  );
 }
 
 export function getProjectsByTechnology(tech: string): Project[] {
@@ -1837,8 +1914,8 @@ export function searchProjects(query: string): Project[] {
   );
 }
 
-export function getUniqueCategories(): string[] {
-  return [...new Set(projects.map(project => project.category))];
+export function getUniqueCategories(list: Project[] = projects): string[] {
+  return [...new Set(list.map(project => project.category))];
 }
 
 export function getUniqueTechnologies(): string[] {
@@ -1851,29 +1928,14 @@ export function getUniqueTags(): string[] {
   return [...new Set(allTags)].sort();
 }
 
-export function getProjectStats() {
-  return {
-    total: projects.length,
-    completed: projects.filter(p => p.status === 'completed').length,
-    inProgress: projects.filter(p => p.status === 'in-progress').length,
-    planned: projects.filter(p => p.status === 'planned').length,
-    archived: projects.filter(p => p.status === 'archived').length,
-    active: projects.filter(p => p.phase === 'active').length,
-    sunset: projects.filter(p => p.phase === 'sunset').length,
-    technologies: getUniqueTechnologies().length,
-    categories: getUniqueCategories().length,
-    tags: getUniqueTags().length,
-  };
-}
-
 // Get projects by year
 export function getProjectsByYear(year: number): Project[] {
   return projects.filter(project => project.born.slice(0, 4) === String(year));
 }
 
 // Get all years with projects
-export function getProjectYears(): number[] {
-  const years = projects.map(project => Number(project.born.slice(0, 4)));
+export function getProjectYears(list: Project[] = projects): number[] {
+  const years = list.map(project => Number(project.born.slice(0, 4)));
   return [...new Set(years)].sort((a, b) => b - a);
 }
 

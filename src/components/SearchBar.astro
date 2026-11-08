@@ -1,6 +1,6 @@
 ---
 import { STAGES, SORTS, type Stage } from '../lib/archive';
-import { getUniqueCategories, getProjectYears } from '../data/projects';
+import { getCardProjects, getUniqueCategories, getProjectYears } from '../data/projects';
 
 export interface Props {
   counts: Record<Stage, number>;
@@ -8,8 +8,10 @@ export interface Props {
 }
 
 const { counts, total } = Astro.props as Props;
-const categories = getUniqueCategories();
-const years = getProjectYears();
+// Options come from the card grid only; coursework isn't filterable (#20).
+const cardProjects = getCardProjects();
+const categories = getUniqueCategories(cardProjects);
+const years = getProjectYears(cardProjects);
 ---
 
 <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-8 shadow-sm">

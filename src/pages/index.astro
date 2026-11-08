@@ -3,8 +3,10 @@ import Layout from '../layouts/Layout.astro';
 import ProjectList from '../components/ProjectList.astro';
 import { getFeaturedProjects } from '../data/projects';
 import { homeJsonLd } from '../lib/jsonld';
+import { getStats } from '../lib/projects';
 
 const featuredProjects = getFeaturedProjects();
+const stats = getStats();
 ---
 
 <Layout title="Welcome | Learnt" jsonLd={homeJsonLd(new URL('/', Astro.site))}>
@@ -25,6 +27,9 @@ const featuredProjects = getFeaturedProjects();
             About Me
           </a>
         </div>
+        <p class="mt-6 text-sm text-gray-600 dark:text-gray-300">
+          {stats.total} projects · {stats.byStage.shipped} shipped · {stats.byStage.composted} composted
+        </p>
       </div>
     </div>
   </section>

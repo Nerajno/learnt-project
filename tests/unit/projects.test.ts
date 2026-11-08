@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
+  getCardProjects,
+  getCourseworkProjects,
   getFeaturedProjects,
   getProjectYears,
+  getUniqueCategories,
   getProjectsByYear,
   getRecentProjects,
   projects,
@@ -59,20 +62,82 @@ describe('graveyard dates (#15)', () => {
 });
 
 describe('getFeaturedProjects', () => {
-  it('never returns active projects (#14)', () => {
+  it('never returns living projects (#14)', () => {
     const featured = getFeaturedProjects();
     expect(featured.length).toBeGreaterThan(0);
     for (const project of featured) {
       expect(project.featured).toBe(true);
-      expect(project.phase).not.toBe('active');
+      expect(['shipped', 'composted']).toContain(project.stage);
     }
   });
 
-  it('returns every featured non-active project in data order', () => {
+  it('returns every featured finished project in data order', () => {
     const expected = projects
-      .filter((p) => p.featured && p.phase !== 'active')
+      .filter(
+        (p) =>
+          p.featured &&
+          (p.stage === 'shipped' || p.stage === 'composted') &&
+          p.tier !== 'coursework',
+      )
       .map((p) => p.slug);
     expect(getFeaturedProjects().map((p) => p.slug)).toEqual(expected);
+  });
+});
+
+describe('stages (#39)', () => {
+  const stageValues = ['seed', 'sprout', 'shipped', 'composted'] as const;
+
+  it('every project has an explicit valid stage', () => {
+    for (const project of projects) {
+      expect(stageValues).toContain(project.stage);
+    }
+  });
+
+  it('stage counts sum to every project', () => {
+    const total = stageValues
+      .map((stage) => projects.filter((p) => p.stage === stage).length)
+      .reduce((sum, count) => sum + count, 0);
+    expect(total).toBe(projects.length);
+  });
+
+  it('keeps the migration split', () => {
+    expect(projects.filter((p) => p.stage === 'seed')).toHaveLength(0);
+    expect(projects.filter((p) => p.stage === 'sprout')).toHaveLength(6);
+    expect(projects.filter((p) => p.stage === 'shipped')).toHaveLength(24);
+    expect(projects.filter((p) => p.stage === 'composted')).toHaveLength(12);
+  });
+
+  it('keeps no status or phase fields', () => {
+    for (const project of projects) {
+      expect('status' in project).toBe(false);
+      expect('phase' in project).toBe(false);
+    }
+  });
+});
+
+describe('coursework plot (#20)', () => {
+  it('Featured never includes coursework', () => {
+    expect(getFeaturedProjects().filter((p) => p.tier === 'coursework')).toEqual([]);
+  });
+
+  it('cards and the coursework list split every project exactly once', () => {
+    const cards = getCardProjects().map((p) => p.slug);
+    const coursework = getCourseworkProjects().map((p) => p.slug);
+    expect(getCardProjects().every((p) => p.tier !== 'coursework')).toBe(true);
+    expect(getCourseworkProjects().every((p) => p.tier === 'coursework')).toBe(true);
+    expect([...cards, ...coursework].sort()).toEqual(projects.map((p) => p.slug).sort());
+  });
+
+  it('archive option helpers can be scoped to a project list', () => {
+    const [one] = getCardProjects();
+    const only = [{ ...one, born: '1999-01-01', category: 'mobile' as const }];
+    expect(getProjectYears(only)).toEqual([1999]);
+    expect(getUniqueCategories(only)).toEqual(['mobile']);
+  });
+
+  it('lists coursework newest first by born', () => {
+    const born = getCourseworkProjects().map((p) => p.born);
+    expect(born).toEqual([...born].sort().reverse());
   });
 });
 

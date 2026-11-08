@@ -1,0 +1,46 @@
+---
+// #20: tier 'coursework' projects as a compact, collapsed list (VWC 3-7).
+import type { Project } from "../data/projects";
+
+interface Props {
+  projects: Project[];
+}
+
+const { projects } = Astro.props;
+
+const formatDate = (iso: string) =>
+  new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    timeZone: "UTC",
+  });
+---
+
+{projects.length > 0 && (
+  <details id="coursework" class="mt-12 rounded-lg border border-surface bg-surface-alt">
+    <summary class="cursor-pointer select-none px-5 py-4 min-h-[44px] font-medium text-strong">
+      <h2 class="inline text-base font-medium">Coursework ({projects.length})</h2>
+      <span class="ml-2 text-sm font-normal text-soft">Tutorials, bootcamp and certification projects</span>
+    </summary>
+    <ul class="divide-y divide-surface border-t border-surface">
+      {projects.map((project) => (
+        <li class="flex flex-wrap items-baseline gap-x-3 gap-y-1 px-5 py-3">
+          <a href={`/learnt/${project.slug}`} class="font-medium">{project.title}</a>
+          <time datetime={project.born} class="text-sm text-soft">{formatDate(project.born)}</time>
+          {project.githubUrl && (
+            <a
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-sm"
+              aria-label={`Repo: ${project.title}`}
+            >
+              Repo
+            </a>
+          )}
+          {project.epitaph && <p class="basis-full text-sm italic text-body">“{project.epitaph}”</p>}
+        </li>
+      ))}
+    </ul>
+  </details>
+)}

@@ -1,13 +1,15 @@
 import AxeBuilder from '@axe-core/playwright';
-import { projects } from '../../src/data/projects';
+import { getCardProjects } from '../../src/data/projects';
 import { test, expect } from './test';
+
+const cardCount = getCardProjects().length;
 
 test.describe('without JavaScript', () => {
   test.use({ javaScriptEnabled: false });
 
-  test('all projects still render', async ({ page }) => {
+  test('all card projects still render', async ({ page }) => {
     await page.goto('/learnt/?stage=composted');
-    await expect(page.locator('#project-list article')).toHaveCount(projects.length);
+    await expect(page.locator('#project-list article')).toHaveCount(cardCount);
   });
 });
 
@@ -17,7 +19,7 @@ test('the category query filters the archive', async ({ page }) => {
   const visible = page.locator('#project-list article[data-slug]:not([hidden])');
   const count = await visible.count();
   expect(count).toBeGreaterThan(0);
-  expect(count).toBeLessThan(projects.length);
+  expect(count).toBeLessThan(cardCount);
   expect(await visible.evaluateAll((els) => els.every((el) => (el as HTMLElement).dataset.category === 'frontend'))).toBe(true);
 });
 

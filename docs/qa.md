@@ -12,7 +12,7 @@ Each check, and the spec that covers it:
 | No horizontal scroll at 360, 768, 1024 and 1440px | `qa.spec.ts` |
 | Targets are 24px or larger, or properly spaced (WCAG 2.5.8) | `qa.spec.ts` |
 | Nav targets are 44px or larger | `shell.spec.ts` |
-| Reduced motion: no animation or transition, and no card lift | `qa.spec.ts` |
+| Reduced motion: CSS durations clamped, no card lift, in-page links jump instantly (delays and Web Animations are not checked) | `qa.spec.ts` |
 | Title, description, canonical, Open Graph and Twitter meta on every route | `qa.spec.ts` |
 | Sitemap lists every page and project | `qa.spec.ts` |
 | Every internal link resolves | `qa.spec.ts` |

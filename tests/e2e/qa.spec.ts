@@ -1,6 +1,9 @@
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './test';
+import { readdirSync } from 'node:fs';
 import { projects } from '../../src/data/projects';
+
+const SITE = 'https://learnt.developingdvlpr.com';
 
 // #47: site-wide accessibility + QA pass. Manual items live in docs/qa.md.
 const ROUTES = [
@@ -112,25 +115,51 @@ test('every route has title, description, canonical, Open Graph and Twitter meta
       };
     });
     for (const [k, v] of Object.entries(meta)) if (!v) found.push(`${route} missing ${k}`);
+    for (const sel of ['meta[name="description"]', 'link[rel="canonical"]', 'meta[property="og:title"]', 'meta[name="twitter:card"]']) {
+      const n = await page.locator(`head ${sel}`).count();
+      if (n !== 1) found.push(`${route} ${sel} ×${n}`);
+    }
+    if (!meta.canonical.startsWith(SITE)) found.push(`${route} canonical not on ${SITE}: ${meta.canonical}`);
   }
   expect(found).toEqual([]);
 });
 
-test('sitemap lists the main pages and every project', async ({ request }) => {
+test('sitemap lists every page file and every project, as absolute site URLs', async ({ request }) => {
   const res = await request.get('/sitemap.xml');
   expect(res.status()).toBe(200);
-  const xml = await res.text();
-  for (const path of ['/', '/learnt/', '/about/', '/contact/']) expect(xml).toContain(`${path}</loc>`);
-  for (const p of projects) expect(xml, p.slug).toContain(`/learnt/${p.slug}/</loc>`);
-  expect(xml).not.toContain('/404');
-  expect(xml).not.toContain('/contact/thanks');
+  const locs = [...(await res.text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  // Every static page file except 404 and the form's thanks page.
+  const pages = readdirSync('src/pages', { recursive: true })
+    .map(String)
+    .filter((f) => f.endsWith('.astro') && !f.includes('[') && !/404|thanks/.test(f))
+    .map((f) => f.replace(/\.astro$/, '').replace(/(^|\/)index$/, ''))
+    .map((f) => `${SITE}/${f ? `${f}/` : ''}`);
+  const want = [...pages, ...projects.map((p) => `${SITE}/learnt/${p.slug}/`)].sort();
+  expect([...locs].sort()).toEqual(want);
+});
+
+test('robots.txt points crawlers at the sitemap', async ({ request }) => {
+  const res = await request.get('/robots.txt');
+  expect(res.status()).toBe(200);
+  expect(await res.text()).toContain(`Sitemap: ${SITE}/sitemap.xml`);
+});
+
+test('in-page links jump without smooth scrolling under reduced motion', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const target = await page.locator('#stages').evaluate((el) => el.getBoundingClientRect().top + window.scrollY);
+  await page.getByRole('link', { name: 'How the stages work' }).click();
+  // No waiting: an instant jump lands within a frame; a smooth scroll is still near the top.
+  const y = await page.evaluate(() => new Promise<number>((r) => requestAnimationFrame(() => r(window.scrollY))));
+  expect(y).toBeGreaterThan(target / 2);
 });
 
 test('every internal link resolves', async ({ page, request }) => {
   desktopOnly();
   test.setTimeout(180_000);
   const hrefs = new Set<string>();
-  for (const route of ROUTES) {
+  const crawl = [...new Set([...ROUTES, ...projects.map((p) => `/learnt/${p.slug}/`)])];
+  for (const route of crawl) {
     await page.goto(route);
     const links = await page.locator('a[href^="/"]').evaluateAll((els) => els.map((el) => el.getAttribute('href')!));
     for (const h of links) hrefs.add(h.split('#')[0]);
@@ -138,8 +167,8 @@ test('every internal link resolves', async ({ page, request }) => {
   const broken: string[] = [];
   for (const href of hrefs) {
     if (!href) continue;
-    const res = await request.get(href);
-    if (res.status() >= 400) broken.push(`${href} → ${res.status()}`);
+    const res = await request.get(href, { maxRedirects: 0 });
+    if (res.status() >= 300) broken.push(`${href} → ${res.status()}`);
   }
   expect(broken).toEqual([]);
 });

@@ -2,21 +2,21 @@
 // #45 Home: the Garden ledger front page. Everything comes from the collection.
 import Layout from '../layouts/Layout.astro';
 import StageChip from '../components/StageChip.astro';
+import CompostCard from '../components/home/CompostCard.astro';
 import StageLegend from '../components/StageLegend.astro';
-import { projects, getProjectBySlug, getUniqueTechnologies } from '../data/projects';
+import { getCardProjects, getProjectBySlug, getUniqueTechnologies } from '../data/projects';
 import { homeJsonLd } from '../lib/jsonld';
 import { getByYear, getStats } from '../lib/projects';
-import { compostLine, getRecentlyComposted, getStillGrowing, monthYear, toYearBars } from '../lib/home';
+import { firstYear, getRecentlyComposted, getStillGrowing, monthYear, toYearBars } from '../lib/home';
 import { STAGES } from '../lib/stages';
 
 const stats = getStats();
-const firstYear = Math.min(...projects.map((p) => Number(p.born.slice(0, 4))));
+const since = firstYear();
 const composted = getRecentlyComposted();
 const growing = getStillGrowing();
-const trail = toYearBars(getByYear());
-const busiest = Math.max(1, ...trail.map((y) => y.total));
-// Bar segments run in lifecycle order: shipped and composted first, then what's still alive.
-const segmentOrder = ['shipped', 'composted', 'sprout', 'seed'] as const;
+// Card projects only, so each bar matches what /learnt?year= shows.
+const trail = toYearBars(getByYear(getCardProjects()));
+const keyOrder = ['shipped', 'composted', 'sprout', 'seed'] as const;
 const stageName = Object.fromEntries(STAGES.map((s) => [s.value, s.label.toLowerCase()]));
 ---
 
@@ -24,7 +24,7 @@ const stageName = Object.fromEntries(STAGES.map((s) => [s.value, s.label.toLower
   <div class="ledger container-custom">
     <section class="hero" aria-labelledby="home-title">
       <div class="hero-copy">
-        <p class="eyebrow">The proof-of-work archive · {firstYear} → now</p>
+        <p class="eyebrow">The proof-of-work archive · {since} → now</p>
         <h1 id="home-title">Every project I've shipped, sunset or buried — and what each one taught me.</h1>
         <p class="lede">
           A ledger of the things I built to learn: when each one stopped, why it stopped, and the proof
@@ -39,7 +39,7 @@ const stageName = Object.fromEntries(STAGES.map((s) => [s.value, s.label.toLower
       <dl class="stats">
         <div><dt>projects logged</dt><dd data-stat="total">{stats.total}</dd></div>
         <div><dt>shipped</dt><dd data-stat="shipped">{stats.byStage.shipped}</dd></div>
-        <div><dt>still growing</dt><dd data-stat="growing">{stats.byStage.seed + stats.byStage.sprout}</dd></div>
+        <div><dt>still growing</dt><dd data-stat="growing">{stats.byStage.sprout}</dd></div>
         <div><dt>technologies touched</dt><dd data-stat="technologies">{getUniqueTechnologies().length}</dd></div>
       </dl>
     </section>
@@ -54,21 +54,9 @@ const stageName = Object.fromEntries(STAGES.map((s) => [s.value, s.label.toLower
         <p class="empty">Nothing composted yet. Projects land here when they end.</p>
       ) : (
         <div class="compost-grid">
-          {composted.map((p) => {
-            const successor = p.supersededBy ? getProjectBySlug(p.supersededBy) : undefined;
-            return (
-              <article class="compost">
-                <StageChip stage={p.stage} cause={p.causeOfDeath} />
-                <h3><a href={`/learnt/${p.slug}`}>{p.title}</a></h3>
-                <p class="compost-line">{compostLine(p)}</p>
-                {successor && (
-                  <p class="successor">
-                    Superseded by <a href={`/learnt/${successor.slug}`}>{successor.title}</a>
-                  </p>
-                )}
-              </article>
-            );
-          })}
+          {composted.map((p) => (
+            <CompostCard project={p} successor={p.supersededBy ? getProjectBySlug(p.supersededBy) : undefined} />
+          ))}
         </div>
       )}
     </section>
@@ -94,29 +82,22 @@ const stageName = Object.fromEntries(STAGES.map((s) => [s.value, s.label.toLower
     <section data-section="trail" aria-labelledby="trail-h">
       <h2 id="trail-h">The trail, by year</h2>
       <p class="hint">Each bar is split by how that year's projects ended up.</p>
+      {trail.length === 0 && <p class="empty">No projects logged yet.</p>}
       <ol class="trail">
         {trail.map((y) => (
           <li>
             <a href={y.href}>
               <span class="trail-year">{y.year}</span>
               <span class="trail-bar" aria-hidden="true">
-                {segmentOrder
-                  .filter((stage) => y.byStage[stage] > 0)
-                  .map((stage) => (
-                    <span
-                      class={`seg seg-${stage}`}
-                      style={`width:${(y.byStage[stage] / busiest) * 100}%`}
-                    />
-                  ))}
+                {y.segments.map((seg) => (
+                  <span class={`seg seg-${seg.stage}`} style={`width:${seg.width}%`} />
+                ))}
               </span>
               <span class="trail-count">
                 {y.total} project{y.total === 1 ? '' : 's'}
                 <span class="sr-only">
                   :{' '}
-                  {segmentOrder
-                    .filter((stage) => y.byStage[stage] > 0)
-                    .map((stage) => `${y.byStage[stage]} ${stageName[stage]}`)
-                    .join(', ')}
+                  {y.segments.map((seg) => `${seg.count} ${stageName[seg.stage]}`).join(', ')}
                 </span>
               </span>
             </a>
@@ -124,7 +105,7 @@ const stageName = Object.fromEntries(STAGES.map((s) => [s.value, s.label.toLower
         ))}
       </ol>
       <p class="key" aria-hidden="true">
-        {segmentOrder.map((stage) => (
+        {keyOrder.map((stage) => (
           <span><i class={`seg seg-${stage}`} />{stageName[stage]}</span>
         ))}
       </p>
@@ -220,30 +201,6 @@ const stageName = Object.fromEntries(STAGES.map((s) => [s.value, s.label.toLower
     grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
     gap: 1rem;
   }
-  .compost {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-    padding: 1.125rem 1.25rem;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-  }
-  .compost h3 {
-    margin: 0.25rem 0 0;
-    font-size: 1rem;
-  }
-  .compost h3 a {
-    color: var(--text-strong);
-  }
-  .compost-line,
-  .successor {
-    margin: 0;
-    font-size: 0.8125rem;
-    color: var(--text-soft);
-  }
-
   /* still growing: ruled rows */
   .rows {
     margin: 0;
@@ -356,6 +313,9 @@ const stageName = Object.fromEntries(STAGES.map((s) => [s.value, s.label.toLower
   }
 
   @media (max-width: 860px) {
+    .compost-grid {
+      grid-template-columns: 1fr;
+    }
     .rows li {
       grid-template-columns: auto minmax(0, 1fr);
     }

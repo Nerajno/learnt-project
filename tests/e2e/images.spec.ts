@@ -33,7 +33,7 @@ for (const path of pages) {
 
     // With no screenshots captured yet, every project image is a designed placeholder.
     // Home (#45) has no project images, so only pages with cards or a hero shot are checked.
-    if (path !== '/') {
+    if (await page.locator('[data-project-image]').count()) {
       expect(await page.locator('[data-placeholder="true"]').count()).toBeGreaterThan(0);
     }
 

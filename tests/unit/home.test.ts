@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getRecentlyComposted, getStillGrowing, toYearBars, compostLine } from '../../src/lib/home';
+import { getRecentlyComposted, getStillGrowing, toYearBars, compostLine, firstYear } from '../../src/lib/home';
 import { makeProject } from './fixtures';
 
 // #45 Home selectors.
@@ -42,8 +42,29 @@ describe('toYearBars', () => {
     expect(bars[0].href).toBe('/learnt?year=2025');
   });
 
+  it('splits each bar into stage segments sized against the busiest year', () => {
+    const [, y2024] = toYearBars([
+      { year: 2025, total: 4, byStage: { seed: 0, sprout: 4, shipped: 0, composted: 0 } },
+      { year: 2024, total: 8, byStage: { seed: 0, sprout: 0, shipped: 6, composted: 2 } },
+    ]);
+    expect(y2024.segments).toEqual([
+      { stage: 'shipped', count: 6, width: 75 },
+      { stage: 'composted', count: 2, width: 25 },
+    ]);
+  });
+
   it('is empty for no years', () => {
     expect(toYearBars([])).toEqual([]);
+  });
+});
+
+describe('firstYear', () => {
+  it('is the earliest born year', () => {
+    expect(firstYear([makeProject({ born: '2024-05-01' }), makeProject({ born: '2021-02-01' })])).toBe(2021);
+  });
+
+  it('falls back to the current year for an empty collection', () => {
+    expect(firstYear([], new Date('2026-03-01T00:00:00Z'))).toBe(2026);
   });
 });
 

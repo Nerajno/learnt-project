@@ -1,7 +1,12 @@
-export type Stage = 'seed' | 'sprout' | 'shipped' | 'composted';
-export type Sort = 'newest' | 'oldest' | 'longest' | 'shortest';
-
+import { STAGES } from './stages';
+import type { Stage } from './stages';
+import { daysBetween } from './dates';
 import type { Project } from '../data/projects';
+
+export { STAGES } from './stages';
+export type { Stage } from './stages';
+
+export type Sort = 'newest' | 'oldest' | 'longest' | 'shortest';
 
 export interface ArchiveFilters {
   q: string;
@@ -18,13 +23,6 @@ export const DEFAULT_FILTERS: ArchiveFilters = {
   year: null,
   sort: 'newest',
 };
-
-export const STAGES: ReadonlyArray<{ value: Stage; label: string }> = [
-  { value: 'seed', label: 'Seed' },
-  { value: 'sprout', label: 'Sprout' },
-  { value: 'shipped', label: 'Shipped' },
-  { value: 'composted', label: 'Composted' },
-];
 
 export const SORTS: ReadonlyArray<{ value: Sort; label: string }> = [
   { value: 'newest', label: 'Newest first' },
@@ -76,16 +74,6 @@ export interface ArchiveItem {
   search: string; // lowercase searchable blob
 }
 
-/** TODO(#39): replace this bridge with the real `stage` field. */
-export function deriveStage(project: Pick<Project, 'status' | 'phase'>): Stage {
-  if (project.status === 'planned') return 'seed';
-  if (project.status === 'in-progress') return 'sprout';
-  if (project.status === 'completed') {
-    return project.phase === 'sunset' ? 'composted' : 'shipped';
-  }
-  return 'composted';
-}
-
 export function toArchiveItem(project: Project): ArchiveItem {
   const born = project.born;
   const died = project.died ?? '';
@@ -105,7 +93,7 @@ export function toArchiveItem(project: Project): ArchiveItem {
     slug: project.slug,
     title: project.title,
     category: project.category,
-    stage: deriveStage(project),
+    stage: project.stage,
     year: yearMatch ? Number(yearMatch[1]) : null,
     born,
     died,
@@ -115,11 +103,7 @@ export function toArchiveItem(project: Project): ArchiveItem {
 
 /** Whole days from born to died; `null` when either date is missing. */
 export function lifespanDays(item: ArchiveItem): number | null {
-  if (!item.born || !item.died) return null;
-  const start = Date.parse(item.born);
-  const end = Date.parse(item.died);
-  if (Number.isNaN(start) || Number.isNaN(end)) return null;
-  return Math.max(0, Math.round((end - start) / 86_400_000));
+  return daysBetween(item.born, item.died);
 }
 
 export function cardDataset(item: ArchiveItem): Record<string, string> {

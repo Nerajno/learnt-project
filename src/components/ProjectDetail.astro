@@ -21,7 +21,7 @@ const { project } = Astro.props as { project: Project };
 
   <!-- Meta -->
   <section class="mb-6 space-y-2">
-    <div><strong>Status:</strong> {project.status}</div>
+    <div><strong>Stage:</strong> {project.stage}</div>
     <div><strong>Difficulty:</strong> {project.difficulty}</div>
     <div><strong>Category:</strong> {project.category}</div>
     <div><strong>Technologies:</strong> {project.technologies.join(", ")}</div>

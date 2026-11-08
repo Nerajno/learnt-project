@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import ProjectList from '../components/ProjectList.astro';
 import { getFeaturedProjects } from '../data/projects';
 import { homeJsonLd } from '../lib/jsonld';
+import StageLegend from '../components/StageLegend.astro';
 import { getStats } from '../lib/projects';
 
 const featuredProjects = getFeaturedProjects();
@@ -47,6 +48,10 @@ const stats = getStats();
       </div>
     </section>
   )}
+
+  <div class="container-custom py-12">
+    <StageLegend />
+  </div>
 
   <section class="py-16">
     <div class="container-custom text-center">

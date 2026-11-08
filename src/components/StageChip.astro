@@ -1,0 +1,19 @@
+---
+// #40: the one stage chip. Presentational: takes stage (+ optional cause).
+import type { CauseOfDeath } from "../data/projects";
+import { STAGES, type Stage } from "../lib/stages";
+
+interface Props {
+  stage: Stage;
+  cause?: CauseOfDeath; // shown only for composted
+}
+
+const { stage, cause } = Astro.props;
+const meta = STAGES.find((s) => s.value === stage)!;
+const sub = stage === "composted" && cause ? cause.replace(/-/g, " ") : undefined;
+---
+
+<span class="stage-chip" data-stage={stage} title={meta.definition}>
+  <span class="stage-chip__icon" aria-hidden="true">{meta.icon}</span>
+  {meta.label}{sub && <span class="stage-chip__cause"> · {sub}</span>}
+</span>

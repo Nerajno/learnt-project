@@ -1784,6 +1784,17 @@ export function getAllProjects(): Project[] {
   return [...projects];
 }
 
+// #20: coursework is honest history, listed compactly instead of as cards.
+export function getCardProjects(): Project[] {
+  return projects.filter(project => project.tier !== 'coursework');
+}
+
+export function getCourseworkProjects(): Project[] {
+  return projects
+    .filter(project => project.tier === 'coursework')
+    .sort((a, b) => b.born.localeCompare(a.born));
+}
+
 export function filterProjects(filters: Partial<Project>): Project[] {
   return projects.filter(project => {
     return Object.entries(filters).every(([key, value]) => {
@@ -1814,8 +1825,11 @@ export function getProjectsByPhase(phase: string): Project[] {
 }
 
 // Learnt is for past projects; living ones are listed on the About page.
+// Coursework never headlines (#20).
 export function getFeaturedProjects(): Project[] {
-  return projects.filter(project => project.featured && project.phase !== 'active');
+  return projects.filter(
+    project => project.featured && project.phase !== 'active' && project.tier !== 'coursework'
+  );
 }
 
 export function getProjectsByTechnology(tech: string): Project[] {

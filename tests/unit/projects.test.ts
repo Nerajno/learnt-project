@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
+  getCardProjects,
+  getCourseworkProjects,
   getFeaturedProjects,
   getProjectYears,
   getProjectsByYear,
@@ -70,9 +72,28 @@ describe('getFeaturedProjects', () => {
 
   it('returns every featured non-active project in data order', () => {
     const expected = projects
-      .filter((p) => p.featured && p.phase !== 'active')
+      .filter((p) => p.featured && p.phase !== 'active' && p.tier !== 'coursework')
       .map((p) => p.slug);
     expect(getFeaturedProjects().map((p) => p.slug)).toEqual(expected);
+  });
+});
+
+describe('coursework plot (#20)', () => {
+  it('Featured never includes coursework', () => {
+    expect(getFeaturedProjects().filter((p) => p.tier === 'coursework')).toEqual([]);
+  });
+
+  it('cards and the coursework list split every project exactly once', () => {
+    const cards = getCardProjects().map((p) => p.slug);
+    const coursework = getCourseworkProjects().map((p) => p.slug);
+    expect(getCardProjects().every((p) => p.tier !== 'coursework')).toBe(true);
+    expect(getCourseworkProjects().every((p) => p.tier === 'coursework')).toBe(true);
+    expect([...cards, ...coursework].sort()).toEqual(projects.map((p) => p.slug).sort());
+  });
+
+  it('lists coursework newest first by born', () => {
+    const born = getCourseworkProjects().map((p) => p.born);
+    expect(born).toEqual([...born].sort().reverse());
   });
 });
 

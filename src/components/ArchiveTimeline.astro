@@ -103,18 +103,10 @@ const monthYear = (iso: string) =>
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
   }
-  /* Scoped display rules would otherwise beat the hidden attribute. */
-  .row[hidden],
-  .year[hidden] {
-    display: none;
-  }
   @media (max-width: 640px) {
     .row {
       grid-template-columns: minmax(0, 1fr);
       gap: 0.25rem;
-    }
-    .when {
-      grid-column: auto;
     }
   }
 </style>

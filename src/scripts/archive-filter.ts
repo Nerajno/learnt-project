@@ -22,7 +22,7 @@ const clearBtn = document.querySelector<HTMLButtonElement>('#archive-clear');
 const emptyClearBtn = document.querySelector<HTMLButtonElement>('#archive-empty-clear');
 const stageButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-stage-filter]'));
 // #21: grid/timeline toggle; timeline rows are hidden by slug like the cards.
-const viewButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-view]'));
+const viewButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('#archive-controls [data-view]'));
 const timelineEl = document.querySelector<HTMLElement>('#project-timeline');
 const timelineRows = timelineEl ? Array.from(timelineEl.querySelectorAll<HTMLElement>('li[data-slug]')) : [];
 const timelineYears = timelineEl ? Array.from(timelineEl.querySelectorAll<HTMLElement>('[data-year-group]')) : [];

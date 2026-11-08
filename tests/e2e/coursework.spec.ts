@@ -37,7 +37,7 @@ test('coursework sits in a collapsed list at the bottom of the archive', async (
 test('the page names the archive and coursework split', async ({ page }) => {
   await page.goto('/learnt/');
   await expect(page.locator('#archive-result')).toContainText(
-    `Showing ${cardCount} of ${cardCount} archive cards`,
+    `Showing ${cardCount} of ${cardCount} projects`,
   );
   await expect(page.getByText(`${coursework.length} coursework`)).toBeVisible();
   await expect(page.getByText('All Projects')).toBeVisible();

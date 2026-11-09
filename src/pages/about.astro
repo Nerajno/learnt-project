@@ -1,50 +1,161 @@
 ---
+// #85: About on the dialects learn surface. Copy slots are filled by #31.
 import Layout from "../layouts/Layout.astro";
+import StageChip from "../components/StageChip.astro";
+import StageLegend from "../components/StageLegend.astro";
 import { getProjectsByStage } from "../data/projects";
 
-const activeProjects = [
-  ...getProjectsByStage("seed"),
-  ...getProjectsByStage("sprout"),
-];
-import StageLegend from "../components/StageLegend.astro";
+const activeProjects = [...getProjectsByStage("seed"), ...getProjectsByStage("sprout")];
 ---
 
 <Layout title="About">
-  <section class="max-w-3xl mx-auto px-4 py-12 prose dark:prose-invert">
-    <h1>About</h1>
-    <p>
-      This site is a collection of projects I’ve built, experimented with, or sunsetted along the way.
-      It’s inspired by <em>Killed by Google</em>, but focused on my own learning journey.
-    </p>
-    <p>
-      Each project taught me something valuable — whether it’s mastering a new technology,
-      understanding best practices, or simply knowing when to let go.
-    </p>
-    <p>
-      My goal is to continuously learn, share and track my progress, and document my learning path.
-    </p>
+  <div class="about container-custom">
+    <header class="intro">
+      <h1 class="text-strong">About</h1>
+      <!-- #31: three-line positioning statement goes here. -->
+      <p class="lead text-strong">
+        This site is a collection of projects I’ve built, experimented with, or sunsetted along the way.
+        It’s inspired by <em>Killed by Google</em>, but focused on my own learning journey.
+      </p>
+      <p class="text-body">
+        Each project taught me something valuable — whether it’s mastering a new technology,
+        understanding best practices, or simply knowing when to let go.
+      </p>
+      <p class="text-body">
+        My goal is to continuously learn, share and track my progress, and document my learning path.
+      </p>
+      <p>
+        <a
+          href="https://developingdvlpr.com"
+          class="btn btn-secondary"
+          aria-label="Curated work lives here: open the main portfolio (developingdvlpr.com)"
+        >
+          Curated work lives here <span aria-hidden="true">↗</span>
+        </a>
+      </p>
+    </header>
 
-    {activeProjects.length > 0 && (
-      <>
-        <h2>Currently building</h2>
-        <p>Still alive, so not in the graveyard yet:</p>
-        <ul>
-          {activeProjects.map((project) => (
-            <li>
-              <a href={`/learnt/${project.slug}`}>{project.title}</a> — {project.description}
-              {project.liveUrl && (
-                <>
-                  {" "}(<a href={project.liveUrl} target="_blank" rel="noopener noreferrer">live site</a>)
-                </>
-              )}
-            </li>
-          ))}
-        </ul>
-      </>
-    )}
+    <section class="building" aria-labelledby="building-h">
+      <h2 id="building-h" class="text-2xl font-bold text-strong">Currently building</h2>
+      {activeProjects.length > 0 ? (
+        <>
+          <p class="text-soft">Still alive, so not in the graveyard yet:</p>
+          <ul class="ledger" role="list" data-testid="about-ledger">
+            {activeProjects.map((project) => (
+              <li class="row bg-surface-card border border-surface shadow-card">
+                <StageChip stage={project.stage} />
+                <div class="row-body">
+                  <a class="row-title text-strong" href={`/learnt/${project.slug}`}>{project.title}</a>
+                  <p class="text-soft">{project.description}</p>
+                </div>
+                {project.liveUrl && (
+                  <a
+                    class="row-live text-accent"
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${project.title} live site (opens in new tab)`}
+                  >
+                    live site <span aria-hidden="true">↗</span>
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        <p class="text-soft">Nothing in the ground right now.</p>
+      )}
+    </section>
 
-    <div class="mt-12">
-      <StageLegend />
-    </div>
-  </section>
+    <StageLegend />
+  </div>
 </Layout>
+
+<style>
+  .about {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    padding-block: 2rem 4rem;
+    max-width: 52rem;
+  }
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+  h2 {
+    margin: 0 0 0.5rem;
+  }
+  p {
+    margin: 0;
+  }
+  .lead {
+    font-size: 1.125rem;
+  }
+  .intro .btn {
+    margin-top: 0.5rem;
+  }
+  .ledger {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 0.75rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.75rem 1rem;
+    align-items: start;
+    justify-items: start;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-lg);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .row:hover {
+    transform: translateY(-2px);
+  }
+  .row-live {
+    justify-self: end;
+  }
+  @media (max-width: 640px) {
+    .row-live {
+      justify-self: start;
+    }
+  }
+  .row-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+  .row-title {
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+  .row-live {
+    white-space: nowrap;
+    font-size: 0.875rem;
+  }
+  @media (max-width: 640px) {
+    .row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .row {
+      transition: none;
+    }
+    .row:hover {
+      transform: none;
+    }
+  }
+</style>

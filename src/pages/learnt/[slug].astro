@@ -4,9 +4,7 @@ import Layout from "../../layouts/Layout.astro";
 import ProjectImage from "../../components/ProjectImage.astro";
 import DetailHeader from "../../components/project/DetailHeader.astro";
 import SuccessorBanner from "../../components/project/SuccessorBanner.astro";
-import Overview from "../../components/project/Overview.astro";
-import ProofOfWork from "../../components/project/ProofOfWork.astro";
-import Learned from "../../components/project/Learned.astro";
+import DetailMain from "../../components/project/DetailMain.astro";
 import DetailSidebar from "../../components/project/DetailSidebar.astro";
 import SameSoil from "../../components/project/SameSoil.astro";
 import { projects, getProjectBySlug, type Project } from "../../data/projects";
@@ -73,11 +71,7 @@ const jsonLd = projectJsonLd(
     </div>
 
     <div class="body">
-      <div class="main">
-        <Overview project={project} />
-        <ProofOfWork project={project} />
-        <Learned project={project} />
-      </div>
+      <DetailMain project={project} />
       <DetailSidebar project={project} lineage={getLineage(project)} />
     </div>
 
@@ -124,12 +118,6 @@ const jsonLd = projectJsonLd(
     grid-template-columns: minmax(0, 1fr) minmax(0, 18rem);
     gap: 2.5rem;
     align-items: start;
-  }
-  .main {
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
-    min-width: 0;
   }
   .report {
     margin: 0;

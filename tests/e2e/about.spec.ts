@@ -1,5 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { projects } from '../../src/data/projects';
+import { site } from '../../src/data/site';
+import { STAGES } from '../../src/lib/stages';
 import { test, expect } from './test';
 
 const living = projects.filter((p) => p.stage === 'seed' || p.stage === 'sprout');
@@ -67,3 +69,38 @@ for (const scheme of ['light', 'dark'] as const) {
     expect(serious.map((v) => v.id)).toEqual([]);
   });
 }
+
+test('About copy sections render in order (#31)', async ({ page }) => {
+  await page.goto('/about/');
+  await expect(page.locator('h1')).toHaveText('Killed by Google, but every headstone says what it taught me.');
+  await expect(page.locator('main h2')).toHaveText([
+    'The proof-of-work standard',
+    'Why not seedling, budding, evergreen?',
+    'Four stages, no shame',
+    'Where everything else lives',
+    'Still alive, so not composted yet',
+  ]);
+  await expect(page.getByTestId('pow-standard').locator('li')).toHaveCount(8);
+  await expect(page.locator('main')).toContainText('Vets Who Code');
+});
+
+test('stage copy comes from STAGES, not hand-written (#31)', async ({ page }) => {
+  await page.goto('/about/');
+  for (const { definition } of STAGES) {
+    await expect(page.locator('[data-stage-legend]')).toContainText(definition);
+  }
+});
+
+test('Where everything else lives links match site config (#31)', async ({ page }) => {
+  await page.goto('/about/');
+  const cards = page.getByTestId('elsewhere');
+  await expect(cards.getByRole('link', { name: 'Blog', exact: true })).toHaveAttribute('href', site.blog);
+  await expect(cards.getByRole('link', { name: 'Garden', exact: true })).toHaveAttribute('href', site.garden);
+  await expect(cards.getByRole('link', { name: 'Tracker', exact: true })).toHaveAttribute('href', 'https://isnerandodoneyet.com');
+  await expect(page.getByRole('link', { name: 'Twitter/X' })).toHaveAttribute('href', site.social.x.url);
+});
+
+test('About has no unfilled [placeholders] (#31)', async ({ page }) => {
+  await page.goto('/about/');
+  expect(await page.locator('main').innerText()).not.toContain('[');
+});

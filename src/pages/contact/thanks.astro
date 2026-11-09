@@ -1,18 +1,75 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import { projects } from "../../data/projects";
+
+// slug -> title, so the confirmation can name the project the note was about.
+const titles = JSON.stringify(Object.fromEntries(projects.map((p) => [p.slug, p.title]))).replace(
+  /</g,
+  "\\u003c",
+);
 ---
 
-<Layout title="Message sent" description="Thanks for getting in touch.">
-  <section class="container-custom py-16 text-center max-w-2xl mx-auto">
-    <h1 id="thanks-heading" tabindex="-1" class="text-3xl md:text-4xl font-bold mb-4">
-      Thanks. Your message is on its way.
-    </h1>
-    <p class="text-lg text-body mb-8">I read everything that comes in and reply by email.</p>
-    <a href="/learnt" class="btn-primary min-h-[48px] px-6">Back to the archive</a>
+<Layout title="Note sent" description="Thanks for leaving a note.">
+  <section class="thanks container-custom">
+    <h1 id="thanks-heading" tabindex="-1" class="text-strong">Your note is in.</h1>
+    <p class="lead text-body">I read every note and reply by email.</p>
+    <p id="thanks-project" class="text-body" hidden>
+      Filed under <a id="thanks-project-link" class="text-strong" href="/learnt"></a>.
+    </p>
+    <p>
+      <a href="/learnt" class="btn-primary min-h-[48px] px-6">Back to the archive</a>
+    </p>
   </section>
 </Layout>
 
+<script is:inline type="application/json" id="project-titles" set:html={titles} />
+
 <script>
+  // Name the project the note was about, when the form passed one along.
+  const titles: Record<string, string> = JSON.parse(
+    document.getElementById("project-titles")?.textContent || "{}",
+  );
+  const slug = new URLSearchParams(window.location.search).get("project") ?? "";
+  const line = document.getElementById("thanks-project");
+  const link = document.getElementById("thanks-project-link") as HTMLAnchorElement | null;
+  if (line && link && titles[slug]) {
+    link.textContent = titles[slug];
+    link.href = `/learnt/${encodeURIComponent(slug)}`;
+    line.hidden = false;
+  }
   // Move focus to the confirmation so screen readers announce it after the redirect.
   document.getElementById("thanks-heading")?.focus();
 </script>
+
+<style>
+  .thanks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 52rem;
+    padding-block: 3rem 4rem;
+  }
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  h1:focus {
+    outline: none;
+  }
+  p {
+    margin: 0;
+  }
+  .lead {
+    font-size: 1.125rem;
+  }
+  #thanks-project a {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 0.2em;
+  }
+  .thanks .btn-primary {
+    margin-top: 1rem;
+  }
+</style>

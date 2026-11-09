@@ -30,3 +30,6 @@ playwright-report/
 
 # graphify knowledge graph output
 graphify-out/
+
+# Impeccable critique snapshots (local)
+.impeccable/

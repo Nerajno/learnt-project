@@ -4,25 +4,48 @@ import Layout from "../layouts/Layout.astro";
 import StageChip from "../components/StageChip.astro";
 import StageLegend from "../components/StageLegend.astro";
 import { getProjectsByStage } from "../data/projects";
+import { site } from "../data/site";
 
 const activeProjects = [...getProjectsByStage("seed"), ...getProjectsByStage("sprout")];
+
+// #31: the proof-of-work standard every headstone follows (from the VWC checklist).
+const STANDARD = [
+  "The problem it solved",
+  "The repo",
+  "A working demo",
+  "Screenshots",
+  "What was hard",
+  "What I learned",
+  "How long it lived",
+  "What came before and after it",
+];
+
+const ELSEWHERE = [
+  { name: "Portfolio", href: `${site.portfolio}portfolio`, blurb: "The curated work: featured projects and MVPs." },
+  { name: "Blog", href: site.blog, blurb: "Articles, written in public." },
+  { name: "Garden", href: site.garden, blurb: "The Rolodex of terms I’ve learnt." },
+  { name: "Tracker", href: "https://isnerandodoneyet.com", blurb: "Is Nerando done yet? Project status at a glance." },
+];
 ---
 
 <Layout title="About">
   <div class="about container-custom">
     <header class="intro">
-      <h1 class="text-strong">About</h1>
-      <!-- #31: three-line positioning statement goes here. -->
+      <h1 class="text-strong">Killed by Google, but every headstone says what it taught me.</h1>
       <p class="lead text-strong">
-        This site is a collection of projects I’ve built, experimented with, or sunsetted along the way.
-        It’s inspired by <em>Killed by Google</em>, but focused on my own learning journey.
+        I’m Nerando Johnson, a front-end engineer in Atlanta working in Vue 3, TypeScript and Nuxt.
+        This is the full archive: every project I’ve started, shipped, or let go, with what each one taught me.
+        The curated work lives at developingdvlpr.com.
       </p>
       <p class="text-body">
-        Each project taught me something valuable — whether it’s mastering a new technology,
-        understanding best practices, or simply knowing when to let go.
+        I teach, and teachers keep receipts. I got here as a hobbyist, a mentee, a freeCodeCamp learner,
+        a bootcamp graduate and a consultant, and I learn in public. The projects that taught me the most
+        mostly aren’t on the polished portfolio, so they live here, in the spirit of
+        <a class="text-accent underline" href="https://killedbygoogle.com/" target="_blank" rel="noopener noreferrer">Killed by Google<span class="sr-only"> (opens in new tab)</span></a>.
       </p>
       <p class="text-body">
-        My goal is to continuously learn, share and track my progress, and document my learning path.
+        Great software is as much about people as code. I learnt how to use Stack Overflow the hard way —
+        by asking a question first.
       </p>
       <p>
         <a
@@ -35,11 +58,52 @@ const activeProjects = [...getProjectsByStage("seed"), ...getProjectsByStage("sp
       </p>
     </header>
 
+    <section aria-labelledby="standard-h">
+      <h2 id="standard-h" class="text-2xl font-bold text-strong">The proof-of-work standard</h2>
+      <p class="text-body">
+        Every headstone answers the same eight questions, adapted from the Vets Who Code portfolio checklist:
+      </p>
+      <ol class="standard text-body" role="list" data-testid="pow-standard">
+        {STANDARD.map((item) => <li>{item}</li>)}
+      </ol>
+    </section>
+
+    <section aria-labelledby="stages-h">
+      <h2 id="stages-h" class="text-2xl font-bold text-strong">Why not seedling, budding, evergreen?</h2>
+      <p class="text-body">
+        Digital gardens grade notes by how finished they are. Projects are different: they get planned,
+        built, shipped, and sometimes ended on purpose. So the stages here describe a project’s life,
+        and composting counts as a result, not a failure. A longer write-up is coming on the
+        <a class="text-accent underline" href={site.blog}>blog</a>.
+      </p>
+    </section>
+
+    <StageLegend />
+
+    <section aria-labelledby="elsewhere-h">
+      <h2 id="elsewhere-h" class="text-2xl font-bold text-strong">Where everything else lives</h2>
+      <ul class="ledger" role="list" data-testid="elsewhere">
+        {ELSEWHERE.map((place) => (
+          <li class="row bg-surface-card border border-surface shadow-card">
+            <div class="row-body">
+              <a class="row-title text-strong" href={place.href}>{place.name}</a>
+              <p class="text-soft">{place.blurb}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <p class="text-soft social">
+        Also on <a class="underline" href={site.social.github.url}>GitHub</a>,
+        <a class="underline" href={site.social.linkedin.url}>LinkedIn</a> and
+        <a class="underline" href={site.social.x.url}>Twitter/X</a>.
+      </p>
+    </section>
+
     <section class="building" aria-labelledby="building-h">
-      <h2 id="building-h" class="text-2xl font-bold text-strong">Currently building</h2>
+      <h2 id="building-h" class="text-2xl font-bold text-strong">Still alive, so not composted yet</h2>
       {activeProjects.length > 0 ? (
         <>
-          <p class="text-soft">Still alive, so not in the graveyard yet:</p>
+          <p class="text-soft">Seeds and sprouts, generated from the archive:</p>
           <ul class="ledger" role="list" data-testid="about-ledger">
             {activeProjects.map((project) => (
               <li class="row bg-surface-card border border-surface shadow-card">
@@ -67,8 +131,6 @@ const activeProjects = [...getProjectsByStage("seed"), ...getProjectsByStage("sp
         <p class="text-soft">Nothing in the ground right now.</p>
       )}
     </section>
-
-    <StageLegend />
   </div>
 </Layout>
 
@@ -101,6 +163,16 @@ const activeProjects = [...getProjectsByStage("seed"), ...getProjectsByStage("sp
   }
   .intro .btn {
     margin-top: 0.5rem;
+  }
+  .standard {
+    margin: 0.75rem 0 0;
+    padding-left: 1.5rem;
+    list-style: decimal;
+    display: grid;
+    gap: 0.25rem;
+  }
+  .social {
+    margin-top: 0.75rem;
   }
   .ledger {
     display: flex;

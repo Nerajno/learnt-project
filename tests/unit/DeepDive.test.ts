@@ -11,7 +11,7 @@ const full = {
   problem: 'Contacts lived in five places.',
   successCriteria: ['One source of truth'],
   approach: 'Rails API + SPA.',
-  architectureDiagram: '/images/placeholder-project.png',
+  architectureDiagram: '/images/project-placeholder.svg',
   tradeoffs: [{ decision: 'Rails API', why: 'Fast CRUD', adrUrl: 'https://example.com/adr-1' }],
   measurableOutcome: 'Used daily for a year.',
   ai: { tools: ['Copilot'], aiDid: 'Scaffolded tests', iOwned: 'Data model', aiGotWrong: 'Invented a gem' },

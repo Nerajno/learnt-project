@@ -96,3 +96,18 @@ describe('strict content rules (ready for #25)', () => {
     expect(strict({ stage: 'shipped', outcome: 'Shipped a working thing.' }).success).toBe(true);
   });
 });
+
+describe('supersededBy slug check (#23)', () => {
+  it('fails when supersededBy points at a missing slug', async () => {
+    const { projectsSchema } = await import('../../src/data/projects');
+    const r = projectsSchema.safeParse([makeProject({ slug: 'a', supersededBy: 'nope' })]);
+    expect(r.success).toBe(false);
+    expect(r.error?.issues[0].message).toContain('nope');
+  });
+
+  it('passes when supersededBy points at a real slug', async () => {
+    const { projectsSchema } = await import('../../src/data/projects');
+    const r = projectsSchema.safeParse([makeProject({ slug: 'a', supersededBy: 'b' }), makeProject({ slug: 'b' })]);
+    expect(r.success).toBe(true);
+  });
+});

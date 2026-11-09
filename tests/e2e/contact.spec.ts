@@ -92,3 +92,21 @@ for (const path of ['/contact', '/contact/thanks'] as const) {
     });
   }
 }
+
+// #79: prefill round trip and edge cases.
+test('report link on a detail page lands on a prefilled form', async ({ page }) => {
+  await page.goto('/learnt/side-project-status');
+  await page.getByTestId('report-link').click();
+  await expect(page.locator('#project')).toHaveValue('side-project-status');
+  await expect(page.locator('#topic')).toHaveValue('A project in the archive');
+});
+
+test('?project= is capped at 200 characters', async ({ page }) => {
+  await page.goto(`/contact?project=${'x'.repeat(250)}`);
+  await expect(page.locator('#project')).toHaveValue('x'.repeat(200));
+});
+
+test('?project= decodes encoded characters', async ({ page }) => {
+  await page.goto('/contact?project=a%20b%26c%C3%A9');
+  await expect(page.locator('#project')).toHaveValue('a b&cé');
+});

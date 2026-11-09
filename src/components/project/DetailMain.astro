@@ -1,0 +1,40 @@
+---
+// #24: detail page main column. Headstones with a deep dive get the story
+// layout in place of Overview + Learned; everything else keeps the marker layout.
+import Overview from "./Overview.astro";
+import ProofOfWork from "./ProofOfWork.astro";
+import Learned from "./Learned.astro";
+import DeepDive from "./DeepDive.astro";
+import type { Project } from "../../data/projects";
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const deep = project.tier === "headstone" && !!project.deepDive;
+---
+
+<div class="main">
+  {deep ? (
+    <>
+      <DeepDive project={project} />
+      <ProofOfWork project={project} />
+    </>
+  ) : (
+    <>
+      <Overview project={project} />
+      <ProofOfWork project={project} />
+      <Learned project={project} />
+    </>
+  )}
+</div>
+
+<style>
+  .main {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    min-width: 0;
+  }
+</style>

@@ -1828,7 +1828,21 @@ const rawProjects: Project[] = [
   },
 ];
 
-const parsed = z.array(projectSchema).safeParse(rawProjects);
+// #23: supersededBy must name a real slug, or the build fails.
+export const projectsSchema = z.array(projectSchema).superRefine((list, ctx) => {
+  const slugs = new Set(list.map((p) => p.slug));
+  list.forEach((p, i) => {
+    if (p.supersededBy && !slugs.has(p.supersededBy)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: [i, 'supersededBy'],
+        message: `supersededBy "${p.supersededBy}" is not a known slug`,
+      });
+    }
+  });
+});
+
+const parsed = projectsSchema.safeParse(rawProjects);
 
 if (!parsed.success) {
   const details = parsed.error.issues

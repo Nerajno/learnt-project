@@ -1,112 +1,601 @@
 ---
+// Contact as a note left in the ledger. Netlify Forms handles delivery (#44);
+// the script below adds inline validation, a sending state and a failure path.
 import Layout from "../layouts/Layout.astro";
 import { site } from "../data/site";
+import { projects } from "../data/projects";
 
 const { github, linkedin, x } = site.social;
 
 const contactLinks = [
   { platform: "Portfolio", href: site.portfolio, label: new URL(site.portfolio).host },
   { platform: "GitHub", href: github.url, label: `@${github.handle}` },
-  { platform: "LinkedIn", href: linkedin.url, label: `linkedin.com/in/${linkedin.handle}` },
+  { platform: "LinkedIn", href: linkedin.url, label: `in/${linkedin.handle}` },
   { platform: "X", href: x.url, label: `@${x.handle}` },
 ];
 
-const topics = [
-  "A project in the archive",
-  "Collaboration",
-  "Speaking or workshop",
-  "Just saying hello",
-];
+const ARCHIVE_TOPIC = "A project in the archive";
+const topics = [ARCHIVE_TOPIC, "Collaboration", "Speaking or workshop", "Just saying hello"];
+
+// slug -> title, so a prefilled ?project= reads as the project's name.
+const titles = JSON.stringify(Object.fromEntries(projects.map((p) => [p.slug, p.title]))).replace(
+  /</g,
+  "\\u003c",
+);
 
 const seoDescription =
-  "Built something similar or spotted a better fix? Open to questions and collaboration.";
-
-const label = "block text-sm font-medium text-strong mb-1";
-const field =
-  "block w-full min-h-[48px] px-3 py-2 rounded-lg border border-surface-strong bg-surface-card text-body " +
-  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
-const hint = "mt-1 text-xs text-soft";
+  "Built something similar or spotted a better fix? Leave a note about a project in the archive.";
 ---
 
 <Layout title="Contact" description={seoDescription}>
-  <section class="container-custom py-12">
-    <div class="grid gap-10 lg:grid-cols-[2fr_3fr]">
-      <div>
-        <h1 class="text-3xl md:text-4xl font-bold mb-4">
-          Built something similar? Spotted a better fix?
-        </h1>
-        <p class="text-lg text-body mb-8">Open to questions and collaboration.</p>
+  <div class="contact container-custom">
+    <header class="intro">
+      <h1 class="text-strong">Leave a note</h1>
+      <p class="lead text-strong">
+        Built something similar? Spotted a better fix for something buried in the archive? Write it down here.
+      </p>
+      <p class="text-body">I read every note and reply by email.</p>
+    </header>
 
-        <ul class="space-y-3" aria-label="Elsewhere">
-          {contactLinks.map((link) => (
-            <li>
-              <a href={link.href} rel="noopener noreferrer" class="inline-flex min-h-[44px] items-baseline gap-2">
-                <span class="font-medium text-strong">{link.platform}</span>
-                <span class="text-sm text-soft">{link.label}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
+    <form
+      id="contact-form"
+      name="contact"
+      method="POST"
+      action="/contact/thanks"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      novalidate
+      class="note bg-surface-card border border-surface shadow-card"
+    >
+      <input type="hidden" name="form-name" value="contact" />
+      <p class="hidden" aria-hidden="true">
+        <label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+      </p>
+
+      <dl class="note-head">
+        <div class="note-head__line">
+          <dt>To</dt>
+          <dd class="text-strong">{site.name}</dd>
+        </div>
+        <div id="project-chip" class="note-head__line" hidden>
+          <dt>Re</dt>
+          <dd class="re">
+            <span id="project-chip-title" class="text-strong"></span>
+            <button type="button" id="project-remove" class="re-remove" aria-label="Remove project">
+              <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
+                <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" fill="none" />
+              </svg>
+            </button>
+          </dd>
+        </div>
+      </dl>
+
+      <div id="form-errors" class="alert" tabindex="-1" aria-labelledby="form-errors-heading" hidden>
+        <h2 id="form-errors-heading" class="alert__title"></h2>
+        <ul class="alert__list"></ul>
       </div>
 
-      <form
-        id="contact-form"
-        name="contact"
-        method="POST"
-        action="/contact/thanks"
-        data-netlify="true"
-        netlify-honeypot="bot-field"
-        class="space-y-5 p-6 rounded-lg border border-surface bg-surface-alt"
-      >
-        <input type="hidden" name="form-name" value="contact" />
-        <p class="hidden" aria-hidden="true">
-          <label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
-        </p>
-
-        <div class="grid gap-5 md:grid-cols-2">
-          <div>
-            <label for="name" class={label}>Name</label>
-            <input id="name" name="name" type="text" autocomplete="name" required aria-describedby="name-hint" class={field} />
-            <p id="name-hint" class={hint}>Required.</p>
-          </div>
-          <div>
-            <label for="email" class={label}>Email</label>
-            <input id="email" name="email" type="email" autocomplete="email" required aria-describedby="email-hint" class={field} />
-            <p id="email-hint" class={hint}>Required. I'll reply here.</p>
-          </div>
+      <fieldset class="topics" aria-describedby="topic-error">
+        <legend class="label text-strong">What's it about?</legend>
+        <div class="topic-options">
+          {topics.map((t) => (
+            <label class="topic">
+              <input type="radio" name="topic" value={t} required />
+              <span class="topic__dot" aria-hidden="true"></span>
+              <span>{t}</span>
+            </label>
+          ))}
         </div>
+        <p id="topic-error" class="field-error" hidden></p>
+      </fieldset>
 
-        <div>
-          <label for="topic" class={label}>What's it about?</label>
-          <select id="topic" name="topic" autocomplete="off" class={field}>
-            {topics.map((t) => <option value={t}>{t}</option>)}
-          </select>
+      <div id="project-field" class="field">
+        <label for="project" class="label text-strong">Which project? <span class="text-soft">(optional)</span></label>
+        <input id="project" name="project" type="text" autocomplete="off" aria-describedby="project-hint" class="input-field" />
+        <p id="project-hint" class="hint text-soft">The project name or its archive URL.</p>
+      </div>
+
+      <div class="pair">
+        <div class="field">
+          <label for="name" class="label text-strong">Name</label>
+          <input id="name" name="name" type="text" autocomplete="name" required class="input-field" />
+          <p id="name-error" class="field-error" hidden></p>
         </div>
-
-        <div>
-          <label for="project" class={label}>Which project? (optional)</label>
-          <input id="project" name="project" type="text" autocomplete="off" aria-describedby="project-hint" class={field} />
-          <p id="project-hint" class={hint}>The project name or its archive URL.</p>
+        <div class="field">
+          <label for="email" class="label text-strong">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required aria-describedby="email-hint" class="input-field" />
+          <p id="email-hint" class="hint text-soft">Replies go here.</p>
+          <p id="email-error" class="field-error" hidden></p>
         </div>
+      </div>
 
-        <div>
-          <label for="message" class={label}>Message</label>
-          <textarea id="message" name="message" rows="6" required aria-describedby="message-hint" class={field}></textarea>
-          <p id="message-hint" class={hint}>Required.</p>
-        </div>
+      <div class="field">
+        <label for="message" class="label text-strong">Note</label>
+        <textarea id="message" name="message" rows="6" required aria-describedby="message-hint" class="input-field"></textarea>
+        <p id="message-hint" class="hint text-soft">Plain words are fine. Links welcome.</p>
+        <p id="message-error" class="field-error" hidden></p>
+      </div>
 
-        <button type="submit" class="btn-primary min-h-[48px] px-6">Send message</button>
-      </form>
-    </div>
-  </section>
+      <div id="send-error" class="alert" role="alert" hidden>
+        <p class="alert__title">The note didn't send.</p>
+        <p>Your words are still here. Check your connection and try again.</p>
+      </div>
+
+      <div class="send-row">
+        <button type="submit" class="btn-primary send">Send note</button>
+        <p class="hint text-soft">Lands in my inbox. I reply by email.</p>
+      </div>
+    </form>
+
+    <section class="elsewhere" aria-labelledby="elsewhere-heading">
+      <h2 id="elsewhere-heading" class="text-strong">Elsewhere</h2>
+      <ul class="ledger" role="list" aria-label="Elsewhere">
+        {contactLinks.map((link) => (
+          <li class="row border border-surface">
+            <a href={link.href} class="row-link text-strong">
+              {link.platform} <span class="row-handle text-soft">{link.label}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
 </Layout>
 
+<script is:inline type="application/json" id="project-titles" set:html={titles} />
+
 <script>
-  // /contact?project=<slug> prefills the project field (linked from detail pages).
-  const form = document.getElementById("contact-form") as HTMLFormElement | null;
-  const project = new URLSearchParams(window.location.search).get("project");
-  if (form && project) {
-    (form.elements.namedItem("project") as HTMLInputElement).value = project.slice(0, 200);
-    (form.elements.namedItem("topic") as HTMLSelectElement).value = "A project in the archive";
+  const ARCHIVE = "A project in the archive";
+  const form = document.getElementById("contact-form") as HTMLFormElement;
+  const summary = document.getElementById("form-errors") as HTMLElement;
+  const sendError = document.getElementById("send-error") as HTMLElement;
+  const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+  const projectInput = document.getElementById("project") as HTMLInputElement;
+  const projectField = document.getElementById("project-field") as HTMLElement;
+  const chip = document.getElementById("project-chip") as HTMLElement;
+  const chipTitle = document.getElementById("project-chip-title") as HTMLElement;
+  const titles: Record<string, string> = JSON.parse(
+    document.getElementById("project-titles")?.textContent || "{}",
+  );
+  let attempted = false;
+
+  const topicChecked = () => form.querySelector<HTMLInputElement>('input[name="topic"]:checked');
+
+  // The bare project field only matters for archive notes; a prefilled project shows as the Re line.
+  function syncProject() {
+    chip.hidden = !projectInput.value || chip.dataset.removed === "true";
+    projectField.hidden = !chip.hidden || topicChecked()?.value !== ARCHIVE;
   }
+
+  type Check = { id: string; label: string; message: string | null };
+
+  function check(): Check[] {
+    const name = form.elements.namedItem("name") as HTMLInputElement;
+    const email = form.elements.namedItem("email") as HTMLInputElement;
+    const message = form.elements.namedItem("message") as HTMLTextAreaElement;
+    return [
+      { id: "topic", label: "Topic", message: topicChecked() ? null : "Pick what the note is about." },
+      { id: "name", label: "Name", message: name.value.trim() ? null : "Add your name so I know who I'm replying to." },
+      {
+        id: "email",
+        label: "Email",
+        message: email.validity.valueMissing
+          ? "Add an email so I can reply."
+          : email.validity.typeMismatch
+            ? "That email is missing an @ or a domain, like name@example.com."
+            : null,
+      },
+      { id: "message", label: "Note", message: message.value.trim() ? null : "Write the note itself." },
+    ];
+  }
+
+  function showField({ id, message }: Check) {
+    const error = document.getElementById(`${id}-error`)!;
+    const target = id === "topic" ? form.querySelector<HTMLElement>("fieldset.topics")! : document.getElementById(id)!;
+    error.textContent = message ?? "";
+    error.hidden = !message;
+    if (id === "topic") {
+      target.toggleAttribute("data-invalid", !!message);
+      return;
+    }
+    const ids = (target.getAttribute("aria-describedby") ?? "").split(" ").filter((d) => d && d !== `${id}-error`);
+    if (message) {
+      ids.push(`${id}-error`);
+      target.setAttribute("aria-invalid", "true");
+    } else {
+      target.removeAttribute("aria-invalid");
+    }
+    if (ids.length) target.setAttribute("aria-describedby", ids.join(" "));
+    else target.removeAttribute("aria-describedby");
+  }
+
+  function render(results: Check[]) {
+    results.forEach(showField);
+    const failed = results.filter((r) => r.message);
+    summary.hidden = failed.length === 0;
+    summary.querySelector(".alert__title")!.textContent =
+      failed.length === 1 ? "One thing before this sends:" : `${failed.length} things before this sends:`;
+    const list = summary.querySelector(".alert__list")!;
+    list.replaceChildren(
+      ...failed.map((r) => {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = `#${r.id === "topic" ? "topic-error" : r.id}`;
+        a.textContent = `${r.label}: ${r.message}`;
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
+          const field = r.id === "topic" ? form.querySelector<HTMLInputElement>('input[name="topic"]') : document.getElementById(r.id);
+          field?.focus();
+        });
+        li.append(a);
+        return li;
+      }),
+    );
+    return failed.length;
+  }
+
+  function setBusy(busy: boolean) {
+    button.disabled = busy;
+    button.textContent = busy ? "Sending…" : "Send note";
+    form.setAttribute("aria-busy", String(busy));
+  }
+
+  form.addEventListener("input", () => attempted && render(check()));
+  form.addEventListener("change", (e) => {
+    if ((e.target as HTMLInputElement).name === "topic") syncProject();
+    if (attempted) render(check());
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    attempted = true;
+    sendError.hidden = true;
+    if (render(check())) {
+      summary.focus();
+      return;
+    }
+    setBusy(true);
+    try {
+      const body = new URLSearchParams(new FormData(form) as unknown as Record<string, string>);
+      const res = await fetch(form.action, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body,
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const slug = projectInput.value.trim();
+      window.location.assign(`/contact/thanks${titles[slug] ? `?project=${encodeURIComponent(slug)}` : ""}`);
+    } catch {
+      setBusy(false);
+      sendError.hidden = false;
+    }
+  });
+
+  document.getElementById("project-remove")?.addEventListener("click", () => {
+    chip.dataset.removed = "true";
+    projectInput.value = "";
+    syncProject();
+    projectField.hidden = false;
+    projectInput.focus();
+  });
+
+  // /contact?project=<slug> prefills the project (linked from detail pages).
+  const prefill = new URLSearchParams(window.location.search).get("project");
+  if (prefill) {
+    projectInput.value = prefill.slice(0, 200);
+    const archive = form.querySelector<HTMLInputElement>(`input[name="topic"][value="${ARCHIVE}"]`);
+    if (archive) archive.checked = true;
+    chipTitle.textContent = titles[projectInput.value] ?? projectInput.value;
+  }
+  syncProject();
 </script>
+
+<style>
+  .contact {
+    display: grid;
+    grid-template-areas: "intro" "form" "elsewhere";
+    gap: 2.5rem;
+    padding-block: 2rem 4rem;
+  }
+  @media (min-width: 1024px) {
+    .contact {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+      grid-template-areas: "intro form" "elsewhere form";
+      grid-template-rows: auto 1fr;
+      column-gap: 3rem;
+      align-items: start;
+    }
+  }
+  .intro {
+    grid-area: intro;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 34rem;
+  }
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  p {
+    margin: 0;
+  }
+  .lead {
+    font-size: 1.125rem;
+    text-wrap: pretty;
+  }
+
+  /* The note */
+  .note {
+    grid-area: form;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+  }
+  .note-head {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px dashed var(--border-strong);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+  }
+  .note-head__line {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    align-items: center;
+    min-height: 2rem;
+  }
+  .note-head__line[hidden] {
+    display: none;
+  }
+  .note-head dt {
+    color: var(--text-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 0.75rem;
+  }
+  .note-head dd {
+    margin: 0;
+    min-width: 0;
+  }
+  .re {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .re > span {
+    overflow-wrap: anywhere;
+  }
+  .re-remove {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    margin-block: -6px;
+    border: 0;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--text-soft);
+    cursor: pointer;
+  }
+  .re-remove:hover {
+    background: var(--bg-alt);
+    color: var(--text-strong);
+  }
+
+  .label {
+    display: block;
+    margin-bottom: 0.375rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+  .field[hidden] {
+    display: none;
+  }
+  .input-field {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    color: var(--text-strong);
+    font: inherit;
+  }
+  .input-field:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+  .input-field[aria-invalid="true"] {
+    border-color: var(--danger);
+  }
+  textarea.input-field {
+    resize: vertical;
+  }
+  .hint,
+  .field-error {
+    margin-top: 0.375rem;
+    font-size: 0.875rem;
+  }
+  .field-error {
+    color: var(--danger);
+    font-weight: 500;
+  }
+  .pair {
+    display: grid;
+    gap: 1.5rem;
+  }
+  @media (min-width: 640px) {
+    .pair {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  /* Topic choices, drawn like the stage chips */
+  .topics {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+  .topic-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .topic {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0.375rem 0.875rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    color: var(--text-body);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: border-color var(--transition-fast), background-color var(--transition-fast);
+  }
+  .topic input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+  .topic__dot {
+    flex: none;
+    width: 0.625rem;
+    height: 0.625rem;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 999px;
+  }
+  .topic:hover {
+    border-color: var(--text-soft);
+  }
+  .topic:has(input:checked) {
+    border-color: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent);
+    background: var(--bg-alt);
+    color: var(--text-strong);
+  }
+  .topic:has(input:checked) .topic__dot {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+  .topic:has(input:focus-visible) {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+  .topics[data-invalid] .topic {
+    border-color: var(--danger);
+  }
+
+  /* Error summary and send failure */
+  .alert {
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--danger);
+    border-radius: var(--radius-md);
+    background: var(--danger-soft);
+    color: var(--text-strong);
+  }
+  .alert:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+  .alert__title {
+    margin: 0 0 0.25rem;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  .alert__list {
+    margin: 0;
+    padding-left: 1.25rem;
+    list-style: disc;
+  }
+  .alert__list a {
+    display: inline-block;
+    padding-block: 0.25rem;
+    color: var(--text-strong);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .send-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+  }
+  .send {
+    min-height: 48px;
+    padding-inline: 1.5rem;
+    font-size: 0.9375rem;
+  }
+  .send-row .hint {
+    margin: 0;
+  }
+
+  /* Elsewhere: ledger rows like About */
+  .elsewhere {
+    grid-area: elsewhere;
+  }
+  .elsewhere h2 {
+    margin: 0 0 0.75rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+  .ledger {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .row {
+    border-radius: var(--radius-md);
+    transition: border-color var(--transition-fast);
+  }
+  .row:hover {
+    border-color: var(--border-strong);
+  }
+  .row-link {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.75rem;
+    min-height: 44px;
+    padding: 0.625rem 1rem;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.25em;
+  }
+  .row-handle {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    font-weight: 400;
+    overflow-wrap: anywhere;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .topic,
+    .row {
+      transition: none;
+    }
+  }
+</style>

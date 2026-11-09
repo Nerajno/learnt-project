@@ -27,3 +27,6 @@ pnpm-debug.log*
 test-results/
 playwright-report/
 .playwright-mcp/
+
+# graphify knowledge graph output
+graphify-out/

@@ -8,9 +8,9 @@ Draft for [#25](https://github.com/Nerajno/learnt-project/issues/25). Supersedes
 - **Sources only:** drafts come from what is already in `src/data/projects.ts` (description, features, learnings, challenges, retrospective) and your GitHub commit dates. No invented numbers. Where the evidence runs out it says _needs you_.
 - **Epitaphs** need your voice most. Where a retrospective existed I borrowed its line.
 - **Count:** the data has 42 projects, not the 44 #25 mentions.
-- **Fields:** `outcome` and `impact` are drafted for headstones and markers (coursework only needs `epitaph`). `causeOfDeath` follows the schema: open projects have none, shipped ones can only be `shipped`, composted ones need one of `superseded`, `outgrew-stack`, `course-ended`, `abandoned`, `merged-into`. `superseded` and `merged-into` need `supersededBy`.
+- **Fields:** `outcome` is drafted for every shipped or composted project, coursework included: `strictProjectSchema` requires it, although #25's checklist says coursework only needs an epitaph. `impact` is drafted for headstones and markers. `causeOfDeath` follows the schema: open projects have none, shipped ones can only be `shipped`, composted ones need one of `superseded`, `outgrew-stack`, `course-ended`, `abandoned`, `merged-into`. `superseded` and `merged-into` need `supersededBy`.
 - **Skill tags** are market terms for the card face (max 4). The playful tags stay as filter-only tags.
-- **Dates:** git = first/last commit authored by `Nerajno` (GitHub API, 2026-11-09). Re-uploads and forks skew git, so each project says which source I picked and why.
+- **Dates:** git = first/last commit authored by `Nerajno` (GitHub API, 2026-11-09). Re-uploads and forks skew git, so each date pick says its source and the reason in brackets.
 
 When you're done, hand it back and I'll apply it to `src/data/projects.ts` in one PR.
 
@@ -21,7 +21,7 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 | [Portfolio V3](#portfolio-v3) | marker | sprout | — | git |
 | [Learnt Project](#learnt-project) | marker | sprout | — | git |
 | [Digital Garden](#digital-garden) | marker | sprout | — | git |
-| [Is Nerando Done Yet](#is-nerando-done-yet) | marker | sprout | — | data |
+| [Is Nerando Done Yet](#is-nerando-done-yet) | marker | sprout | — | needs you |
 | [My Digital Mausoleum](#digital-mausoleum) | marker | sprout | — | data |
 | [Learnt V2](#learnt-v2) | marker | composted | superseded | data |
 | [Learnt V1](#learnt-v1) | marker | composted | superseded | git |
@@ -38,7 +38,7 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 | [bRavur FCC Project](#bravur-fcc) | coursework | shipped | shipped | data |
 | [Toppur FCC Project](#toppur-fcc) | coursework | shipped | shipped | data |
 | [Current Portfolio 2023](#portfolio-2023) | marker | composted | superseded | git |
-| [Hosted Blog V3](#hosted-blog-v3) | marker | composted | outgrew-stack | git |
+| [Hosted Blog V3](#hosted-blog-v3) | marker | composted | superseded | git |
 | [Astro Blog](#astro-blog) | marker | composted | abandoned | data |
 | [MDX Blog with Next.js](#nextjs-mdx-blog) | marker | composted | abandoned | needs you |
 | [CV Website](#cv-website) | marker | shipped | shipped | needs you |
@@ -58,7 +58,7 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 | [TDD Big Picture](#tdd-big-picture) | marker | shipped | shipped | needs you |
 | [.NET Tools Exploration](#dotnet-tools) | marker | composted | abandoned | needs you |
 | [Yup Nosey](#yup-nosey) | marker | composted | abandoned | needs you |
-| [Gulp Jest Plugin](#gulp-jest) | marker | composted | outgrew-stack | data |
+| [Gulp Jest Plugin](#gulp-jest) | marker | composted | abandoned | data |
 | [GitHub Profile README](#github-profile) | marker | sprout | — | git |
 
 ---
@@ -77,10 +77,10 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `marker` (keep) | |
 | stage | `sprout` (keep) | |
-| born / died | `2024-02-08` / open (git) | |
+| born / died | `2024-02-08` / open (git: first commit in this repo; it may carry older portfolio history, confirm) | |
 | causeOfDeath | — (open project) | |
 | outcome | An Astro portfolio with a filterable project showcase, an MDX blog and dark mode. | |
-| impact | Moved my public work onto Astro and made performance a habit, not an afterthought. | |
+| impact | Moved my portfolio onto Astro and taught me to optimise for Lighthouse scores. | |
 | epitaph | "Still the front door. Still being repainted." | |
 | skill tags | Astro, TypeScript, Tailwind CSS, Performance | |
 
@@ -98,7 +98,7 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `marker` (keep) | |
 | stage | `sprout` (keep) | |
-| born / died | `2025-08-23` / open (git) | |
+| born / died | `2025-08-23` / open (git: matches the first commit in this repo) | |
 | causeOfDeath | — (open project) | |
 | outcome | This archive: every project I built, learned from or let go, with filters, a timeline and retrospectives. | |
 | impact | Taught me as much about reflection as about web development. | |
@@ -119,10 +119,10 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `marker` (keep) | |
 | stage | `sprout` (keep) | |
-| born / died | `2024-03-11` / open (git) | |
+| born / died | `2024-03-11` / open (git: data born is a 1st-of-month estimate; commits start earlier) | |
 | causeOfDeath | — (open project) | |
 | outcome | A public notes site with backlinks, tags and evergreen pages. | |
-| impact | Made learning in public a habit; notes now link to the projects that taught them. | |
+| impact | A place to learn in public and build knowledge one note at a time. | |
 | epitaph | "Never finished. That is the point." | |
 | skill tags | HTML, CSS, JavaScript, Content Strategy | |
 
@@ -135,16 +135,16 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 - **Data:** born `2025-09-20` · died — (open) · tier `marker` · stage `sprout`
 - **Git:** first `2022-04-02` · last `2026-10-14` · 90 commits
 - **Links:** [repo](https://github.com/Nerajno/isnerandodoneyet-com) · no live URL
-- **Note:** git first commit predates the data born date because the repo is a fork; data born kept, confirm.
+- **Note:** git shows 90 commits authored by you since 2022, so the data born date looks wrong; pick the real start.
 
 | Field | Draft | Your answer |
 |---|---|---|
 | tier | `marker` (keep) | |
 | stage | `sprout` (keep) | |
-| born / died | `2025-09-20` / open (data) | |
+| born / died | _needs you_ | |
 | causeOfDeath | — (open project) | |
 | outcome | A forked status page that answers one question about my current project. | |
-| impact | Practised working inside someone else's Vue codebase without breaking it. | |
+| impact | Practised working inside someone else's Vue codebase and keeping a fork up to date. | |
 | epitaph | "Not yet." | |
 | skill tags | Vue, JavaScript, Open Source | |
 
@@ -163,10 +163,10 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `marker` (keep) | |
 | stage | `sprout` (keep) | |
-| born / died | `2024-11-01` / open (data) | |
+| born / died | `2024-11-01` / open (data: a single commit, likely a later upload) | |
 | causeOfDeath | — (open project) | |
 | outcome | A repository of archived experiments with learning logs and reflection notes. | |
-| impact | The first attempt at honouring finished work instead of hiding it; the idea grew into this archive. | |
+| impact | Treats finished work as something to honour, not hide. | |
 | epitaph | "Every project, successful or not, teaches something." | |
 | skill tags | Documentation, Git, Markdown | |
 
@@ -184,7 +184,7 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `marker` (keep) | |
 | stage | `composted` (keep) | |
-| born / died | `2025-08-10` / `2025-08-20` (data) | |
+| born / died | `2025-08-10` / `2025-08-20` (data: a single commit on the last day; data is the build window) | |
 | causeOfDeath | `superseded` | |
 | supersededBy | `learnt-project` | |
 | outcome | A basic Astro archive with project listing, simple filtering and Markdown content. | |
@@ -206,7 +206,7 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `marker` (keep) | |
 | stage | `composted` (keep) | |
-| born / died | `2025-08-13` / `2025-08-15` (git) | |
+| born / died | `2025-08-13` / `2025-08-15` (git: commits fall inside the data range) | |
 | causeOfDeath | `superseded` | |
 | supersededBy | `learnt-v2` | |
 | outcome | Basic project pages on a first Astro setup. | |
@@ -228,7 +228,7 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `marker` (keep) | |
 | stage | `composted` (keep) | |
-| born / died | `2025-04-15` / `2025-06-01` (data) | |
+| born / died | `2025-04-15` / `2025-06-01` (data: a single commit, likely a later upload) | |
 | causeOfDeath | `superseded` | |
 | supersededBy | `learnt-project` | |
 | outcome | A Vue dashboard tracking side projects as active, on hold or done, with filters and export. | |
@@ -245,13 +245,13 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 - **Data:** born `2024-09-15` · died `2024-11-15` · tier `headstone` · stage `composted`
 - **Git:** first `2021-02-20` · last `2025-12-10` · 278 commits
 - **Links:** [repo](https://github.com/Nerajno/Burble-V1) · no live URL
-- **Note:** git spans years of later commits; confirm cause (abandoned vs outgrew-stack).
+- **Note:** cause inferred: commits run to 2025-12-10 and the retrospective does not say it was abandoned; confirm cause and death date.
 
 | Field | Draft | Your answer |
 |---|---|---|
 | tier | `headstone` (keep) | |
 | stage | `composted` (keep) | |
-| born / died | `2024-09-15` / `2024-11-15` (data) | |
+| born / died | `2024-09-15` / `2024-11-15` (data: commits run for years after; data is the build window) | |
 | causeOfDeath | `abandoned` | |
 | outcome | A streaming-style React interface with category carousels, hover previews, search and a video player. | |
 | impact | Taught me that a UI that looks simple can hide hard carousel, timing and layout problems. | |
@@ -272,8 +272,9 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `coursework` (keep) | |
 | stage | `shipped` (keep) | |
-| born / died | `2024-10-01` / `2024-10-29` (data) | |
+| born / died | `2024-10-01` / `2024-10-29` (data: git starts 2024-01-07, the same day as Trumma's last commit, so likely a bulk upload; confirm) | |
 | causeOfDeath | `shipped` | |
+| outcome | A TypeScript calculator meeting the freeCodeCamp certification tests, with keyboard support. | |
 | epitaph | "Order of operations, respected." | |
 | skill tags | TypeScript, State Machines, Accessibility | |
 
@@ -286,17 +287,17 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 - **Data:** born `2024-08-15` · died `2024-09-01` · tier `marker` · stage `shipped`
 - **Git:** first `2023-07-11` · last `2024-01-07` · 19 commits
 - **Links:** [repo](https://github.com/NerajnoLearning/Trumma) · [live](https://drum-machine.freecodecamp.rocks/)
-- **Note:** git last commit precedes the data dates; confirm.
+- **Note:** the live URL is the freeCodeCamp demo, not your own deploy; confirm before keeping it.
 
 | Field | Draft | Your answer |
 |---|---|---|
 | tier | `marker` (keep) | |
 | stage | `shipped` (keep) | |
-| born / died | `2024-08-15` / `2024-09-01` (data) | |
+| born / died | `2024-08-15` / `2024-09-01` (data: every commit predates the data dates, likely a bulk upload; confirm) | |
 | causeOfDeath | `shipped` | |
-| outcome | A browser drum machine with keyboard and click pads, volume control and visual feedback, live online. | |
+| outcome | A browser drum machine with keyboard and click pads, volume control and visual feedback. | |
 | impact | My first real work with the Web Audio API and keyboard event handling. | |
-| epitaph | "Still keeps the beat." | |
+| epitaph | "Keyboard keys, drum pads." | |
 | skill tags | React, Web Audio API, JavaScript | |
 
 <a id="javascript30"></a>
@@ -314,8 +315,9 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `coursework` (keep) | |
 | stage | `shipped` (keep) | |
-| born / died | `2020-01-01` / `2021-07-26` (git) | |
+| born / died | `2020-01-01` / `2021-07-26` (git: years earlier than data; likely the real run, confirm) | |
 | causeOfDeath | `shipped` | |
+| outcome | Thirty vanilla JavaScript projects in thirty days, from drum kits to video players and canvas drawing. | |
 | epitaph | "Thirty days, no frameworks." | |
 | skill tags | JavaScript, DOM, CSS | |
 
@@ -336,7 +338,7 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 | born / died | _needs you_ | |
 | causeOfDeath | `shipped` | |
 | outcome | Worked through a proven-patterns workshop at Vue Conference: Composition API, TypeScript and component architecture. | |
-| impact | Gave me patterns for Vue components I still reach for. | |
+| impact | Covered the Composition API, advanced reactivity and real-world component patterns. | |
 | epitaph | "Patterns, proven." | |
 | skill tags | Vue, TypeScript, Composition API | |
 
@@ -355,8 +357,9 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `coursework` (keep) | |
 | stage | `shipped` (keep) | |
-| born / died | `2024-05-20` / `2024-06-01` (data) | |
+| born / died | `2024-05-20` / `2024-06-01` (data: git is a later re-upload) | |
 | causeOfDeath | `shipped` | |
+| outcome | An interactive D3 bar chart of economic data with tooltips and scaled axes. | |
 | epitaph | "Data, joined." | |
 | skill tags | D3.js, Data Visualization, SVG | |
 
@@ -375,7 +378,7 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `headstone` (keep) | |
 | stage | `shipped` (keep) | |
-| born / died | `2024-06-05` / `2024-06-15` (data) | |
+| born / died | `2024-06-05` / `2024-06-15` (data: git is a later re-upload) | |
 | causeOfDeath | `shipped` | |
 | outcome | An interactive data story with several coordinated D3 charts, the capstone of the freeCodeCamp Data Visualization track. | |
 | impact | Showed me visualization is storytelling as much as code. | |
@@ -418,8 +421,9 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `coursework` (keep) | |
 | stage | `shipped` (keep) | |
-| born / died | `2023-01-12` / `2023-09-16` (git) | |
+| born / died | `2023-01-12` / `2023-09-16` (git: git shows work from January; data starts in September, confirm) | |
 | causeOfDeath | `shipped` | |
+| outcome | The first freeCodeCamp Front End Development Libraries project: a responsive app that passes the certification tests. | |
 | epitaph | "The first taste." | |
 | skill tags | JavaScript, Responsive Design, HTML | |
 
@@ -438,8 +442,9 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `coursework` (keep) | |
 | stage | `shipped` (keep) | |
-| born / died | `2024-04-15` / `2024-05-01` (data) | |
+| born / died | `2024-04-15` / `2024-05-01` (data: git is a later re-upload) | |
 | causeOfDeath | `shipped` | |
+| outcome | A React app for the freeCodeCamp Front End certification, focused on state, props and component communication. | |
 | epitaph | "State, managed." | |
 | skill tags | React, State Management, JavaScript | |
 
@@ -458,8 +463,9 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `coursework` (keep) | |
 | stage | `shipped` (keep) | |
-| born / died | `2024-05-15` / `2024-06-01` (data) | |
+| born / died | `2024-05-15` / `2024-06-01` (data: git is a later re-upload) | |
 | causeOfDeath | `shipped` | |
+| outcome | The capstone React app that earned the freeCodeCamp Front End Libraries certification. | |
 | epitaph | "Certified, finally." | |
 | skill tags | React, JavaScript, Responsive Design | |
 
@@ -477,7 +483,7 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `marker` (keep) | |
 | stage | `composted` (keep) | |
-| born / died | `2022-10-22` / `2024-03-15` (git) | |
+| born / died | `2022-10-22` / `2024-03-15` (git: data dates look estimated; git covers the build) | |
 | causeOfDeath | `superseded` | |
 | supersededBy | `portfolio-v3` | |
 | outcome | A hand-built HTML, CSS and JavaScript portfolio with a project showcase and contact form. | |
@@ -494,16 +500,18 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 - **Data:** born `2023-12-01` · died `2024-06-01` · tier `marker` · stage `composted`
 - **Git:** first `2023-11-01` · last `2023-12-31` · 34 commits
 - **Links:** [repo](https://github.com/Nerajno/hosted_Blog_v3) · no live URL
+- **Note:** cause from the Astro Blog data, whose challenges include "Migration from Vue"; confirm.
 
 | Field | Draft | Your answer |
 |---|---|---|
 | tier | `marker` (keep) | |
 | stage | `composted` (keep) | |
-| born / died | `2023-11-01` / `2023-12-31` (git) | |
-| causeOfDeath | `outgrew-stack` | |
+| born / died | `2023-11-01` / `2023-12-31` (git: git covers the build; data looks estimated) | |
+| causeOfDeath | `superseded` | |
+| supersededBy | `astro-blog` | |
 | outcome | A Vue and TypeScript blog with Markdown posts, tags, search and an RSS feed. | |
-| impact | Taught me blog architecture; the next blog moved to a static site generator. | |
-| epitaph | "Third rebuild, same lesson." | |
+| impact | Taught me blog architecture in Vue; the Astro blog was the migration away from it. | |
+| epitaph | "Rebuilt until it fit." | |
 | skill tags | Vue, TypeScript, Markdown | |
 
 <a id="astro-blog"></a>
@@ -521,10 +529,10 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `marker` (keep) | |
 | stage | `composted` (keep) | |
-| born / died | `2024-01-15` / `2024-03-01` (data) | |
+| born / died | `2024-01-15` / `2024-03-01` (data: a single commit, likely a later upload) | |
 | causeOfDeath | `abandoned` | |
 | outcome | A static Astro blog with Markdown posts, an RSS feed and zero JavaScript by default. | |
-| impact | The experiment that made Astro my default for content sites. | |
+| impact | The experiment that led to adopting Astro for other projects. | |
 | epitaph | "The spark, not the fire." | |
 | skill tags | Astro, Static Site Generation, Markdown | |
 
@@ -585,7 +593,7 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `headstone` (keep) | |
 | stage | `shipped` (keep) | |
-| born / died | `2025-07-01` / `2025-08-11` (data) | |
+| born / died | `2025-07-01` / `2025-08-11` (data: git spans years; data is the build window) | |
 | causeOfDeath | `shipped` | |
 | outcome | A Rails-backed single-page address book with full CRUD, search, categories and a REST API. | |
 | impact | My grounding in Rails, REST API design and keeping SPA state in sync with a server. | |
@@ -630,6 +638,7 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 | stage | `shipped` (keep) | |
 | born / died | _needs you_ | |
 | causeOfDeath | `shipped` | |
+| outcome | The Flatiron front-end capstone: a React app with CRUD, authentication and API integration, presented to instructors and peers. | |
 | epitaph | "Presented, under pressure." | |
 | skill tags | React, REST APIs, JavaScript | |
 
@@ -648,8 +657,9 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `coursework` (keep) | |
 | stage | `shipped` (keep) | |
-| born / died | `2023-10-01` / `2023-10-24` (data) | |
+| born / died | `2023-10-01` / `2023-10-24` (data: git spans years; data is the submission window) | |
 | causeOfDeath | `shipped` | |
+| outcome | A Rails backend with a REST API, relational database, authentication and a test suite, built as the bootcamp's final project. | |
 | epitaph | "The API held." | |
 | skill tags | Ruby on Rails, PostgreSQL, REST APIs | |
 
@@ -711,10 +721,10 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `headstone` (keep) | |
 | stage | `shipped` (keep) | |
-| born / died | `2024-07-01` / `2024-08-02` (data) | |
+| born / died | `2024-07-01` / `2024-08-02` (data: git is a later upload) | |
 | causeOfDeath | `shipped` | |
 | outcome | A tested Python command-line tool, submitted as the CS50P final project. | |
-| impact | CS50 taught me to think like a programmer and to test before claiming done. | |
+| impact | CS50 taught me to think like a programmer. | |
 | epitaph | "Built from scratch." | |
 | skill tags | Python, pytest, CLI | |
 
@@ -735,6 +745,7 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 | stage | `shipped` (keep) | |
 | born / died | _needs you_ | |
 | causeOfDeath | `shipped` | |
+| outcome | A public log of a hundred days of coding: daily entries, progress tracking and reflections. | |
 | epitaph | "Consistency beats intensity." | |
 | skill tags | Git, Markdown, Consistency | |
 
@@ -795,7 +806,7 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `marker` (keep) | |
 | stage | `shipped` (keep) | |
-| born / died | `2023-06-01` / `2023-06-08` (data) | |
+| born / died | `2023-06-01` / `2023-06-08` (data: git dates are earlier than data; confirm) | |
 | causeOfDeath | `shipped` | |
 | outcome | CSS, responsive and documentation fixes contributed to folkmusic.com. | |
 | impact | My first significant open-source contribution, through real review. | |
@@ -816,10 +827,10 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `marker` (keep) | |
 | stage | `shipped` (keep) | |
-| born / died | `2021-11-03` / `2022-11-14` (git) | |
+| born / died | `2021-11-03` / `2022-11-14` (git: data dates look estimated; git covers the workflows) | |
 | causeOfDeath | `shipped` | |
 | outcome | GitHub Actions workflows for tests, lint, builds and deployment, with matrix builds. | |
-| impact | Made CI a default; every project since has a pipeline. | |
+| impact | Taught me to set up testing, linting and deployment pipelines. | |
 | epitaph | "Green checks, automated." | |
 | skill tags | GitHub Actions, CI/CD, YAML | |
 
@@ -837,10 +848,10 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `marker` (keep) | |
 | stage | `shipped` (keep) | |
-| born / died | `2021-11-08` / `2021-11-09` (git) | |
+| born / died | `2021-11-08` / `2021-11-09` (git: the name says 2021 and git matches) | |
 | causeOfDeath | `shipped` | |
 | outcome | A conference schedule app built live in a Connect Tech workshop with React and TypeScript. | |
-| impact | Hands-on TypeScript in React from people who use it daily. | |
+| impact | Hands-on TypeScript and React patterns from industry experts. | |
 | epitaph | "Kept up with the code-along." | |
 | skill tags | React, TypeScript | |
 
@@ -861,7 +872,7 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 | born / died | _needs you_ | |
 | causeOfDeath | `shipped` | |
 | outcome | Completed the Pluralsight course on test-driven development, with exercises in C#. | |
-| impact | Red, green, refactor became how I write tests. | |
+| impact | Learned the red-green-refactor cycle and test-first thinking. | |
 | epitaph | "Test first." | |
 | skill tags | TDD, C#, Unit Testing | |
 
@@ -917,17 +928,17 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 - **Data:** born `2022-07-15` · died `2022-08-01` · tier `marker` · stage `composted`
 - **Git:** first `2021-05-06` · last `2026-10-04` · 22 commits
 - **Links:** [repo](https://github.com/Nerajno/gulp-jest) · no live URL
-- **Note:** git spans years; data kept, confirm.
+- **Note:** cause inferred; the data does not say why it stopped.
 
 | Field | Draft | Your answer |
 |---|---|---|
 | tier | `marker` (keep) | |
 | stage | `composted` (keep) | |
-| born / died | `2022-07-15` / `2022-08-01` (data) | |
-| causeOfDeath | `outgrew-stack` | |
+| born / died | `2022-07-15` / `2022-08-01` (data: git runs to 2026; confirm when it died) | |
+| causeOfDeath | `abandoned` | |
 | outcome | A Gulp plugin that ran Jest inside a build pipeline, with watch mode. | |
-| impact | Taught me streams and plugin design; the tooling world moved past Gulp. | |
-| epitaph | "Outrun by the tooling." | |
+| impact | Taught me Gulp streams and plugin architecture. | |
+| epitaph | "Streams, piped." | |
 | skill tags | Node.js, Jest, Build Tools | |
 
 <a id="github-profile"></a>
@@ -944,7 +955,7 @@ When you're done, hand it back and I'll apply it to `src/data/projects.ts` in on
 |---|---|---|
 | tier | `marker` (keep) | |
 | stage | `sprout` (keep) | |
-| born / died | `2020-08-01` / open (git) | |
+| born / died | `2020-08-01` / open (git: repo history goes back to 2020) | |
 | causeOfDeath | — (open project) | |
 | outcome | A profile README with stats, a tech stack and links. | |
 | impact | The front page of my GitHub; it changes as I do. | |

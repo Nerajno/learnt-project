@@ -27,7 +27,7 @@ test('visible dates match the stored calendar date', async ({ page }) => {
 
   await page.goto('/learnt/');
   await expect(page.locator('article[data-slug="trumma-drum-machine"] time')).toHaveText('Aug 2024');
-  await expect(page.locator('article[data-slug="digital-garden"] time')).toHaveText('Sep 2025');
+  await expect(page.locator('article[data-slug="digital-garden"] time')).toHaveText('Mar 2024'); // born from git (#25)
 });
 
 test('an open project shows no duration', async ({ page }) => {

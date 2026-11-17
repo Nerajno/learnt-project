@@ -151,6 +151,7 @@ export const strictProjectSchema = baseProjectSchema.superRefine((project, ctx) 
   contentRules(project, ctx);
 });
 
+// TODO(#25): epitaphs, outcomes and impacts are drafts (docs/content/25-triage-draft.md); rewrite in your voice.
 const rawProjects: Project[] = [
   // ACTIVE PROJECTS (2025)
   {
@@ -165,8 +166,11 @@ const rawProjects: Project[] = [
     category: 'frontend',
     stage: 'sprout',
     difficulty: 'intermediate',
-    born: '2025-08-01',
+    born: '2024-02-08',
     tier: 'marker',
+    outcome: 'An Astro portfolio with a filterable project showcase, an MDX blog and dark mode.',
+    impact: 'Moved my portfolio onto Astro and taught me to optimise for Lighthouse scores.',
+    epitaph: 'Still the front door. Still being repainted.',
     githubUrl: 'https://github.com/Nerajno/portfolio_v3',
     features: [
       'Static site generation with Astro',
@@ -208,8 +212,11 @@ const rawProjects: Project[] = [
     category: 'frontend',
     stage: 'sprout',
     difficulty: 'intermediate',
-    born: '2025-08-01',
+    born: '2025-08-23',
     tier: 'marker',
+    outcome: 'This archive: every project I built, learned from or let go, with filters, a timeline and retrospectives.',
+    impact: 'Taught me as much about reflection as about web development.',
+    epitaph: 'Third time is the charm.',
     githubUrl: 'https://github.com/Nerajno/learnt-project',
     liveUrl: 'https://learnt.developingdvlpr.com',
     features: [
@@ -260,8 +267,11 @@ const rawProjects: Project[] = [
     category: 'frontend',
     stage: 'sprout',
     difficulty: 'beginner',
-    born: '2025-09-01',
+    born: '2024-03-11',
     tier: 'marker',
+    outcome: 'A public notes site with backlinks, tags and evergreen pages.',
+    impact: 'A place to learn in public and build knowledge one note at a time.',
+    epitaph: 'Never finished. That is the point.',
     githubUrl: 'https://github.com/Nerajno/digital_garden',
     features: [
       'Interconnected notes',
@@ -304,8 +314,11 @@ const rawProjects: Project[] = [
     category: 'frontend',
     stage: 'sprout',
     difficulty: 'beginner',
-    born: '2025-09-20',
+    born: '2025-09-20', // TODO(#25): confirm dates
     tier: 'marker',
+    outcome: 'A forked status page that answers one question about my current project.',
+    impact: 'Practised working inside someone else\'s Vue codebase and keeping a fork up to date.',
+    epitaph: 'Not yet.',
     githubUrl: 'https://github.com/Nerajno/isnerandodoneyet-com',
     features: [
       'Status display',
@@ -341,6 +354,9 @@ const rawProjects: Project[] = [
     difficulty: 'beginner',
     born: '2024-11-01',
     tier: 'marker',
+    outcome: 'A repository of archived experiments with learning logs and reflection notes.',
+    impact: 'Treats finished work as something to honour, not hide.',
+    epitaph: 'Every project, successful or not, teaches something.',
     githubUrl: 'https://github.com/NerajnoLearning/My-digital-Mausoleum',
     features: [
       'Project archive',
@@ -380,6 +396,11 @@ const rawProjects: Project[] = [
     difficulty: 'intermediate',
     born: '2025-08-10',
     tier: 'marker',
+    causeOfDeath: 'superseded',
+    supersededBy: 'learnt-project',
+    outcome: 'A basic Astro archive with project listing, simple filtering and Markdown content.',
+    impact: 'Showed me what the archive really needed; its lessons shaped the version you are reading.',
+    epitaph: 'Failed forward.',
     died: '2025-08-20',
     githubUrl: 'https://github.com/Nerajno/learnt_2',
     features: [
@@ -415,8 +436,13 @@ const rawProjects: Project[] = [
     category: 'frontend',
     stage: 'composted',
     difficulty: 'beginner',
-    born: '2025-08-05',
+    born: '2025-08-05', // TODO(#25): confirm dates; git (2025-08-13) starts after Learnt V2
     tier: 'marker',
+    causeOfDeath: 'superseded',
+    supersededBy: 'learnt-v2',
+    outcome: 'Basic project pages on a first Astro setup.',
+    impact: 'Proved the idea was worth a second try, and that planning matters before building.',
+    epitaph: 'Messy, but it started.',
     died: '2025-08-16',
     githubUrl: 'https://github.com/Nerajno/learnt',
     features: [
@@ -452,6 +478,11 @@ const rawProjects: Project[] = [
     difficulty: 'intermediate',
     born: '2025-04-15',
     tier: 'marker',
+    causeOfDeath: 'superseded',
+    supersededBy: 'learnt-project',
+    outcome: 'A Vue dashboard tracking side projects as active, on hold or done, with filters and export.',
+    impact: 'Its job moved to Learnt, which documents projects instead of only tracking them.',
+    epitaph: 'Great tool while it lasted.',
     died: '2025-06-01',
     githubUrl: 'https://github.com/Nerajno/v0-Side_project_Status',
     features: [
@@ -491,6 +522,10 @@ const rawProjects: Project[] = [
     difficulty: 'intermediate',
     born: '2024-09-15',
     tier: 'headstone',
+    causeOfDeath: 'abandoned', // TODO(#25): confirm cause
+    outcome: 'A streaming-style React interface with category carousels, hover previews, search and a video player.',
+    impact: 'Taught me that a UI that looks simple can hide hard carousel, timing and layout problems.',
+    epitaph: 'Deceptively complex.',
     died: '2024-11-15',
     githubUrl: 'https://github.com/Nerajno/Burble-V1',
     features: [
@@ -532,6 +567,9 @@ const rawProjects: Project[] = [
     difficulty: 'beginner',
     born: '2024-10-01',
     tier: 'coursework',
+    causeOfDeath: 'shipped',
+    outcome: 'A TypeScript calculator meeting the freeCodeCamp certification tests, with keyboard support.',
+    epitaph: 'Order of operations, respected.',
     died: '2024-10-29',
     githubUrl: 'https://github.com/Nerajno/Ber-kna-FCCFEDL',
     features: [
@@ -572,9 +610,13 @@ const rawProjects: Project[] = [
     difficulty: 'intermediate',
     born: '2024-08-15',
     tier: 'marker',
+    causeOfDeath: 'shipped',
+    outcome: 'A browser drum machine with keyboard and click pads, volume control and visual feedback.',
+    impact: 'My first real work with the Web Audio API and keyboard event handling.',
+    epitaph: 'Keyboard keys, drum pads.',
     died: '2024-09-01',
     githubUrl: 'https://github.com/NerajnoLearning/Trumma',
-    liveUrl: 'https://drum-machine.freecodecamp.rocks/',
+    liveUrl: 'https://drum-machine.freecodecamp.rocks/', // TODO(#25): this is the freeCodeCamp demo, not your own deploy
     features: [
       '9 drum pads with unique sounds',
       'Keyboard support (Q,W,E,A,S,D,Z,X,C)',
@@ -611,9 +653,12 @@ const rawProjects: Project[] = [
     category: 'frontend',
     stage: 'shipped',
     difficulty: 'beginner',
-    born: '2024-03-01',
+    born: '2020-01-01',
     tier: 'coursework',
-    died: '2024-03-30',
+    causeOfDeath: 'shipped',
+    outcome: 'Thirty vanilla JavaScript projects in thirty days, from drum kits to video players and canvas drawing.',
+    epitaph: 'Thirty days, no frameworks.',
+    died: '2021-07-26',
     githubUrl: 'https://github.com/Nerajno/JavaScript30',
     features: [
       '30 unique JavaScript projects',
@@ -653,8 +698,12 @@ const rawProjects: Project[] = [
     category: 'frontend',
     stage: 'shipped',
     difficulty: 'advanced',
-    born: '2025-05-19',
+    born: '2025-05-19', // TODO(#25): confirm dates
     tier: 'marker',
+    causeOfDeath: 'shipped',
+    outcome: 'Worked through a proven-patterns workshop at Vue Conference: Composition API, TypeScript and component architecture.',
+    impact: 'Covered the Composition API, advanced reactivity and real-world component patterns.',
+    epitaph: 'Patterns, proven.',
     died: '2025-05-19',
     githubUrl: 'https://github.com/Nerajno/vue-conf-25-proven-patterns-workshop',
     features: [
@@ -695,6 +744,9 @@ const rawProjects: Project[] = [
     difficulty: 'intermediate',
     born: '2024-05-20',
     tier: 'coursework',
+    causeOfDeath: 'shipped',
+    outcome: 'An interactive D3 bar chart of economic data with tooltips and scaled axes.',
+    epitaph: 'Data, joined.',
     died: '2024-06-01',
     githubUrl: 'https://github.com/NerajnoLearning/FCC_D3_Bars',
     features: [
@@ -735,6 +787,10 @@ const rawProjects: Project[] = [
     difficulty: 'advanced',
     born: '2024-06-05',
     tier: 'headstone',
+    causeOfDeath: 'shipped',
+    outcome: 'An interactive data story with several coordinated D3 charts, the capstone of the freeCodeCamp Data Visualization track.',
+    impact: 'Showed me visualization is storytelling as much as code.',
+    epitaph: 'Technical skill, told as a story.',
     died: '2024-06-15',
     githubUrl: 'https://github.com/NerajnoLearning/FCC_D3_story',
     features: [
@@ -773,8 +829,12 @@ const rawProjects: Project[] = [
     category: 'frontend',
     stage: 'shipped',
     difficulty: 'intermediate',
-    born: '2024-11-15',
+    born: '2024-11-15', // TODO(#25): confirm dates
     tier: 'marker',
+    causeOfDeath: 'shipped',
+    outcome: 'A Vue card maker with templates, custom text, colours and images, and export to an image.',
+    impact: 'First real work with canvas rendering and file handling in the browser.',
+    epitaph: 'Seasonal, but it shipped.',
     died: '2024-12-01',
     githubUrl: 'https://github.com/NerajnoLearning/Vue_Holiday_Card_Maker',
     features: [
@@ -812,8 +872,11 @@ const rawProjects: Project[] = [
     category: 'frontend',
     stage: 'shipped',
     difficulty: 'beginner',
-    born: '2023-09-01',
+    born: '2023-01-12',
     tier: 'coursework',
+    causeOfDeath: 'shipped',
+    outcome: 'The first freeCodeCamp Front End Development Libraries project: a responsive app that passes the certification tests.',
+    epitaph: 'The first taste.',
     died: '2023-09-16',
     githubUrl: 'https://github.com/Nerajno/Assaggio-1-FCC_FEDLC',
     features: [
@@ -851,6 +914,9 @@ const rawProjects: Project[] = [
     difficulty: 'intermediate',
     born: '2024-04-15',
     tier: 'coursework',
+    causeOfDeath: 'shipped',
+    outcome: 'A React app for the freeCodeCamp Front End certification, focused on state, props and component communication.',
+    epitaph: 'State, managed.',
     died: '2024-05-01',
     githubUrl: 'https://github.com/NerajnoLearning/bRavur-4-FCC_FEDLC',
     features: [
@@ -889,6 +955,9 @@ const rawProjects: Project[] = [
     difficulty: 'intermediate',
     born: '2024-05-15',
     tier: 'coursework',
+    causeOfDeath: 'shipped',
+    outcome: 'The capstone React app that earned the freeCodeCamp Front End Libraries certification.',
+    epitaph: 'Certified, finally.',
     died: '2024-06-01',
     githubUrl: 'https://github.com/NerajnoLearning/NerajnoLearning-sToppur-5-FCC_FEDLC',
     features: [
@@ -926,9 +995,14 @@ const rawProjects: Project[] = [
     category: 'frontend',
     stage: 'composted',
     difficulty: 'beginner',
-    born: '2024-02-01',
+    born: '2022-10-22',
     tier: 'marker',
-    died: '2024-08-01',
+    causeOfDeath: 'superseded',
+    supersededBy: 'portfolio-v3',
+    outcome: 'A hand-built HTML, CSS and JavaScript portfolio with a project showcase and contact form.',
+    impact: 'Served as my professional presence until it needed more than vanilla could give.',
+    epitaph: 'Served me well.',
+    died: '2024-03-15',
     githubUrl: 'https://github.com/Nerajno/Current_Portfolio_2023',
     features: [
       'Project showcase',
@@ -966,9 +1040,14 @@ const rawProjects: Project[] = [
     category: 'frontend',
     stage: 'composted',
     difficulty: 'intermediate',
-    born: '2023-12-01',
+    born: '2023-11-01',
     tier: 'marker',
-    died: '2024-06-01',
+    causeOfDeath: 'superseded', // TODO(#25): confirm cause
+    supersededBy: 'astro-blog',
+    outcome: 'A Vue and TypeScript blog with Markdown posts, tags, search and an RSS feed.',
+    impact: 'Taught me blog architecture in Vue; the Astro blog was the migration away from it.',
+    epitaph: 'Rebuilt until it fit.',
+    died: '2023-12-31',
     githubUrl: 'https://github.com/Nerajno/hosted_Blog_v3',
     features: [
       'Markdown blog posts',
@@ -1008,6 +1087,10 @@ const rawProjects: Project[] = [
     difficulty: 'beginner',
     born: '2024-01-15',
     tier: 'marker',
+    causeOfDeath: 'abandoned', // TODO(#25): confirm cause
+    outcome: 'A static Astro blog with Markdown posts, an RSS feed and zero JavaScript by default.',
+    impact: 'The experiment that led to adopting Astro for other projects.',
+    epitaph: 'The spark, not the fire.',
     died: '2024-03-01',
     githubUrl: 'https://github.com/Nerajno/blog-Astro',
     features: [
@@ -1044,8 +1127,12 @@ const rawProjects: Project[] = [
     category: 'frontend',
     stage: 'composted',
     difficulty: 'intermediate',
-    born: '2024-01-15',
+    born: '2024-01-15', // TODO(#25): confirm dates
     tier: 'marker',
+    causeOfDeath: 'abandoned',
+    outcome: 'A forked Next.js blog with MDX posts, TypeScript, Tailwind CSS and dark mode.',
+    impact: 'A tour of the Next.js and MDX ecosystem that showed me how much configuration it carries.',
+    epitaph: 'Explored, then left.',
     died: '2024-04-01',
     githubUrl: 'https://github.com/Nerajno/My-Self-hosted-TypeScript-Mdx-blog',
     features: [
@@ -1084,8 +1171,12 @@ const rawProjects: Project[] = [
     category: 'frontend',
     stage: 'shipped',
     difficulty: 'beginner',
-    born: '2023-12-20',
+    born: '2023-12-20', // TODO(#25): confirm dates
     tier: 'marker',
+    causeOfDeath: 'shipped',
+    outcome: 'A forked one-page CV, tuned for print and PDF export.',
+    impact: 'Taught me print CSS and page-break control.',
+    epitaph: 'Fits on one page.',
     died: '2023-12-27',
     githubUrl: 'https://github.com/Nerajno/cv',
     features: [
@@ -1127,6 +1218,10 @@ const rawProjects: Project[] = [
     difficulty: 'intermediate',
     born: '2025-07-01',
     tier: 'headstone',
+    causeOfDeath: 'shipped',
+    outcome: 'A Rails-backed single-page address book with full CRUD, search, categories and a REST API.',
+    impact: 'My grounding in Rails, REST API design and keeping SPA state in sync with a server.',
+    epitaph: 'Every contact, kept.',
     died: '2025-08-11',
     githubUrl: 'https://github.com/Nerajno/Trapper_Keeper-v1',
     features: [
@@ -1165,8 +1260,12 @@ const rawProjects: Project[] = [
     category: 'fullstack',
     stage: 'shipped',
     difficulty: 'advanced',
-    born: '2023-05-01',
+    born: '2023-05-01', // TODO(#25): confirm dates
     tier: 'headstone',
+    causeOfDeath: 'shipped',
+    outcome: 'A MERN social network for developers: JWT auth, profiles, posts, comments, likes and GitHub repos.',
+    impact: 'Tied every layer of full-stack development together in one app.',
+    epitaph: 'Connected, end to end.',
     died: '2023-06-08',
     githubUrl: 'https://github.com/NerajnoLearning/devconnector_2.0',
     features: [
@@ -1207,8 +1306,11 @@ const rawProjects: Project[] = [
     category: 'fullstack',
     stage: 'shipped',
     difficulty: 'intermediate',
-    born: '2023-02-15',
+    born: '2023-02-15', // TODO(#25): confirm dates
     tier: 'coursework',
+    causeOfDeath: 'shipped',
+    outcome: 'The Flatiron front-end capstone: a React app with CRUD, authentication and API integration, presented to instructors and peers.',
+    epitaph: 'Presented, under pressure.',
     died: '2023-03-15',
     githubUrl: 'https://github.com/Nerajno/frontend_final_project',
     features: [
@@ -1249,6 +1351,9 @@ const rawProjects: Project[] = [
     difficulty: 'intermediate',
     born: '2023-10-01',
     tier: 'coursework',
+    causeOfDeath: 'shipped',
+    outcome: 'A Rails backend with a REST API, relational database, authentication and a test suite, built as the bootcamp\'s final project.',
+    epitaph: 'The API held.',
     died: '2023-10-24',
     githubUrl: 'https://github.com/Nerajno/backend_final-project',
     features: [
@@ -1287,8 +1392,12 @@ const rawProjects: Project[] = [
     category: 'backend',
     stage: 'shipped',
     difficulty: 'intermediate',
-    born: '2023-09-01',
+    born: '2023-09-01', // TODO(#25): confirm dates
     tier: 'marker',
+    causeOfDeath: 'shipped',
+    outcome: 'A REST API cataloguing regional treats, with search, filtering, geographic data and user contributions.',
+    impact: 'Practised data modelling in MongoDB and designing an API for others to use.',
+    epitaph: 'Something sweet, served over REST.',
     died: '2023-09-21',
     githubUrl: 'https://github.com/Nerajno/Native_treats_api',
     features: [
@@ -1327,8 +1436,12 @@ const rawProjects: Project[] = [
     category: 'fullstack',
     stage: 'shipped',
     difficulty: 'intermediate',
-    born: '2023-07-01',
+    born: '2023-07-01', // TODO(#25): confirm dates
     tier: 'marker',
+    causeOfDeath: 'shipped',
+    outcome: 'Completed the JP Morgan Chase software engineering virtual experience: live stock feeds and real-time charts.',
+    impact: 'A first look at enterprise codebases and financial data.',
+    epitaph: 'Real-world tasks, virtual desk.',
     died: '2023-07-10',
     githubUrl: 'https://github.com/Nerajno/forage-jpmc-swe-task-2',
     features: [
@@ -1371,6 +1484,10 @@ const rawProjects: Project[] = [
     difficulty: 'intermediate',
     born: '2024-07-01',
     tier: 'headstone',
+    causeOfDeath: 'shipped',
+    outcome: 'A tested Python command-line tool, submitted as the CS50P final project.',
+    impact: 'CS50 taught me to think like a programmer.',
+    epitaph: 'Built from scratch.',
     died: '2024-08-02',
     githubUrl: 'https://github.com/NerajnoLearning/CS50P-Final_Project',
     features: [
@@ -1410,8 +1527,11 @@ const rawProjects: Project[] = [
     category: 'design',
     stage: 'shipped',
     difficulty: 'beginner',
-    born: '2024-05-01',
+    born: '2024-05-01', // TODO(#25): confirm dates
     tier: 'coursework',
+    causeOfDeath: 'shipped',
+    outcome: 'A public log of a hundred days of coding: daily entries, progress tracking and reflections.',
+    epitaph: 'Consistency beats intensity.',
     died: '2024-08-02',
     githubUrl: 'https://github.com/Nerajno/100DaysOfCodeLog',
     features: [
@@ -1451,8 +1571,12 @@ const rawProjects: Project[] = [
     category: 'fullstack',
     stage: 'composted',
     difficulty: 'advanced',
-    born: '2023-12-01',
+    born: '2023-12-01', // TODO(#25): confirm dates
     tier: 'marker',
+    causeOfDeath: 'abandoned',
+    outcome: 'A fork of the freeCodeCamp platform, set up locally to study and find first issues.',
+    impact: 'Taught me how to navigate a very large open-source codebase.',
+    epitaph: 'Studied, never merged.',
     died: '2024-01-01',
     githubUrl: 'https://github.com/Nerajno/freeCodeCamp',
     features: [
@@ -1489,8 +1613,12 @@ const rawProjects: Project[] = [
     category: 'frontend',
     stage: 'shipped',
     difficulty: 'intermediate',
-    born: '2023-04-10',
+    born: '2023-04-10', // TODO(#25): confirm dates
     tier: 'marker',
+    causeOfDeath: 'shipped',
+    outcome: 'Bootcamp exercise: Redux reducers, action creators and reducer tests.',
+    impact: 'Made immutability and predictable state click.',
+    epitaph: 'Same input, same state.',
     died: '2023-04-12',
     githubUrl: 'https://github.com/Nerajno/redux-reducer-atlanta-web-060319',
     features: [
@@ -1530,6 +1658,10 @@ const rawProjects: Project[] = [
     difficulty: 'beginner',
     born: '2023-06-01',
     tier: 'marker',
+    causeOfDeath: 'shipped',
+    outcome: 'CSS, responsive and documentation fixes contributed to folkmusic.com.',
+    impact: 'My first significant open-source contribution, through real review.',
+    epitaph: 'Small fixes, merged.',
     died: '2023-06-08',
     githubUrl: 'https://github.com/Nerajno/folkmusic',
     features: [
@@ -1566,9 +1698,13 @@ const rawProjects: Project[] = [
     category: 'backend',
     stage: 'shipped',
     difficulty: 'intermediate',
-    born: '2023-03-15',
+    born: '2021-11-03',
     tier: 'marker',
-    died: '2023-04-01',
+    causeOfDeath: 'shipped',
+    outcome: 'GitHub Actions workflows for tests, lint, builds and deployment, with matrix builds.',
+    impact: 'Taught me to set up testing, linting and deployment pipelines.',
+    epitaph: 'Green checks, automated.',
+    died: '2022-11-14',
     githubUrl: 'https://github.com/Nerajno/github-actions-for-ci',
     features: [
       'Automated testing',
@@ -1606,9 +1742,13 @@ const rawProjects: Project[] = [
     category: 'frontend',
     stage: 'shipped',
     difficulty: 'intermediate',
-    born: '2023-03-25',
+    born: '2021-11-08',
     tier: 'marker',
-    died: '2023-04-01',
+    causeOfDeath: 'shipped',
+    outcome: 'A conference schedule app built live in a Connect Tech workshop with React and TypeScript.',
+    impact: 'Hands-on TypeScript and React patterns from industry experts.',
+    epitaph: 'Kept up with the code-along.',
+    died: '2021-11-09',
     githubUrl: 'https://github.com/NerajnoLearning/conf-app-connecttech-2021',
     features: [
       'Conference schedule display',
@@ -1645,8 +1785,12 @@ const rawProjects: Project[] = [
     category: 'backend',
     stage: 'shipped',
     difficulty: 'intermediate',
-    born: '2023-01-15',
+    born: '2023-01-15', // TODO(#25): confirm dates
     tier: 'marker',
+    causeOfDeath: 'shipped',
+    outcome: 'Completed the Pluralsight course on test-driven development, with exercises in C#.',
+    impact: 'Learned the red-green-refactor cycle and test-first thinking.',
+    epitaph: 'Test first.',
     died: '2023-02-01',
     githubUrl: 'https://github.com/NerajnoLearning/TDD-TheBigPicture',
     features: [
@@ -1684,8 +1828,12 @@ const rawProjects: Project[] = [
     category: 'backend',
     stage: 'composted',
     difficulty: 'beginner',
-    born: '2022-12-15',
+    born: '2022-12-15', // TODO(#25): confirm dates
     tier: 'marker',
+    causeOfDeath: 'abandoned',
+    outcome: 'A fork exploring the .NET command-line tools collection.',
+    impact: 'A first map of the .NET ecosystem and its CLI.',
+    epitaph: 'Explored, not adopted.',
     died: '2023-01-01',
     githubUrl: 'https://github.com/NerajnoLearning/DotNetTools',
     features: [
@@ -1722,8 +1870,12 @@ const rawProjects: Project[] = [
     category: 'frontend',
     stage: 'composted',
     difficulty: 'beginner',
-    born: '2025-02-15',
+    born: '2025-02-15', // TODO(#25): confirm dates
     tier: 'marker',
+    causeOfDeath: 'abandoned',
+    outcome: 'A curiosity-driven prototype with no fixed goal.',
+    impact: 'Taught me to embrace experiments and to know when to stop.',
+    epitaph: 'Just being nosey.',
     died: '2025-03-15',
     githubUrl: 'https://github.com/Nerajno/yup-nosey',
     features: [
@@ -1762,6 +1914,10 @@ const rawProjects: Project[] = [
     difficulty: 'advanced',
     born: '2022-07-15',
     tier: 'marker',
+    causeOfDeath: 'abandoned', // TODO(#25): confirm cause
+    outcome: 'A Gulp plugin that ran Jest inside a build pipeline, with watch mode.',
+    impact: 'Taught me Gulp streams and plugin architecture.',
+    epitaph: 'Streams, piped.',
     died: '2022-08-01',
     githubUrl: 'https://github.com/Nerajno/gulp-jest',
     features: [
@@ -1800,8 +1956,11 @@ const rawProjects: Project[] = [
     category: 'design',
     stage: 'sprout',
     difficulty: 'beginner',
-    born: '2025-03-20',
+    born: '2020-08-01',
     tier: 'marker',
+    outcome: 'A profile README with stats, a tech stack and links.',
+    impact: 'The front page of my GitHub; it changes as I do.',
+    epitaph: 'Always being updated.',
     githubUrl: 'https://github.com/Nerajno/nerajno',
     features: [
       'GitHub stats display',

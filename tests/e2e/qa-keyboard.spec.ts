@@ -29,12 +29,17 @@ test('archive: filter to Composted + 2024, switch to timeline and back, open a p
   await expect(page).toHaveURL(/stage=composted/);
   await expect(page).toHaveURL(/year=2024/);
 
-  const composted = new Set(projects.filter((p) => p.stage === 'composted').map((p) => p.slug));
+  // Exactly the Composted projects born in 2024: catches an ignored stage or year filter.
+  const expected = projects
+    .filter((p) => p.stage === 'composted' && p.born.startsWith('2024'))
+    .map((p) => p.slug)
+    .sort();
+  expect(expected.length).toBeGreaterThan(0);
   const visible = page.locator('article[data-slug]:visible');
   await expect(visible.first()).toBeVisible();
-  for (const slug of await visible.evaluateAll((els) => els.map((e) => e.getAttribute('data-slug')))) {
-    expect(composted.has(slug!), `${slug} is composted`).toBe(true);
-  }
+  await expect
+    .poll(async () => (await visible.evaluateAll((els) => els.map((e) => e.getAttribute('data-slug')))).sort())
+    .toEqual(expected);
 
   const timeline = page.locator('[data-view="timeline"]');
   await tabTo(page, timeline);

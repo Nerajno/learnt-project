@@ -42,20 +42,19 @@ Routes covered: `/`, `/learnt/`, `/learnt/?view=timeline`, a composted detail pa
 - [ ] **NVDA (Firefox, Windows):** the same.
 
 ### Zoom
-- [x] 200% browser zoom: no content lost. *(automated as a 640px viewport: `qa-reflow.spec.ts`)*
+- [ ] 200% browser zoom: no content lost. *(partly automated: `qa-reflow.spec.ts` proves no horizontal overflow at 640px; clipped, truncated or breakpoint-hidden content still needs a look with Cmd +)*
 - [x] 400% reflow at 1280px: no two-way scrolling. *(automated as a 320px viewport)*
-- [ ] Spot-check real browser zoom (Cmd +) once; viewport emulation doesn't cover zoom-only bugs.
 
 ### Browsers
 - [ ] Latest Safari, Firefox and Chrome: a smoke test of every route.
 - [ ] iOS Safari on a real phone: the theme toggle and the contact form.
 
 ### Lighthouse (deploy preview)
-- [ ] Performance 95 or above. **Fails on Home (89).**
-- [x] Accessibility 95 or above.
-- [x] SEO 100.
+- [ ] Performance 95 or above. *(local: fails on Home, 89)*
+- [ ] Accessibility 95 or above. *(local: passes, 98–100)*
+- [ ] SEO 100. *(local: passes, 100)*
 
-Local run, 2026-11-17 (Lighthouse 12.2.1, `astro preview`, headless Chrome, mobile preset). Re-run on the deploy preview before ticking Performance.
+Local run, 2026-11-17 (Lighthouse 12.2.1, `astro preview`, headless Chrome, mobile preset). These are local results only: tick each item after the same run on the deploy preview.
 
 | Route | Performance | Accessibility | Best practices | SEO |
 |---|---|---|---|---|

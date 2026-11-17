@@ -19,17 +19,19 @@ Each check, and the spec that covers it:
 | Theme follows the system preference, persists, and doesn't flash | `theme.spec.ts` |
 | Visible focus, mobile menu, `aria-current` | `shell.spec.ts` |
 | Archive without JS, keyboard filters, `aria-pressed` | `archive-a11y.spec.ts`, `timeline.spec.ts` |
+| Keyboard-only journeys: archive filter → timeline → project, contact send | `qa-keyboard.spec.ts` |
+| 200% zoom (640px) and 400% reflow (320px): no sideways scroll, nothing wider than the viewport | `qa-reflow.spec.ts` |
 
 Routes covered: `/`, `/learnt/`, `/learnt/?view=timeline`, a composted detail page, a shipped detail page, `/about/`, `/contact/`, `/contact/thanks/`, `/404.html`.
 
 ## Manual
 
 ### Keyboard only (no mouse)
-- [ ] Filter the archive to Composted, 2024.
-- [ ] Switch to the timeline and back.
-- [ ] Open a project.
-- [ ] Follow its successor, once #25 sets `supersededBy`.
-- [ ] Submit the contact form.
+- [x] Filter the archive to Composted, 2024. *(automated: `qa-keyboard.spec.ts`)*
+- [x] Switch to the timeline and back. *(automated)*
+- [x] Open a project. *(automated)*
+- [ ] Follow its successor, once #25 sets `supersededBy` (#93).
+- [x] Submit the contact form. *(automated with a mocked POST; a real send is still a manual check on the deploy)*
 
 ### Screen readers
 - [ ] **VoiceOver (Safari, macOS):** archive filters and one detail page.
@@ -40,17 +42,31 @@ Routes covered: `/`, `/learnt/`, `/learnt/?view=timeline`, a composted detail pa
 - [ ] **NVDA (Firefox, Windows):** the same.
 
 ### Zoom
-- [ ] 200% browser zoom: no content lost.
-- [ ] 400% reflow at 1280px: no two-way scrolling.
+- [x] 200% browser zoom: no content lost. *(automated as a 640px viewport: `qa-reflow.spec.ts`)*
+- [x] 400% reflow at 1280px: no two-way scrolling. *(automated as a 320px viewport)*
+- [ ] Spot-check real browser zoom (Cmd +) once; viewport emulation doesn't cover zoom-only bugs.
 
 ### Browsers
 - [ ] Latest Safari, Firefox and Chrome: a smoke test of every route.
 - [ ] iOS Safari on a real phone: the theme toggle and the contact form.
 
 ### Lighthouse (deploy preview)
-- [ ] Performance 95 or above.
-- [ ] Accessibility 95 or above.
-- [ ] SEO 100.
+- [ ] Performance 95 or above. **Fails on Home (89).**
+- [x] Accessibility 95 or above.
+- [x] SEO 100.
+
+Local run, 2026-11-17 (Lighthouse 12.2.1, `astro preview`, headless Chrome, mobile preset). Re-run on the deploy preview before ticking Performance.
+
+| Route | Performance | Accessibility | Best practices | SEO |
+|---|---|---|---|---|
+| `/` | 89 | 100 | 79 | 100 |
+| `/learnt/` | 98 | 98 | 79 | 100 |
+| `/learnt/side-project-status/` | 100 | 100 | 79 | 100 |
+| `/contact/` | 100 | 100 | 79 | 100 |
+
+Findings:
+- **Microsoft Clarity** costs every page: best practices 79 (8 third-party cookies from `clarity.ms` / `bing.com`), plus 4 preconnect misses and a short cache TTL on `clarity.js`. It's also most of Home's 3.6s LCP.
+- **`/learnt/` heading order:** card titles are `<h3>` with no `<h2>` above them (axe "moderate", so the serious-only sweeps above don't catch it).
 
 ### Validators
 - [ ] JSON-LD (validator.schema.org) on Home and one detail page.

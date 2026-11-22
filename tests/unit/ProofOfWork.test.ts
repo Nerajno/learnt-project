@@ -45,4 +45,19 @@ describe('ProofOfWork (#46 Task 4)', () => {
     const html = await container.renderToString(ProofOfWork, { props: { project: makeProject({ githubUrl: undefined }) } });
     expect(html.trim()).toBe('');
   });
+
+  it('#32: counts the evidence it has against the fields it expects', async () => {
+    const html = await container.renderToString(ProofOfWork, {
+      props: { project: makeProject({ outcome: 'Did it.', proof: { tests: '12 passing' } }) },
+    });
+    expect(html).toContain('data-evidence="3/9"');
+    expect(text(html)).toContain('3 of 9 evidence fields filled');
+    expect(html).toMatch(/class="meter"[^>]*aria-hidden="true"|aria-hidden="true"[^>]*class="meter"/);
+  });
+
+  it('#32: a headstone is counted out of ten (the deep dive counts)', async () => {
+    const html = await container.renderToString(ProofOfWork, { props: { project: makeProject({ tier: 'headstone' }) } });
+    expect(html).toContain('data-evidence="1/10"');
+  });
 });
+

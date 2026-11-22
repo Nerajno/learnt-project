@@ -45,4 +45,28 @@ describe('ArchiveTimeline (#21)', () => {
     expect(html).toContain('id="project-timeline"');
     expect(html).not.toContain('data-year-group');
   });
+
+  it('#32: a superseded row names its successor once, in an ending chip', async () => {
+    const old = makeProject({
+      slug: 'learnt-v2', title: 'Learnt V2', stage: 'composted', born: '2025-08-10', died: '2025-08-20',
+      causeOfDeath: 'superseded', supersededBy: 'learnt-project',
+    });
+    const html = await container.renderToString(ArchiveTimeline, { props: { years: [{ year: 2025, projects: [old] }] } });
+    expect(html).toContain('data-ending="successor"');
+    expect(html).toContain('href="/learnt/learnt-project"');
+    expect(html).not.toContain('stage-chip__cause');
+  });
+
+  it('#32: a composted row with no cause shows the gap', async () => {
+    const gap = makeProject({ slug: 'nosey', stage: 'composted', born: '2025-02-15', died: '2025-03-15' });
+    const html = await container.renderToString(ArchiveTimeline, { props: { years: [{ year: 2025, projects: [gap] }] } });
+    expect(html).toContain('data-ending="missing"');
+  });
+
+  it('#32: shipped rows and plain causes get no extra chip', async () => {
+    const ended = makeProject({ slug: 'course', stage: 'composted', born: '2024-01-01', died: '2024-02-01', causeOfDeath: 'course-ended' });
+    const html = await container.renderToString(ArchiveTimeline, { props: { years: [{ year: 2024, projects: [shipped, ended] }] } });
+    expect(html).not.toContain('data-ending');
+    expect(html).toContain('stage-chip__cause');
+  });
 });

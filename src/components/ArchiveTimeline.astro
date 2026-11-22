@@ -3,6 +3,9 @@
 // Rendered hidden; src/scripts/archive-filter.ts shows it for ?view=timeline and
 // hides rows/years by slug with the same filters as the card grid.
 import StageChip from "./StageChip.astro";
+import EndingChip from "./EndingChip.astro";
+import { getProjectBySlug, type Project } from "../data/projects";
+import { getEnding } from "../lib/ledger";
 import type { TimelineYear } from "../lib/timeline";
 
 interface Props {
@@ -10,6 +13,14 @@ interface Props {
 }
 
 const { years } = Astro.props;
+
+// #32: a successor or a missing cause gets its own chip; the stage chip then
+// drops its cause so the same word isn't said twice on one row.
+const flagged = (p: Project) => {
+  const kind = getEnding(p).kind;
+  return kind === "successor" || kind === "missing";
+};
+const successorOf = (p: Project) => (p.supersededBy ? getProjectBySlug(p.supersededBy) : undefined);
 
 const monthYear = (iso: string) =>
   new Date(`${iso.slice(0, 10)}T00:00:00Z`).toLocaleDateString("en-US", {
@@ -28,10 +39,11 @@ const monthYear = (iso: string) =>
         <ol class="rows" role="list">
           {projects.map((p) => (
             <li class="row" data-slug={p.slug}>
-              <StageChip stage={p.stage} cause={p.causeOfDeath} />
+              <StageChip stage={p.stage} cause={flagged(p) ? undefined : p.causeOfDeath} />
               <span class="what">
                 <a href={`/learnt/${p.slug}`}>{p.title}</a>
                 {p.short && <span class="short">{p.short}</span>}
+                {flagged(p) && <EndingChip project={p} successor={successorOf(p)} />}
               </span>
               <span class="when">
                 <time datetime={p.born}>{monthYear(p.born)}</time>
@@ -89,6 +101,10 @@ const monthYear = (iso: string) =>
     display: flex;
     flex-direction: column;
     min-width: 0;
+  }
+  .what :global(.ending) {
+    align-self: flex-start;
+    margin-top: 0.25rem;
   }
   .what a {
     font-weight: 600;

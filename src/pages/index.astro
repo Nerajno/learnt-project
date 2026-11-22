@@ -3,15 +3,18 @@
 import Layout from '../layouts/Layout.astro';
 import StageChip from '../components/StageChip.astro';
 import CompostCard from '../components/home/CompostCard.astro';
+import HeadstoneCard from '../components/home/HeadstoneCard.astro';
 import StageLegend from '../components/StageLegend.astro';
-import { getCardProjects, getProjectBySlug, getUniqueTechnologies } from '../data/projects';
+import { getCardProjects, getProjectBySlug, getUniqueTechnologies, projects } from '../data/projects';
 import { homeJsonLd } from '../lib/jsonld';
 import { getByYear, getStats } from '../lib/projects';
 import { firstYear, getRecentlyComposted, getStillGrowing, monthYear, toYearBars } from '../lib/home';
 import { STAGES } from '../lib/stages';
+import { getHeadstones } from '../lib/ledger';
 
 const stats = getStats();
 const since = firstYear();
+const headstones = getHeadstones(projects);
 const composted = getRecentlyComposted();
 const growing = getStillGrowing();
 // Card projects only, so each bar matches what /learnt?year= shows.
@@ -43,6 +46,18 @@ const stageName = Object.fromEntries(STAGES.map((s) => [s.value, s.label.toLower
         <div><dt>technologies touched</dt><dd data-stat="technologies">{getUniqueTechnologies().length}</dd></div>
       </dl>
     </section>
+
+    {headstones.length > 0 && (
+      <section data-section="headstones" aria-labelledby="headstones-h">
+        <div class="section-head">
+          <h2 id="headstones-h">Headstones <span class="h-sub">· the ones worth a deep dive</span></h2>
+          <a href="/learnt" class="section-link">browse the archive →</a>
+        </div>
+        <div class="headstone-grid">
+          {headstones.map((p) => <HeadstoneCard project={p} />)}
+        </div>
+      </section>
+    )}
 
     <div id="stages">
       <StageLegend />
@@ -193,6 +208,34 @@ const stageName = Object.fromEntries(STAGES.map((s) => [s.value, s.label.toLower
     font-weight: 700;
     color: var(--text-strong);
     font-variant-numeric: tabular-nums;
+  }
+
+  /* headstones */
+  .section-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .section-head h2 {
+    margin: 0;
+  }
+  .h-sub {
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+  .section-link {
+    font-size: 0.8125rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .headstone-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: 1.25rem;
   }
 
   /* recently composted */
